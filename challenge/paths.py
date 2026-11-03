@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,7 +18,7 @@ ORGANISER_DIR = DATA_DIR / "organiser"
 ANSWER_KEY_DIR = DATA_DIR / "answer_key"
 PARTICIPANT_DIR = DATA_DIR / "participant"
 CARDS_DIR = PARTICIPANT_DIR / "cards"
-SUBMISSIONS_DIR = DATA_DIR / "submissions"
+SUBMISSIONS_DIR = Path(os.environ.get("UL_SUBMISSIONS_DIR") or (DATA_DIR / "submissions"))
 SAMPLES_DIR = DATA_DIR / "samples"
 KAGGLE_DIR = ROOT / "kaggle"
 

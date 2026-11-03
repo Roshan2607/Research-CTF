@@ -10,6 +10,7 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
+import os
 import secrets
 import threading
 from pathlib import Path
@@ -29,7 +30,7 @@ def iso(t: dt.datetime) -> str:
 
 class SubmissionStore:
     def __init__(self, base: Path | None = None):
-        self.base = Path(base or paths.SUBMISSIONS_DIR)
+        self.base = Path(base or os.environ.get("UL_SUBMISSIONS_DIR") or paths.SUBMISSIONS_DIR)
         self.base.mkdir(parents=True, exist_ok=True)
         self.teams_path = self.base / "teams.json"
         self.graph_log = self.base / "graph_submissions.jsonl"
