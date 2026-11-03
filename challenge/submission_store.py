@@ -46,7 +46,7 @@ class SubmissionStore:
 
     def _write(self, p: Path, obj) -> None:
         tmp = p.with_suffix(p.suffix + ".tmp")
-        tmp.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        tmp.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
         tmp.replace(p)
 
     # ------------------------------------------------------------------ teams

@@ -1,0 +1,6 @@
+source_id,target_id,relationship_type,evidence_reference
+P12,P05,CITES,ok row
+P15,P05,CITES,unknown paper id
+P05,P12,CITES,wrong direction (1999 paper cannot cite a 2008/2011 paper)
+P12,P03,INSPIRED_BY,not a relationship type
+P12,P05,cites,duplicate of line 2 in different case

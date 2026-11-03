@@ -24,6 +24,7 @@ PARTICIPANT_PAPER_FIELDS = (
     "title",
     "authors",
     "year",
+    "first_public_year",
     "venue",
     "volume",
     "issue",
@@ -152,3 +153,10 @@ def card_pdf_path(participant_id: str) -> Path:
 
 def valid_participant_ids() -> list[str]:
     return [c["participant_id"] for c in load_corpus()]
+
+
+def participant_infos():
+    """Public year metadata used to validate submission direction (no answer key needed)."""
+    from scoring.reference import PaperInfo
+
+    return {c["participant_id"]: PaperInfo(c["participant_id"], c["year"], c.get("first_public_year") or c["year"]) for c in load_corpus()}

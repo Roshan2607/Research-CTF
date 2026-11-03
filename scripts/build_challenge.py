@@ -62,17 +62,17 @@ def check_answer_key(records: dict) -> list[str]:
 def write_kaggle(rows: list[dict]) -> None:
     paths.KAGGLE_DIR.mkdir(exist_ok=True)
     with (paths.KAGGLE_DIR / "candidate_edges.csv").open("w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator="\n")
         w.writerow(["id", "source_id", "target_id", "relationship_type"])
         for r in rows:
             w.writerow([r["id"], r["source_id"], r["target_id"], r["relationship_type"]])
     with (paths.KAGGLE_DIR / "sample_submission.csv").open("w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator="\n")
         w.writerow(["id", "predicted"])
         for r in rows:
             w.writerow([r["id"], 0])
     with paths.KAGGLE_SOLUTION.open("w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator="\n")
         w.writerow(["id", "label", "fp_weight", "Usage"])
         for r in rows:
             w.writerow([r["id"], r["label"], r["fp_weight"], r["Usage"]])

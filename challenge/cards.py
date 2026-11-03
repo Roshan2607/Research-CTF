@@ -76,12 +76,15 @@ def render_card(card: dict, out_path: Path, branding: str, injection_text: str |
         str(out_path), pagesize=A4, leftMargin=20 * mm, rightMargin=20 * mm, topMargin=16 * mm, bottomMargin=16 * mm,
         title=f"Uncharted Literature challenge card {card['participant_id']}", author="Workshop organisers",
         subject="Workshop wrapper - not the original publication",
+        invariant=1,  # reproducible output: no timestamps / random IDs, so rebuilds do not churn
     )
     access = card.get("open_access_url") or card["doi_url"]
     meta = Table(
         [
             [Paragraph("<b>Authors</b>", st["meta"]), Paragraph(escape(", ".join(card["authors"])), st["meta"])],
-            [Paragraph("<b>Published</b>", st["meta"]), Paragraph(escape(f"{card['venue']} ({card['year']})"), st["meta"])],
+            [Paragraph("<b>Published</b>", st["meta"]), Paragraph(escape(f"{card['venue']} ({card['year']})" + (
+                f" - an earlier version was first made public in {card['first_public_year']}"
+                if card.get("first_public_year") and card["first_public_year"] != card["year"] else "")), st["meta"])],
             [Paragraph("<b>DOI</b>", st["meta"]), Paragraph(escape(card["doi_url"]), st["meta"])],
             [Paragraph("<b>Read it</b>", st["meta"]), Paragraph(escape(f"{access}  -  {card['access']}"), st["meta"])],
             [Paragraph("<b>Domain</b>", st["meta"]), Paragraph(escape(card["domain"]), st["meta"])],

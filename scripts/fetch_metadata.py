@@ -193,7 +193,7 @@ def main(argv: list[str] | None = None) -> int:
                 if o.get(k) != p.get(k):
                     print(f"DIFF {p['internal_id']}.{k}")
         return 0
-    MANIFEST.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    MANIFEST.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote {MANIFEST} with {len(papers)} papers and {len(citations)} in-corpus citations")
     return 0
 

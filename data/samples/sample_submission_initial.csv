@@ -1,0 +1,12 @@
+source_id,target_id,relationship_type,evidence_reference
+P12,P05,CITES,P12 reference list [23]
+P13,P05,CITES,P13 references
+P02,P05,CITES,P02 references
+P12,P03,CITES,P12 reference [24]
+P14,P05,CITES,P14 references
+P02,P05,ANALOGOUS_PROBLEM,Both abstracts: infer multicast tree topology from receiver loss
+P04,P05,SHARES_PRINCIPLE,Both reconstruct from incomplete information (titles)
+P04,P05,EXTENDS,ChatGPT said P04 extends P05
+P07,P05,ANALOGOUS_PROBLEM,Both spread data to many hosts
+P10,P11,USES_METHOD,AI summary of the corpus
+P08,P03,USES_METHOD,P08 mentions neighbor-joining

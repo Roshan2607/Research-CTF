@@ -1,0 +1,21 @@
+source_id,target_id,relationship_type,evidence_reference
+P12,P05,CITES,P12 reference list [23]
+P13,P05,CITES,P13 references
+P02,P05,CITES,P02 references
+P12,P03,CITES,P12 reference [24]
+P14,P05,CITES,P14 references
+P02,P05,ANALOGOUS_PROBLEM,Both abstracts: infer multicast tree topology from receiver loss
+P12,P05,ANALOGOUS_PROBLEM,P12 p.3 lists P05 among multicast probing approaches to routing topology inference
+P12,P03,USES_METHOD,P12 Sec. 4 Algorithm 1 is neighbor-joining (p.13)
+P12,P03,ANALOGOUS_PROBLEM,P12 p.5: network inference problem is similar to phylogenetic inference
+P08,P12,CITES,P08 Sec. 1.3 p.5 refs [19-22]
+P08,P12,SHARES_PRINCIPLE,P08 p.5: like P12 they use distance-based phylogenetic techniques
+P08,P03,CITES,P08 reference [24]
+P08,P03,ANALOGOUS_PROBLEM,P08 p.5: multicast loss problem is a special case of the DNA evolution model
+P06,P03,USES_METHOD,P06 p.3 and p.25: CLNJ uses neighbor-joining
+P06,P01,USES_METHOD,P06 p.3: first step builds the Chow-Liu tree
+P10,P01,EXTENDS,P10 p.5: natural generalization of the Chow-Liu algorithm
+P10,P01,CITES,P10 reference [15]
+P11,P03,CITES,P11 references
+P13,P02,CITES,P13 references
+P05,P03,SHARES_PRINCIPLE,Both rebuild a hidden tree using only leaf observations

@@ -8,6 +8,7 @@
         "C. Liu"
       ],
       "year": 1968,
+      "first_public_year": 1968,
       "venue": "IEEE Transactions on Information Theory",
       "volume": "14",
       "issue": "3",
@@ -39,6 +40,7 @@
         "Don Towsley"
       ],
       "year": 2002,
+      "first_public_year": 2002,
       "venue": "IEEE Transactions on Information Theory",
       "volume": "48",
       "issue": "1",
@@ -68,6 +70,7 @@
         "M Nei"
       ],
       "year": 1987,
+      "first_public_year": 1987,
       "venue": "Molecular Biology and Evolution",
       "volume": "4",
       "issue": "4",
@@ -98,6 +101,7 @@
         "Terence Tao"
       ],
       "year": 2006,
+      "first_public_year": 2006,
       "venue": "IEEE Transactions on Information Theory",
       "volume": "52",
       "issue": "2",
@@ -127,6 +131,7 @@
         "Steven McCanne"
       ],
       "year": 1999,
+      "first_public_year": 1999,
       "venue": "IEEE Conference on Computer Communications (INFOCOM)",
       "volume": null,
       "issue": null,
@@ -158,6 +163,7 @@
         "Alan S. Willsky"
       ],
       "year": 2011,
+      "first_public_year": 2011,
       "venue": "Journal of Machine Learning Research",
       "volume": "12",
       "issue": "49",
@@ -190,6 +196,7 @@
         "John Larson"
       ],
       "year": 1987,
+      "first_public_year": 1987,
       "venue": "ACM Symposium on Principles of Distributed Computing (PODC)",
       "volume": null,
       "issue": null,
@@ -220,6 +227,7 @@
         "Sébastien Roch"
       ],
       "year": 2010,
+      "first_public_year": 2010,
       "venue": "Random Structures and Algorithms",
       "volume": "37",
       "issue": "2",
@@ -248,6 +256,7 @@
         "Y. Vardi"
       ],
       "year": 1996,
+      "first_public_year": 1996,
       "venue": "Journal of the American Statistical Association",
       "volume": "91",
       "issue": "433",
@@ -282,6 +291,7 @@
         "Andrea Califano"
       ],
       "year": 2006,
+      "first_public_year": 2006,
       "venue": "BMC Bioinformatics",
       "volume": "7",
       "issue": "S1",
@@ -313,6 +323,7 @@
         "Tandy J. Warnow"
       ],
       "year": 1999,
+      "first_public_year": 1999,
       "venue": "Random Structures and Algorithms",
       "volume": "14",
       "issue": "2",
@@ -342,6 +353,7 @@
         "Sekhar Tatikonda"
       ],
       "year": 2011,
+      "first_public_year": 2008,
       "venue": "IEEE Transactions on Information Theory",
       "volume": "57",
       "issue": "12",
@@ -375,6 +387,7 @@
         "Yolanda Tsang"
       ],
       "year": 2002,
+      "first_public_year": 2002,
       "venue": "ACM SIGMETRICS International Conference on Measurement and Modeling of Computer Systems (SIGMETRICS)",
       "volume": null,
       "issue": null,
@@ -407,6 +420,7 @@
         "Bin Yu"
       ],
       "year": 2004,
+      "first_public_year": 2004,
       "venue": "Statistical Science",
       "volume": "19",
       "issue": "3",
