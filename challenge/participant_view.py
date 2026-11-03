@@ -33,13 +33,13 @@ PRIMERS = {
         "estimates. To claim one you must **name the principle** and **show it in both papers**."
     ),
     "What does a knowledge graph represent?": (
-        "A set of things (here, papers) joined by typed, directed arrows (relationships). `P07 CITES P02` and "
-        "`P07 USES_METHOD P02` are different arrows with different meanings. A knowledge graph is only as good as "
+        "A set of things (here, papers) joined by typed, directed arrows (relationships). `PX CITES PY` and "
+        "`PX USES_METHOD PY` are different arrows with different meanings. A knowledge graph is only as good as "
         "the evidence behind each arrow."
     ),
     "How do I cite evidence?": (
-        "Give the paper ID plus the place you found it: `P07 p.4, Sec. 2: 'we adopt the estimator of [12]'`, or "
-        "`P07 reference [12] = P02`. A quote or page number beats 'it seemed related'."
+        "Give the paper ID plus the place you found it: `PX p.4, Sec. 2: 'we adopt the estimator of [12]'`, or "
+        "`PX reference [12] = PY`. A quote or page number beats 'it seemed related'."
     ),
     "Why isn't an AI explanation automatically true?": (
         "Language models produce fluent, confident text, including relationships that do not exist. They can also be "
@@ -165,7 +165,7 @@ def _vocabulary(vocab: dict) -> None:
 
 
 def _graph_builder(ids: list[str], rels: list[str]) -> None:
-    st.markdown("Add one row per relationship. Use evidence references like `P07 p.4 Sec. 2` or `P07 ref [12]`.")
+    st.markdown("Add one row per relationship. Use evidence references like `P01 p.4 Sec. 2` or `P01 ref [12]`.")
     up = st.file_uploader("Load an edge list CSV", type=["csv"], key="edge-upload")
     if up is not None and st.button("Replace table with uploaded file"):
         df = pd.read_csv(up, dtype=str, keep_default_na=False)
