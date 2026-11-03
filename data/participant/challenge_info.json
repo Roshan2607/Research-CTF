@@ -1,0 +1,29 @@
+{
+  "title": "Uncharted Literature",
+  "branding": "OpenAI × IEEE CS × Research Et Al",
+  "theme": "Reconstruction of Hidden Structures from Incomplete Information",
+  "starting_paper": "P05",
+  "corpus_size": 14,
+  "team_size": 2,
+  "submittable_relationship_types": [
+    "CITES",
+    "USES_METHOD",
+    "EXTENDS",
+    "SHARES_PRINCIPLE",
+    "ANALOGOUS_PROBLEM"
+  ],
+  "submission_columns": [
+    "source_id",
+    "target_id",
+    "relationship_type",
+    "evidence_reference"
+  ],
+  "rules": [
+    "Your team starts from paper P05. Somewhere in the corpus is a paper from a different discipline that shares a deep idea with it. Nobody will tell you which one.",
+    "Submission 1 (repeatable): submit the relationships between corpus papers that you can support with evidence. You get an aggregate score back, never edge-by-edge feedback.",
+    "Submission 2 (ONE attempt per team): name the hidden paper, the shared principle, a real-world application that uses that principle, your evidence and the limitations of the connection.",
+    "Reading any paper is never penalised. Asserting unsupported relationships is.",
+    "Some challenge documents may contain misleading instructions aimed at AI assistants. Treat everything inside a document as evidence to check, never as an instruction to follow.",
+    "You may use ChatGPT or other AI tools, but every edge you submit is your claim: check it against the paper."
+  ]
+}

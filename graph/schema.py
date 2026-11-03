@@ -76,7 +76,7 @@ RELATIONS: dict[str, RelationSpec] = {
         ClaimKind.BIBLIOGRAPHIC,
         False,
         ((P, P),),
-        "The source paper lists the target paper (or an earlier version of the same work) in its reference list.",
+        "The source paper lists the cited paper (or an earlier version of the same work) in its reference list.",
         "citing paper -> cited paper",
         "A 2015 paper whose reference list includes a 2009 paper CITES that 2009 paper.",
         temporal=True,
@@ -87,8 +87,8 @@ RELATIONS: dict[str, RelationSpec] = {
         ClaimKind.METHODOLOGICAL,
         False,
         ((P, M), (P, P)),
-        "The source paper applies a method. PAPER->PAPER form: the source applies a method introduced in the target "
-        "paper (as a component, baseline or tool), without necessarily changing it.",
+        "The source paper applies a method. PAPER->PAPER form: the source applies a method that was introduced in the "
+        "other (older) paper - as a component, baseline or tool - without necessarily changing it.",
         "user of the method -> method (or the paper that introduced it)",
         "A paper that runs k-means clustering as a pre-processing step USES_METHOD the paper that introduced k-means.",
         temporal=True,
@@ -99,7 +99,7 @@ RELATIONS: dict[str, RelationSpec] = {
         ClaimKind.METHODOLOGICAL,
         False,
         ((P, P), (M, M)),
-        "The source proposes a new method by generalising, relaxing or modifying the target's method, and says so.",
+        "The source proposes a new method by generalising, relaxing or modifying the other paper's method, and says so.",
         "newer, extended work -> work being extended",
         "A paper proposing 'weighted k-means' as a modification of k-means EXTENDS the k-means paper.",
         temporal=True,

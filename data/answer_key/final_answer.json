@@ -1,0 +1,65 @@
+{
+  "_comment": "ORGANISER ONLY - plain-text answer key for Submission 2 (one-shot research discovery flag). The participant-serving validator does not read this file: scripts/build_challenge.py derives data/answer_key/flag_registry.json, which holds only HMAC-SHA256 tokens keyed by the server-side secret FLAG_HMAC_SECRET.",
+  "base_participant_id": "P05",
+  "target_participant_id": "P03",
+  "hidden_connection": {
+    "source": "PAPER_RATNASAMY1999",
+    "target": "PAPER_SAITOUNEI1987",
+    "type": "SHARES_PRINCIPLE",
+    "principle_node": "PRIN_LEAF_ONLY_TREE",
+    "statement": "Ratnasamy & McCanne (multicast networking, 1999) and Saitou & Nei (evolutionary biology, 1987) solve the same abstract problem: recover an unobserved branching tree when measurements exist only at its leaves (multicast receivers / extant species). Both rely on the fact that two leaves' similarity (correlated packet loss / small evolutionary distance) reflects how much of the hidden tree they share. Both rebuild the internal structure, including nodes nobody observed (routers / common ancestors), from leaf-only data.",
+    "evidence": [
+      {"supporting_source": "PAPER_RATNASAMY1999", "doi_or_url": "https://doi.org/10.1109/INFCOM.1999.749302", "location": "Abstract", "basis": "abstract",
+       "quote": "we explore the problem of inferring the internal structure of a multicast distribution tree using only observations made at the end hosts. By noting correlations of loss patterns across the receiver set ... we can determine both the underlying multicast tree structure"},
+      {"supporting_source": "PAPER_SAITOUNEI1987", "doi_or_url": "https://doi.org/10.1093/oxfordjournals.molbev.a040454", "location": "Abstract", "basis": "abstract",
+       "quote": "The principle of this method is to find pairs of operational taxonomic units (OTUs [= neighbors]) that minimize the total branch length at each stage of clustering of OTUs starting with a starlike tree."},
+      {"supporting_source": "PAPER_NITATIKONDA2011", "doi_or_url": "https://arxiv.org/abs/0809.0158", "location": "Sec. 2, p.5", "basis": "full text (independent bridging statement)",
+       "quote": "the network inference problem is similar to the phylogenetic inference problem in evolutionary biology ... The mathematical models of the two problems are very similar, except that in the network inference problem we can control and observe the source node"},
+      {"supporting_source": "PAPER_CASTRO2004", "doi_or_url": "https://doi.org/10.1214/088342304000000422", "location": "Abstract", "basis": "abstract (review)",
+       "quote": "tomographic image reconstruction and phylogenetic tree identification have interesting connections to those arising in networking"},
+      {"supporting_source": "PAPER_COATES2002", "doi_or_url": "https://doi.org/10.1145/511334.511337", "location": "Abstract", "basis": "abstract",
+       "quote": "other recent proposals for topology identification that employ suboptimal, pair-merging strategies"}
+    ],
+    "status": "VERIFIED",
+    "reviewer_notes": "The shared principle (leaf-only hidden-tree reconstruction from shared-path similarity) is verified from the abstracts plus two independent bridging sources (Ni & Tatikonda; Castro et al.). The narrower claim that Ratnasamy & McCanne's grouping is specifically agglomerative PAIR-merging, like neighbor-joining, rests on Coates et al.'s description of 'recent proposals' and needs confirmation from the Ratnasamy & McCanne full text (Sec. 3). Neither paper cites the other; no historical lineage is claimed.",
+    "differences": [
+      "Networking controls and observes the root (the multicast source); phylogenetics does not observe the common ancestor (Ni & Tatikonda p.5).",
+      "The similarity signals differ: packet-loss correlation (a statistical estimate from probes) vs evolutionary distance (from sequence differences).",
+      "Neighbor-joining outputs an unrooted tree with branch lengths; multicast inference wants a rooted logical tree plus link performance."
+    ]
+  },
+  "principle_keyword_groups": {
+    "_comment": "Advisory only: helps the organiser triage free-text explanations. Never used to auto-accept a flag.",
+    "tree_structure": ["tree", "phylogen", "topolog", "branch", "hierarch"],
+    "leaf_only_observation": ["leaf", "leaves", "end host", "end-host", "endpoint", "end point", "end-to-end", "receiver", "extant", "tips", "only observ", "observed only"],
+    "hidden_internal": ["hidden", "internal", "latent", "unobserved", "ancestor", "router", "invisible"],
+    "shared_path_similarity": ["distance", "metric", "additive", "shared path", "correlat", "similar", "pair", "neighbo", "cluster", "group"]
+  },
+  "application": {
+    "canonical": "Nextstrain",
+    "normalised_aliases": ["nextstrain", "nextstrainorg", "nextstrainaugur", "nextstrainauspice", "nextstrainaugurauspice", "nextstrainplatform"],
+    "operationalises": "PRIN_LEAF_ONLY_TREE",
+    "summary": "Nextstrain builds phylogenetic trees of pathogens such as SARS-CoV-2 and influenza from sampled genomes (the leaves) and infers the unobserved ancestors: their sequences (augur ancestral / TreeTime), dates (augur refine --timetree) and, where configured, locations. Public-health teams use it to track outbreak spread in near real time.",
+    "evidence": [
+      {"source": "Hadfield et al. 2018, Bioinformatics 34(23):4121-4123", "url": "https://doi.org/10.1093/bioinformatics/bty407", "quote": "Nextstrain consists of a database of viral genomes, a bioinformatics pipeline for phylodynamics analysis, and an interactive visualization platform."},
+      {"source": "Augur documentation - augur tree", "url": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/tree.html", "quote": "--method Possible choices: fasttree, raxml, iqtree ... Default: 'iqtree'"},
+      {"source": "Augur documentation - augur ancestral", "url": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/ancestral.html", "quote": "Each internal node gets assigned a nucleotide sequence that maximizes a likelihood on the tree given its descendants and its parent node."},
+      {"source": "Nextstrain documentation - How to read a phylogenetic tree", "url": "https://docs.nextstrain.org/en/latest/learn/interpret/how-to-read-a-tree.html", "quote": "possible locations of internal nodes can be inferred using mathematical models as well"}
+    ],
+    "limitations_and_differences": [
+      "No historical lineage is claimed: Nextstrain was not derived from Ratnasamy & McCanne, and its default tree builder is IQ-TREE (maximum likelihood), not neighbor-joining.",
+      "Nextstrain works on sequence alignments with explicit substitution models; the networking papers work on loss/delay statistics.",
+      "Internal-node inferences (ancestral states, dates, locations) are model-based and depend on sampling. Nextstrain's own documentation warns that interpretation 'should be done with caution'."
+    ],
+    "lineage_claim": "none"
+  },
+  "alternative_applications_policy": "Any other application is sent to MANUAL_REVIEW, never auto-rejected. Accept it if the team shows, with credible primary evidence (official documentation, a peer-reviewed system paper or a patent), that the product routinely reconstructs a hidden tree, including unobserved internal nodes, from leaf-only measurements. Accepted alternatives are added to accepted_alternative_applications (normalised) and the flag registry is rebuilt.",
+  "accepted_alternative_applications": [],
+  "rubric": {
+    "target_identified": "Required for a CORRECT flag: target_participant_id must match.",
+    "application": "Canonical alias -> CORRECT; anything else -> MANUAL_REVIEW.",
+    "principle_explanation": "Organiser judgement guided by principle_keyword_groups (advisory score 0-4).",
+    "evidence": "At least one paper reference and one application source are required for submission.",
+    "limitations": "A non-empty limitations statement is required for submission. Reward answers that say no historical lineage is established."
+  }
+}

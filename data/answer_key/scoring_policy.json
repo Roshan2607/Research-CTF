@@ -1,0 +1,42 @@
+{
+  "_comment": "ORGANISER ONLY. How Submission 1 (graph reconstruction) edges are classified. Reference edges are derived automatically from VERIFIED paper-to-paper edges in master_graph.json; this file adds the neutral set and the false-edge classes. All identifiers are participant IDs.",
+  "hidden_pairs": {
+    "_comment": "Any relationship between base and target is neutral (neither TP nor FP), so the iterative scorer cannot be used as an oracle for the hidden connection.",
+    "pairs": [["P03", "P05"]]
+  },
+  "neutral_from_master_statuses": ["REQUIRES_REVIEW"],
+  "neutral_rules": [
+    {
+      "id": "hidden-tree-cluster",
+      "description": "Conceptual / interpretive links among papers that genuinely address hidden-tree reconstruction or its survey are defensible even when no single passage states them. Neutral unless already a reference edge.",
+      "relations": ["SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM"],
+      "among": ["P02", "P03", "P05", "P06", "P08", "P11", "P12", "P13", "P14"]
+    },
+    {
+      "id": "mutual-information-cluster",
+      "description": "Chow-Liu, latent-tree learning and ARACNE share a mutual-information / dependence-tree foundation.",
+      "relations": ["SHARES_PRINCIPLE"],
+      "among": ["P01", "P06", "P10"]
+    },
+    {
+      "id": "inverse-problem-family",
+      "description": "Network tomography and sparse recovery are all indirect-measurement inverse problems. Defensible as ANALOGOUS_PROBLEM, but not the hidden-tree principle.",
+      "relations": ["ANALOGOUS_PROBLEM"],
+      "among": ["P02", "P04", "P08", "P09", "P12", "P13", "P14"],
+      "require_member": ["P04", "P09"]
+    }
+  ],
+  "neutral_explicit": [
+    ["P02", "P05", "EXTENDS"],
+    ["P13", "P05", "EXTENDS"],
+    ["P12", "P05", "EXTENDS"],
+    ["P12", "P02", "EXTENDS"],
+    ["P13", "P02", "EXTENDS"],
+    ["P12", "P13", "EXTENDS"],
+    ["P06", "P11", "USES_METHOD"]
+  ],
+  "ordinary_rejected_from_master": "Paper-to-paper edges marked REJECTED in master_graph.json with false_edge_class 'ordinary' (e.g. P08 USES_METHOD P03) are listed for documentation; they score as ordinary false positives.",
+  "decoy_edges_file": "decoys.json",
+  "injection_edges_file": "injection_annotations.json",
+  "review_queue": "Any false-positive edge submitted with a non-empty evidence_reference is copied to the organiser review queue. Promoted edges join the reference set via data/submissions/accepted_additions.json and teams are rescored."
+}

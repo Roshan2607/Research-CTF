@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 import sys
 import time
 import urllib.parse
@@ -64,6 +65,33 @@ def _abstract(inv: dict | None) -> str | None:
     return " ".join(pos[i] for i in sorted(pos))
 
 
+_IEEE_SPL = {
+    "isin": "∈", "Omega": "Ω", "delta": "δ", "les": "≤", "ges": "≥", "lscr": "ℓ", "middot": "·",
+    "sigma": "Σ", "tau": "τ", "infin": "∞", "alpha": "α", "beta": "β", "lambda": "λ",
+}
+
+
+def clean_abstract(text: str | None, fixes: list[list[str]] | None = None) -> str | None:
+    """Remove indexing artefacts without changing the authors' wording.
+
+    * leading "Abstract" / "Abstract—" labels and trailing copyright / index-term blocks;
+    * IEEE Xplore markup (``/spl isin/``, ``/sub M/``, ``/sup N/``) rendered as symbols;
+    * explicit, organiser-listed word-split repairs from the seed (``abstract_fixes``).
+    """
+    if not text:
+        return text
+    t = re.sub(r"^\s*Abstract\s*[—:\-–]?\s*", "", text)
+    t = re.sub(r"\s*Index Terms\s*[—:\-–].*$", "", t, flags=re.S)
+    t = re.sub(r"\s*©\s*\d{4}.*$", "", t, flags=re.S)
+    t = re.sub(r"/spl ([A-Za-z]+)/", lambda m: _IEEE_SPL.get(m.group(1), m.group(1)), t)
+    t = re.sub(r"/sub ?([^/]*)/", lambda m: "_" + m.group(1).strip(), t)
+    t = re.sub(r"/sup ?([^/]*)/", lambda m: "^" + m.group(1).strip(), t)
+    t = t.replace("‐", "-")
+    for old, new in fixes or []:
+        t = t.replace(old, new)
+    return re.sub(r"\s+", " ", t).strip()
+
+
 def resolve(entry: dict) -> dict:
     doi = entry["doi"]
     work = None
@@ -77,7 +105,9 @@ def resolve(entry: dict) -> dict:
     crm = cr.get("message", {}) if cr else {}
     biblio = work.get("biblio") or {}
     source = ((work.get("primary_location") or {}).get("source") or {})
-    abstract = entry.get("abstract_override") or _abstract(work.get("abstract_inverted_index"))
+    abstract = entry.get("abstract_override") or clean_abstract(
+        _abstract(work.get("abstract_inverted_index")), entry.get("abstract_fixes")
+    )
     record = {
         "internal_id": entry["internal_id"],
         "title": (work.get("title") or crm.get("title", [""])[0]).rstrip("."),
@@ -100,7 +130,7 @@ def resolve(entry: dict) -> dict:
         "abstract": abstract,
         "abstract_source": "organiser override (see override_notes)"
         if entry.get("abstract_override")
-        else "OpenAlex abstract_inverted_index",
+        else "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
         "override_notes": entry.get("override_notes"),
         "openalex_id": work["id"],
         "openalex_referenced_works": work.get("referenced_works", []),

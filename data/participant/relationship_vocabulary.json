@@ -1,0 +1,73 @@
+{
+  "relationship_types": [
+    {
+      "relationship_type": "CITES",
+      "claim_kind": "bibliographic",
+      "symmetric": false,
+      "direction": "citing paper -> cited paper",
+      "meaning": "The source paper lists the cited paper (or an earlier version of the same work) in its reference list.",
+      "example": "A 2015 paper whose reference list includes a 2009 paper CITES that 2009 paper.",
+      "allowed_signatures": [
+        "PAPER->PAPER"
+      ],
+      "usable_in_graph_submission": true
+    },
+    {
+      "relationship_type": "USES_METHOD",
+      "claim_kind": "methodological",
+      "symmetric": false,
+      "direction": "user of the method -> method (or the paper that introduced it)",
+      "meaning": "The source paper applies a method. PAPER->PAPER form: the source applies a method that was introduced in the other (older) paper - as a component, baseline or tool - without necessarily changing it.",
+      "example": "A paper that runs k-means clustering as a pre-processing step USES_METHOD the paper that introduced k-means.",
+      "allowed_signatures": [
+        "PAPER->METHOD",
+        "PAPER->PAPER"
+      ],
+      "usable_in_graph_submission": true
+    },
+    {
+      "relationship_type": "EXTENDS",
+      "claim_kind": "methodological",
+      "symmetric": false,
+      "direction": "newer, extended work -> work being extended",
+      "meaning": "The source proposes a new method by generalising, relaxing or modifying the other paper's method, and says so.",
+      "example": "A paper proposing 'weighted k-means' as a modification of k-means EXTENDS the k-means paper.",
+      "allowed_signatures": [
+        "PAPER->PAPER",
+        "METHOD->METHOD"
+      ],
+      "usable_in_graph_submission": true
+    },
+    {
+      "relationship_type": "SHARES_PRINCIPLE",
+      "claim_kind": "conceptual",
+      "symmetric": true,
+      "direction": "symmetric (order does not matter; stored with the smaller ID first)",
+      "meaning": "Both papers' methods depend on the same underlying principle (named in the evidence), even if they use different vocabulary. A conceptual claim: you must name the principle and show it in both papers.",
+      "example": "A GPS-positioning paper and an earthquake-location paper both locate a source by intersecting distance estimates (trilateration), so they SHARE_PRINCIPLE.",
+      "allowed_signatures": [
+        "PAPER->PAPER"
+      ],
+      "usable_in_graph_submission": true
+    },
+    {
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "claim_kind": "interpretive",
+      "symmetric": true,
+      "direction": "symmetric (order does not matter; stored with the smaller ID first)",
+      "meaning": "The problems the two papers solve have the same abstract structure (what is hidden, what is observed, what must be inferred), possibly in different settings or disciplines. An interpretation: it needs evidence that an author draws the analogy, or a clear mapping between the problem statements.",
+      "example": "Locating a phone from cell-tower signal delays is ANALOGOUS_PROBLEM to locating an earthquake epicentre from seismograph arrival times; a paper that says so is evidence.",
+      "allowed_signatures": [
+        "PAPER->PAPER",
+        "PROBLEM->PROBLEM"
+      ],
+      "usable_in_graph_submission": true
+    }
+  ],
+  "notes": [
+    "Use participant IDs (P01, P02, ...) for source_id and target_id.",
+    "SHARES_PRINCIPLE and ANALOGOUS_PROBLEM are symmetric: P01-P02 and P02-P01 are the same edge.",
+    "CITES, USES_METHOD and EXTENDS are directed from the newer/using paper to the older/used paper.",
+    "Only assert a relationship you can point to evidence for. Wrong types count as wrong edges."
+  ]
+}

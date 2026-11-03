@@ -1,0 +1,38 @@
+{
+  "_comment": "ORGANISER ONLY - never served to participants. Canonical navigation path through the verified paper-to-paper graph.",
+  "base": {"internal_id": "PAPER_RATNASAMY1999", "participant_id": "P05"},
+  "target": {"internal_id": "PAPER_SAITOUNEI1987", "participant_id": "P03"},
+  "path": ["PAPER_RATNASAMY1999", "PAPER_NITATIKONDA2011", "PAPER_BHAMIDI2010", "PAPER_SAITOUNEI1987"],
+  "path_participant_ids": ["P05", "P12", "P08", "P03"],
+  "transitions": [
+    {
+      "from": "PAPER_RATNASAMY1999",
+      "to": "PAPER_NITATIKONDA2011",
+      "supporting_edges": [
+        ["PAPER_NITATIKONDA2011", "PAPER_RATNASAMY1999", "CITES"],
+        ["PAPER_NITATIKONDA2011", "PAPER_RATNASAMY1999", "ANALOGOUS_PROBLEM"]
+      ],
+      "narrative": "Ratnasamy & McCanne infer a multicast tree from what receivers observe. Ni & Tatikonda cite them among multicast-probing approaches to the same routing-topology inference problem and recast it with additive metrics, stating that it 'is similar to the phylogenetic inference problem in evolutionary biology' (p.5)."
+    },
+    {
+      "from": "PAPER_NITATIKONDA2011",
+      "to": "PAPER_BHAMIDI2010",
+      "supporting_edges": [
+        ["PAPER_BHAMIDI2010", "PAPER_NITATIKONDA2011", "CITES"],
+        ["PAPER_BHAMIDI2010", "PAPER_NITATIKONDA2011", "SHARES_PRINCIPLE"]
+      ],
+      "narrative": "Bhamidi, Rajagopal & Roch (applied probability) discuss Ni & Tatikonda's neighbor-joining approach and state that both use distance-based phylogenetic techniques on additive tree metrics (p.5). They also explain why NJ itself is sample-hungry (p.7)."
+    },
+    {
+      "from": "PAPER_BHAMIDI2010",
+      "to": "PAPER_SAITOUNEI1987",
+      "supporting_edges": [
+        ["PAPER_BHAMIDI2010", "PAPER_SAITOUNEI1987", "CITES"],
+        ["PAPER_BHAMIDI2010", "PAPER_SAITOUNEI1987", "ANALOGOUS_PROBLEM"]
+      ],
+      "narrative": "Bhamidi et al. cite Saitou & Nei (ref. [24]) and argue that multicast inference is 'in essence a special case of the standard model of DNA evolution', i.e. the phylogenetic tree reconstruction problem that neighbor-joining solves."
+    }
+  ],
+  "why_this_path": "Every transition is backed by both a bibliographic fact (CITES) and a located methodological / conceptual / interpretive passage. The path also crosses three discipline groups (networking -> applied probability -> evolutionary biology), so a team has to read across vocabularies. It is not the shortest route; see alternative_paths.json.",
+  "transition_count_secret": 3
+}

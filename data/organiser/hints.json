@@ -1,0 +1,9 @@
+{
+  "_comment": "ORGANISER ONLY until released. Hints narrow the conceptual search space without naming papers, the number of transitions or the application. The organiser releases them from the console; released hints are recorded in data/submissions/hint_state.json.",
+  "hints": [
+    {"id": 1, "suggested_release_minute": 115, "text": "Investigate how different disciplines reconstruct relationships or structures from incomplete observations."},
+    {"id": 2, "suggested_release_minute": 125, "text": "Look for mathematical or computational methods that represent branching, evolving, or partially observed relationships."},
+    {"id": 3, "suggested_release_minute": 135, "text": "Investigate how methods for inferring hidden structures from indirect observations can be used across otherwise unrelated domains."},
+    {"id": 4, "suggested_release_minute": 145, "text": "When you think you have found the shared idea, ask where it runs every day outside research: which widely used tool would stop working if that idea were wrong?"}
+  ]
+}

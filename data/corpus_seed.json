@@ -7,7 +7,22 @@
       "doi": "10.1109/TIT.1968.1054142",
       "domain": "DOM_CS",
       "open_access_url": null,
-      "access_note": "Paywalled (IEEE). Abstract and bibliographic metadata only."
+      "access_note": "Paywalled (IEEE). Abstract and bibliographic metadata only.",
+      "abstract_fixes": [
+        [
+          "ann-dimensional",
+          "an n-dimensional"
+        ],
+        [
+          "ofn - 1first",
+          "of n - 1 first"
+        ],
+        [
+          "thenvariables",
+          "the n variables"
+        ]
+      ],
+      "override_notes": "OpenAlex abstract has three word-split artefacts ('ann-dimensional', 'ofn - 1first', 'thenvariables'); repaired via abstract_fixes."
     },
     {
       "internal_id": "PAPER_DUFFIELD2002",
@@ -28,7 +43,8 @@
       "doi": "10.1109/TIT.2005.862083",
       "domain": "DOM_SIG",
       "open_access_url": "https://arxiv.org/abs/math/0409186",
-      "access_note": "Preprint on arXiv (math/0409186)."
+      "access_note": "Preprint on arXiv (math/0409186).",
+      "override_notes": "IEEE Xplore math markup (/spl isin/, /sub M/, ...) is rendered as Unicode symbols by clean_abstract; wording unchanged."
     },
     {
       "internal_id": "PAPER_RATNASAMY1999",
@@ -63,7 +79,14 @@
       "doi": "10.1002/rsa.20305",
       "domain": "DOM_SIG",
       "open_access_url": "https://arxiv.org/abs/math/0604367",
-      "access_note": "Open access (arXiv math/0604367v2). Full text reviewed by organiser."
+      "access_note": "Open access (arXiv math/0604367v2). Full text reviewed by organiser.",
+      "abstract_fixes": [
+        [
+          "poly(logn)",
+          "poly(log n)"
+        ]
+      ],
+      "override_notes": "OpenAlex abstract: leading 'Abstract' label and trailing publisher copyright removed; 'poly(logn)' spacing repaired."
     },
     {
       "internal_id": "PAPER_VARDI1996",
