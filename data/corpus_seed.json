@@ -1,0 +1,161 @@
+{
+  "_comment": "Organiser-authored seed list for the research corpus. scripts/fetch_metadata.py resolves each entry against OpenAlex (and Crossref for bibliographic detail) and writes data/source_manifest.json. Overrides are applied only where the API record is missing or corrupted, and every override is documented in 'override_notes'.",
+  "theme": "Reconstruction of Hidden Structures from Incomplete Information",
+  "papers": [
+    {
+      "internal_id": "PAPER_CHOWLIU1968",
+      "doi": "10.1109/TIT.1968.1054142",
+      "domain": "DOM_CS",
+      "open_access_url": null,
+      "access_note": "Paywalled (IEEE). Abstract and bibliographic metadata only.",
+      "abstract_fixes": [
+        [
+          "ann-dimensional",
+          "an n-dimensional"
+        ],
+        [
+          "ofn - 1first",
+          "of n - 1 first"
+        ],
+        [
+          "thenvariables",
+          "the n variables"
+        ]
+      ],
+      "override_notes": "OpenAlex abstract has three word-split artefacts ('ann-dimensional', 'ofn - 1first', 'thenvariables'); repaired via abstract_fixes."
+    },
+    {
+      "internal_id": "PAPER_DUFFIELD2002",
+      "doi": "10.1109/18.971737",
+      "domain": "DOM_NET",
+      "open_access_url": null,
+      "access_note": "Paywalled (IEEE). Abstract and bibliographic metadata only."
+    },
+    {
+      "internal_id": "PAPER_SAITOUNEI1987",
+      "doi": "10.1093/oxfordjournals.molbev.a040454",
+      "domain": "DOM_BIO",
+      "open_access_url": "https://academic.oup.com/mbe/article-pdf/4/4/406/11167444/7sait.pdf",
+      "access_note": "Free to read at the publisher (OpenAlex oa_status: bronze). Not redistributed; link only."
+    },
+    {
+      "internal_id": "PAPER_CANDES2006",
+      "doi": "10.1109/TIT.2005.862083",
+      "domain": "DOM_SIG",
+      "open_access_url": "https://arxiv.org/abs/math/0409186",
+      "access_note": "Preprint on arXiv (math/0409186).",
+      "override_notes": "IEEE Xplore math markup (/spl isin/, /sub M/, ...) is rendered as Unicode symbols by clean_abstract; wording unchanged."
+    },
+    {
+      "internal_id": "PAPER_RATNASAMY1999",
+      "doi": "10.1109/INFCOM.1999.749302",
+      "domain": "DOM_NET",
+      "open_access_url": null,
+      "access_note": "Paywalled (IEEE INFOCOM). Abstract and bibliographic metadata only."
+    },
+    {
+      "internal_id": "PAPER_CHOI2011",
+      "doi": "10.48550/arXiv.1009.2722",
+      "openalex": "W1493795868",
+      "domain": "DOM_CS",
+      "open_access_url": "https://arxiv.org/abs/1009.2722",
+      "published_version": "Journal of Machine Learning Research 12(49):1771-1812, 2011 (https://jmlr.org/papers/v12/)",
+      "year_override": 2011,
+      "venue_override": "Journal of Machine Learning Research",
+      "access_note": "Open access (arXiv 1009.2722; JMLR). Full text reviewed by organiser.",
+      "override_notes": "OpenAlex indexes the arXiv record (year 2010); the JMLR publication year 2011 is used. OpenAlex lists no referenced works for this record, so citation edges were verified from the reference list in the full text."
+    },
+    {
+      "internal_id": "PAPER_DEMERS1987",
+      "doi": "10.1145/41840.41841",
+      "domain": "DOM_NET",
+      "open_access_url": "https://dl.acm.org/doi/pdf/10.1145/41840.41841",
+      "access_note": "Free to read at ACM Digital Library (bronze OA). Not redistributed; link only.",
+      "abstract_override": "When a database is replicated at many sites, maintaining mutual consistency among the sites in the face of updates is a significant problem. This paper describes several randomized algorithms for distributing updates and driving the replicas toward consistency. The algorithms are very simple and require few guarantees from the underlying communication system, yet they ensure that the effect of every update is eventually reflected in all replicas. The cost and performance of the algorithms are tuned by choosing appropriate distributions in the randomization step. The algorithms are closely analogous to epidemics, and the epidemiology literature aids in understanding their behavior. One of the algorithms has been implemented in the Clearinghouse servers of the Xerox Corporate Internet, solving long-standing problems of high traffic and database inconsistency.",
+      "override_notes": "The OpenAlex abstract for this record is corrupted OCR. The override is a character-level repair of that OCR text (no words added or removed in meaning). REVIEWER: confirm against the ACM PDF before distributing."
+    },
+    {
+      "internal_id": "PAPER_BHAMIDI2010",
+      "doi": "10.1002/rsa.20305",
+      "domain": "DOM_SIG",
+      "open_access_url": "https://arxiv.org/abs/math/0604367",
+      "access_note": "Open access (arXiv math/0604367v2). Full text reviewed by organiser.",
+      "abstract_fixes": [
+        [
+          "poly(logn)",
+          "poly(log n)"
+        ]
+      ],
+      "override_notes": "OpenAlex abstract: leading 'Abstract' label and trailing publisher copyright removed; 'poly(logn)' spacing repaired."
+    },
+    {
+      "internal_id": "PAPER_VARDI1996",
+      "doi": "10.1080/01621459.1996.10476697",
+      "domain": "DOM_SIG",
+      "open_access_url": null,
+      "access_note": "Paywalled (JASA). Abstract and bibliographic metadata only."
+    },
+    {
+      "internal_id": "PAPER_MARGOLIN2006",
+      "doi": "10.1186/1471-2105-7-S1-S7",
+      "domain": "DOM_BIO",
+      "open_access_url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-S1-S7",
+      "access_note": "Open access (BMC Bioinformatics). Full text reviewed by organiser."
+    },
+    {
+      "internal_id": "PAPER_ERDOS1999",
+      "doi": "10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+      "domain": "DOM_CS",
+      "open_access_url": null,
+      "access_note": "Paywalled (Wiley). Abstract and bibliographic metadata only."
+    },
+    {
+      "internal_id": "PAPER_NITATIKONDA2011",
+      "doi": "10.1109/TIT.2011.2168901",
+      "domain": "DOM_NET",
+      "open_access_url": "https://arxiv.org/abs/0809.0158",
+      "first_public_year": 2008,
+      "access_note": "Published version paywalled (IEEE); author preprint open on arXiv (0809.0158). Full text of the preprint reviewed by organiser. A conference version appeared at CISS 2008 (doi:10.1109/CISS.2008.4558692).",
+      "abstract_source": "arxiv",
+      "abstract_override": "Inference of the network structure (e.g., routing topology) and dynamics (e.g., link performance) is an essential component in many network design and management tasks. In this paper we propose a new, general framework for analyzing and designing routing topology and link performance inference algorithms using ideas and tools from phylogenetic inference in evolutionary biology. The framework is applicable to a variety of measurement techniques. Based on the framework we introduce and develop several polynomial-time distance-based inference algorithms with provable performance. We provide sufficient conditions for the correctness of the algorithms. We show that the algorithms are consistent (return correct topology and link performance with an increasing sample size) and robust (can tolerate a certain level of measurement errors). In addition, we establish certain optimality properties of the algorithms (i.e., they achieve the optimal l-infinity-radius) and demonstrate their effectiveness via model simulation.",
+      "override_notes": "OpenAlex has no abstract for the IEEE record; the arXiv abstract (author-provided) is used, with the LaTeX $l_\\infty$ rendered as 'l-infinity'."
+    },
+    {
+      "internal_id": "PAPER_COATES2002",
+      "doi": "10.1145/511334.511337",
+      "domain": "DOM_NET",
+      "open_access_url": null,
+      "access_note": "Paywalled (ACM SIGMETRICS). Abstract and bibliographic metadata only."
+    },
+    {
+      "internal_id": "PAPER_CASTRO2004",
+      "doi": "10.1214/088342304000000422",
+      "domain": "DOM_SIG",
+      "open_access_url": "https://projecteuclid.org/journals/statistical-science/volume-19/issue-3/Network-Tomography-Recent-Developments/10.1214/088342304000000422.full",
+      "access_note": "Open access at Project Euclid. Review article (secondary source). Abstract reviewed; automated full-text download was blocked by the host."
+    }
+  ],
+  "domains": {
+    "DOM_BIO": "Biology & biomedical science",
+    "DOM_CS": "Computer science, graph theory & machine learning",
+    "DOM_NET": "Networking & distributed systems",
+    "DOM_SIG": "Signal processing, statistics & applied mathematics"
+  },
+  "participant_id_assignment": {
+    "_comment": "Neutral identifiers. Assigned by a shuffled order so that IDs carry no information about chronology, domain or challenge role.",
+    "PAPER_CHOWLIU1968": "P01",
+    "PAPER_DUFFIELD2002": "P02",
+    "PAPER_SAITOUNEI1987": "P03",
+    "PAPER_CANDES2006": "P04",
+    "PAPER_RATNASAMY1999": "P05",
+    "PAPER_CHOI2011": "P06",
+    "PAPER_DEMERS1987": "P07",
+    "PAPER_BHAMIDI2010": "P08",
+    "PAPER_VARDI1996": "P09",
+    "PAPER_MARGOLIN2006": "P10",
+    "PAPER_ERDOS1999": "P11",
+    "PAPER_NITATIKONDA2011": "P12",
+    "PAPER_COATES2002": "P13",
+    "PAPER_CASTRO2004": "P14"
+  }
+}

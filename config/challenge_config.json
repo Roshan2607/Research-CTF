@@ -1,0 +1,25 @@
+{
+  "_comment": "Organiser-adjustable configuration. False-positive weights are PROVISIONAL and should be tuned after a pilot run.",
+  "workshop_title": "Uncharted Literature",
+  "branding": "OpenAI \u00d7 IEEE CS \u00d7 Research Et Al",
+  "theme": "Reconstruction of Hidden Structures from Incomplete Information",
+  "fp_weights": {
+    "ordinary": 1.0,
+    "decoy_induced": 0.5,
+    "injection_induced": 3.0
+  },
+  "decoy_incident_default": true,
+  "graph_submission": {
+    "max_submissions_per_team": 15,
+    "min_seconds_between_submissions": 60,
+    "max_rows": 300,
+    "leaderboard_split": "public",
+    "public_fraction": 0.5,
+    "split_seed": 20261103
+  },
+  "final_submission": {
+    "deadline": "2026-12-31T23:59:00+00:00",
+    "reveal_results_after_deadline": true
+  },
+  "team_size": 2
+}

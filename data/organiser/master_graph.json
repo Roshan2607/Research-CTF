@@ -1,0 +1,3004 @@
+{
+  "_comment": "ORGANISER ONLY. Master heterogeneous knowledge graph. The hidden base-target connection is deliberately NOT stored here; see data/answer_key/final_answer.json.",
+  "version": 1,
+  "nodes": [
+    {
+      "id": "PAPER_CHOWLIU1968",
+      "type": "PAPER",
+      "participant_id": "P01",
+      "title": "Approximating discrete probability distributions with dependence trees",
+      "authors": [
+        "C. Chow",
+        "C. Liu"
+      ],
+      "year": 1968,
+      "first_public_year": 1968,
+      "venue": "IEEE Transactions on Information Theory",
+      "volume": "14",
+      "issue": "3",
+      "pages": "462-467",
+      "doi": "10.1109/TIT.1968.1054142",
+      "doi_url": "https://doi.org/10.1109/TIT.1968.1054142",
+      "open_access_url": null,
+      "access_note": "Paywalled (IEEE). Abstract and bibliographic metadata only.",
+      "abstract": "A method is presented to approximate optimally an n-dimensional discrete probability distribution by a product of second-order distributions, or the distribution of the first-order tree dependence. The problem is to find an optimum set of n - 1 first order dependence relationship among the n variables. It is shown that the procedure derived in this paper yields an approximation of a minimum difference in information. It is further shown that when this procedure is applied to empirical observations from an unknown distribution of tree dependence, the procedure is the maximum-likelihood estimate of the distribution.",
+      "domain": "DOM_CS",
+      "key_problem": "Approximate an n-dimensional discrete probability distribution by a product of second-order (pairwise) distributions arranged as a tree of dependencies.",
+      "methods": [
+        "Choose the optimal set of n-1 first-order dependence relationships (the optimal dependence tree)",
+        "Maximum-likelihood estimation of a tree-dependent distribution from empirical observations"
+      ],
+      "findings": [
+        "The procedure yields the approximation with minimum difference in information",
+        "Applied to samples from a tree-dependent distribution, it is the maximum-likelihood estimate"
+      ],
+      "limitations": [
+        "All variables are assumed to be observed - no hidden (latent) variables (cf. Choi et al. 2011, p.3: 'the Chow-Liu tree for the observed variables without any hidden nodes')",
+        "Restricted to tree-structured dependence",
+        "Organiser read abstract only"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)",
+        "Choi et al. 2011 Sec. 5.1 reviews the algorithm (p.14)"
+      ]
+    },
+    {
+      "id": "PAPER_DUFFIELD2002",
+      "type": "PAPER",
+      "participant_id": "P02",
+      "title": "Multicast topology inference from measured end-to-end loss",
+      "authors": [
+        "Nick G. Duffield",
+        "Joseph Horowitz",
+        "Francesco Lo Presti",
+        "Don Towsley"
+      ],
+      "year": 2002,
+      "first_public_year": 2002,
+      "venue": "IEEE Transactions on Information Theory",
+      "volume": "48",
+      "issue": "1",
+      "pages": "26-45",
+      "doi": "10.1109/18.971737",
+      "doi_url": "https://doi.org/10.1109/18.971737",
+      "open_access_url": null,
+      "access_note": "Paywalled (IEEE). Abstract and bibliographic metadata only.",
+      "abstract": "The use of multicast inference on end-to-end measurement has recently been proposed as a means to infer network internal characteristics such as packet link loss rate and delay. In this paper, we propose three types of algorithm that use loss measurements to infer the underlying multicast topology: i) a grouping estimator that exploits the monotonicity of loss rates with increasing path length; ii) a maximum-likelihood (ML) estimator (MLE); and iii) a Bayesian estimator. We establish their consistency, compare their complexity and accuracy, and analyze the modes of failure and their asymptotic probabilities.",
+      "domain": "DOM_NET",
+      "key_problem": "Infer the logical topology of a multicast tree from loss measurements made only at the receivers.",
+      "methods": [
+        "Grouping estimator exploiting monotonicity of loss rates with increasing path length",
+        "Maximum-likelihood topology estimator",
+        "Bayesian topology estimator"
+      ],
+      "findings": [
+        "Consistency of the three estimators is established",
+        "Complexity, accuracy and asymptotic failure probabilities are compared"
+      ],
+      "limitations": [
+        "Requires multicast probing support",
+        "Organiser read abstract only; algorithmic details need full-text review"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)"
+      ]
+    },
+    {
+      "id": "PAPER_SAITOUNEI1987",
+      "type": "PAPER",
+      "participant_id": "P03",
+      "title": "The neighbor-joining method: a new method for reconstructing phylogenetic trees",
+      "authors": [
+        "Naruya Saitou",
+        "M Nei"
+      ],
+      "year": 1987,
+      "first_public_year": 1987,
+      "venue": "Molecular Biology and Evolution",
+      "volume": "4",
+      "issue": "4",
+      "pages": "406-25",
+      "doi": "10.1093/oxfordjournals.molbev.a040454",
+      "doi_url": "https://doi.org/10.1093/oxfordjournals.molbev.a040454",
+      "open_access_url": "https://academic.oup.com/mbe/article-pdf/4/4/406/11167444/7sait.pdf",
+      "access_note": "Free to read at the publisher (OpenAlex oa_status: bronze). Not redistributed; link only.",
+      "abstract": "A new method called the neighbor-joining method is proposed for reconstructing phylogenetic trees from evolutionary distance data. The principle of this method is to find pairs of operational taxonomic units (OTUs [= neighbors]) that minimize the total branch length at each stage of clustering of OTUs starting with a starlike tree. The branch lengths as well as the topology of a parsimonious tree can quickly be obtained by using this method. Using computer simulation, we studied the efficiency of this method in obtaining the correct unrooted tree in comparison with that of five other tree-making methods: the unweighted pair group method of analysis, Farris's method, Sattath and Tversky's method, Li's method, and Tateno et al.'s modified Farris method. The new, neighbor-joining method and Sattath and Tversky's method are shown to be generally better than the other methods.",
+      "domain": "DOM_BIO",
+      "key_problem": "Reconstruct a phylogenetic (evolutionary) tree - topology and branch lengths - from evolutionary distance data between observed taxa.",
+      "methods": [
+        "Neighbor-joining: starting from a star-like tree, repeatedly join the pair of operational taxonomic units (neighbours) that minimises total branch length",
+        "Computer simulation comparing tree-building methods"
+      ],
+      "findings": [
+        "Branch lengths and topology of a parsimonious tree are obtained quickly",
+        "Neighbor-joining and Sattath-Tversky's method are generally better than UPGMA, Farris's, Li's and Tateno et al.'s methods in simulation"
+      ],
+      "limitations": [
+        "Input is a distance matrix: accuracy depends on how well distances are estimated",
+        "Evaluation in the abstract is simulation-based",
+        "Produces an unrooted tree",
+        "Organiser read abstract only"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)",
+        "Free publisher PDF linked"
+      ]
+    },
+    {
+      "id": "PAPER_CANDES2006",
+      "type": "PAPER",
+      "participant_id": "P04",
+      "title": "Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information",
+      "authors": [
+        "Emmanuel J. Candès",
+        "Justin K. Romberg",
+        "Terence Tao"
+      ],
+      "year": 2006,
+      "first_public_year": 2006,
+      "venue": "IEEE Transactions on Information Theory",
+      "volume": "52",
+      "issue": "2",
+      "pages": "489-509",
+      "doi": "10.1109/TIT.2005.862083",
+      "doi_url": "https://doi.org/10.1109/TIT.2005.862083",
+      "open_access_url": "https://arxiv.org/abs/math/0409186",
+      "access_note": "Preprint on arXiv (math/0409186).",
+      "abstract": "This paper considers the model problem of reconstructing an object from incomplete frequency samples. Consider a discrete-time signal f∈C^N and a randomly chosen set of frequencies Ω. Is it possible to reconstruct f from the partial knowledge of its Fourier coefficients on the set Ω? A typical result of this paper is as follows. Suppose that f is a superposition of |T| spikes f(t)=Σ_τ∈Tf(τ)δ(t-τ) obeying |T|≤C_M·(log N)^-1 · |Ω| for some constant C_M>0. We do not know the locations of the spikes nor their amplitudes. Then with probability at least 1-O(N^-M), f can be reconstructed exactly as the solution to the ℓ_1 minimization problem. In short, exact recovery may be obtained by solving a convex optimization problem. We give numerical values for C_M which depend on the desired probability of success. Our result may be interpreted as a novel kind of nonlinear sampling theorem. In effect, it says that any signal made out of |T| spikes may be recovered by convex programming from almost every set of frequencies of size O(|T|·logN). Moreover, this is nearly optimal in the sense that any method succeeding with probability 1-O(N^-M) would in general require a number of frequency samples at least proportional to |T|·logN. The methodology extends to a variety of other situations and higher dimensions. For example, we show how one can reconstruct a piecewise constant (one- or two-dimensional) object from incomplete frequency samples - provided that the number of jumps (discontinuities) obeys the condition above - by minimizing other convex functionals such as the total variation of f.",
+      "domain": "DOM_SIG",
+      "key_problem": "Reconstruct a discrete-time signal from a random, incomplete subset of its Fourier coefficients.",
+      "methods": [
+        "l1-minimisation (convex programming) for sparse 'spike' signals",
+        "Total-variation minimisation for piecewise-constant objects"
+      ],
+      "findings": [
+        "Signals made of |T| spikes are recovered exactly with high probability from O(|T| log N) frequency samples",
+        "The sample count is nearly optimal"
+      ],
+      "limitations": [
+        "Requires the signal to be sparse (or have sparse gradient)",
+        "Frequencies chosen at random",
+        "The unknown is a signal/image on a known grid - there is no unknown graph or tree topology"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex / arXiv math/0409186)"
+      ]
+    },
+    {
+      "id": "PAPER_RATNASAMY1999",
+      "type": "PAPER",
+      "participant_id": "P05",
+      "title": "Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements",
+      "authors": [
+        "Sylvia Ratnasamy",
+        "Steven McCanne"
+      ],
+      "year": 1999,
+      "first_public_year": 1999,
+      "venue": "IEEE Conference on Computer Communications (INFOCOM)",
+      "volume": null,
+      "issue": null,
+      "pages": "353-360 vol.1",
+      "doi": "10.1109/INFCOM.1999.749302",
+      "doi_url": "https://doi.org/10.1109/INFCOM.1999.749302",
+      "open_access_url": null,
+      "access_note": "Paywalled (IEEE INFOCOM). Abstract and bibliographic metadata only.",
+      "abstract": "The efficacy of end-to-end multicast transport protocols depends critically upon their ability to scale efficiently to a large number of receivers. Several research multicast protocols attempt to achieve this high scalability by identifying sets of co-located receivers in order to enhance loss recovery, congestion control and so forth. A number of these schemes could be enhanced and simplified by some level of explicit knowledge of the topology of the multicast distribution tree, the value of the bottleneck bandwidth along the path between the source and each individual receiver and the approximate location of the bottlenecks in the tree. In this paper, we explore the problem of inferring the internal structure of a multicast distribution tree using only observations made at the end hosts. By noting correlations of loss patterns across the receiver set and by measuring how the network perturbs the fine-grained timing structure of the packets sent from the source, we can determine both the underlying multicast tree structure as well as the bottleneck bandwidths. The simulations show that the algorithm is robust and appears to converge to the correct tree with high probability.",
+      "domain": "DOM_NET",
+      "key_problem": "Infer the internal structure of a multicast distribution tree, and the bottleneck bandwidths on it, using only observations made at the end hosts (receivers).",
+      "methods": [
+        "Correlate packet-loss patterns across the receiver set to determine shared tree structure",
+        "Measure how the network perturbs fine-grained packet timing to estimate bottleneck bandwidths"
+      ],
+      "findings": [
+        "In simulation the algorithm is robust and converges to the correct tree with high probability"
+      ],
+      "limitations": [
+        "Simulation-only evaluation reported in the abstract",
+        "Requires IP multicast",
+        "Organiser read abstract only - the exact grouping procedure needs full-text review"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)"
+      ]
+    },
+    {
+      "id": "PAPER_CHOI2011",
+      "type": "PAPER",
+      "participant_id": "P06",
+      "title": "Learning Latent Tree Graphical Models",
+      "authors": [
+        "Myung Jin Choi",
+        "Vincent Y. F. Tan",
+        "Animashree Anandkumar",
+        "Alan S. Willsky"
+      ],
+      "year": 2011,
+      "first_public_year": 2011,
+      "venue": "Journal of Machine Learning Research",
+      "volume": "12",
+      "issue": "49",
+      "pages": "1771-1812",
+      "doi": "10.48550/arXiv.1009.2722",
+      "doi_url": "https://doi.org/10.48550/arXiv.1009.2722",
+      "open_access_url": "https://arxiv.org/abs/1009.2722",
+      "access_note": "Open access (arXiv 1009.2722; JMLR). Full text reviewed by organiser.",
+      "abstract": "We study the problem of learning a latent tree graphical model where samples are available only from a subset of variables. We propose two consistent and computationally efficient algorithms for learning minimal latent trees, that is, trees without any redundant hidden nodes. Unlike many existing methods, the observed nodes (or variables) are not constrained to be leaf nodes. Our first algorithm, recursive grouping, builds the latent tree recursively by identifying sibling groups using so-called information distances. One of the main contributions of this work is our second algorithm, which we refer to as CLGrouping. CLGrouping starts with a pre-processing procedure in which a tree over the observed variables is constructed. This global step groups the observed nodes that are likely to be close to each other in the true latent tree, thereby guiding subsequent recursive grouping (or equivalent procedures) on much smaller subsets of variables. This results in more accurate and efficient learning of latent trees. We also present regularized versions of our algorithms that learn latent tree approximations of arbitrary distributions. We compare the proposed algorithms to other methods by performing extensive numerical experiments on various latent tree graphical models such as hidden Markov models and star graphs. In addition, we demonstrate the applicability of our methods on real-world datasets by modeling the dependency structure of monthly stock returns in the S&P index and of the words in the 20 newsgroups dataset.",
+      "domain": "DOM_CS",
+      "key_problem": "Learn a latent tree graphical model when samples are available only from a subset of the variables (the others are hidden).",
+      "methods": [
+        "Recursive grouping using information distances",
+        "CLGrouping: build a Chow-Liu tree over observed variables, then apply recursive grouping or neighbor-joining locally (CLRG / CLNJ)",
+        "Regularised versions for approximating arbitrary distributions"
+      ],
+      "findings": [
+        "The algorithms are consistent with good sample and computational complexity",
+        "CLNJ/CLRG outperform NJ and RG on latent trees with large diameter",
+        "Applied to S&P 500 monthly returns and the 20 Newsgroups dataset"
+      ],
+      "limitations": [
+        "Assumes the true structure is a (minimal) latent tree",
+        "Analysis focuses on Gaussian and symmetric discrete distributions (Sec. 5)"
+      ],
+      "evidence_refs": [
+        "Full text arXiv:1009.2722 pp.3-5 (related work), p.10 (Prop. 3), p.14 (Sec. 5), p.25 (experiments)"
+      ]
+    },
+    {
+      "id": "PAPER_DEMERS1987",
+      "type": "PAPER",
+      "participant_id": "P07",
+      "title": "Epidemic algorithms for replicated database maintenance",
+      "authors": [
+        "Alan J. Demers",
+        "Dan Greene",
+        "Carl H. Hauser",
+        "Wes Irish",
+        "John Larson"
+      ],
+      "year": 1987,
+      "first_public_year": 1987,
+      "venue": "ACM Symposium on Principles of Distributed Computing (PODC)",
+      "volume": null,
+      "issue": null,
+      "pages": "1-12",
+      "doi": "10.1145/41840.41841",
+      "doi_url": "https://doi.org/10.1145/41840.41841",
+      "open_access_url": "https://dl.acm.org/doi/pdf/10.1145/41840.41841",
+      "access_note": "Free to read at ACM Digital Library (bronze OA). Not redistributed; link only.",
+      "abstract": "When a database is replicated at many sites, maintaining mutual consistency among the sites in the face of updates is a significant problem. This paper describes several randomized algorithms for distributing updates and driving the replicas toward consistency. The algorithms are very simple and require few guarantees from the underlying communication system, yet they ensure that the effect of every update is eventually reflected in all replicas. The cost and performance of the algorithms are tuned by choosing appropriate distributions in the randomization step. The algorithms are closely analogous to epidemics, and the epidemiology literature aids in understanding their behavior. One of the algorithms has been implemented in the Clearinghouse servers of the Xerox Corporate Internet, solving long-standing problems of high traffic and database inconsistency.",
+      "domain": "DOM_NET",
+      "key_problem": "Keep the copies of a database replicated at many sites mutually consistent as updates arrive.",
+      "methods": [
+        "Randomised algorithms for distributing updates between sites",
+        "Analysis by analogy with epidemics, using the epidemiology literature"
+      ],
+      "findings": [
+        "Every update is eventually reflected in all replicas while requiring few guarantees from the network",
+        "One algorithm was deployed in the Xerox Corporate Internet Clearinghouse servers"
+      ],
+      "limitations": [
+        "Concerned with spreading known updates - it does not infer any unobserved structure",
+        "Organiser read (repaired) abstract only"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex OCR, repaired)"
+      ]
+    },
+    {
+      "id": "PAPER_BHAMIDI2010",
+      "type": "PAPER",
+      "participant_id": "P08",
+      "title": "Network delay inference from additive metrics",
+      "authors": [
+        "Shankar Bhamidi",
+        "Ram Rajagopal",
+        "Sébastien Roch"
+      ],
+      "year": 2010,
+      "first_public_year": 2010,
+      "venue": "Random Structures and Algorithms",
+      "volume": "37",
+      "issue": "2",
+      "pages": "176-203",
+      "doi": "10.1002/rsa.20305",
+      "doi_url": "https://doi.org/10.1002/rsa.20305",
+      "open_access_url": "https://arxiv.org/abs/math/0604367",
+      "access_note": "Open access (arXiv math/0604367v2). Full text reviewed by organiser.",
+      "abstract": "We use computational phylogenetic techniques to solve a central problem in inferential network monitoring. More precisely, we design a novel algorithm for multicast-based delay inference, that is, the problem of reconstructing delay characteristics of a network from end-to-end delay measurements on network paths. Our inference algorithm is based on additive metric techniques used in phylogenetics. It runs in polynomial time and requires a sample of size only poly(log n). We also show how to recover the topology of the routing tree.",
+      "domain": "DOM_SIG",
+      "key_problem": "Multicast-based delay inference: reconstruct the delay characteristics of network links, and the routing tree topology, from end-to-end delay measurements.",
+      "methods": [
+        "Additive (tree) metric techniques from phylogenetics",
+        "Use only 'short' paths to keep sample complexity low (building on Erdős et al.)"
+      ],
+      "findings": [
+        "Polynomial-time algorithm needing a sample of size only poly(log n)",
+        "Shows how to recover the topology of the routing tree"
+      ],
+      "limitations": [
+        "Primarily theoretical, with provable guarantees",
+        "Assumes multicast probing on a routing tree"
+      ],
+      "evidence_refs": [
+        "Full text arXiv:math/0604367 p.1 (abstract), p.5 (related work), p.7 (sample complexity)"
+      ]
+    },
+    {
+      "id": "PAPER_VARDI1996",
+      "type": "PAPER",
+      "participant_id": "P09",
+      "title": "Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data",
+      "authors": [
+        "Y. Vardi"
+      ],
+      "year": 1996,
+      "first_public_year": 1996,
+      "venue": "Journal of the American Statistical Association",
+      "volume": "91",
+      "issue": "433",
+      "pages": "365-377",
+      "doi": "10.1080/01621459.1996.10476697",
+      "doi_url": "https://doi.org/10.1080/01621459.1996.10476697",
+      "open_access_url": null,
+      "access_note": "Paywalled (JASA). Abstract and bibliographic metadata only.",
+      "abstract": "The problem of estimating the node-to-node traffic intensity from repeated measurements of traffic on the links of a network is formulated and discussed under Poisson assumptions and two types of traffic-routing regimens: deterministic (a fixed known path between each directed pair of nodes) and Markovian (a random path between each directed pair of nodes, determined according to a known Markov chain fixed for that pair). Maximum likelihood estimation and related approximations are discussed, and computational difficulties are pointed out. A detailed methodology is presented for estimates based on the method of moments. The estimates are derived algorithmically, taking advantage of the fact that the first and second moment equations give rise to a linear inverse problem with positivity restrictions that can be approached by an EM algorithm, resulting in a particularly simple solution to a hard problem. A small simulation study is carried out.",
+      "domain": "DOM_SIG",
+      "key_problem": "Estimate node-to-node (source-destination) traffic intensities from repeated measurements of traffic on network links.",
+      "methods": [
+        "Poisson traffic model with deterministic or Markovian routing",
+        "Method of moments leading to a linear inverse problem with positivity restrictions, solved by an EM algorithm"
+      ],
+      "findings": [
+        "A simple estimation procedure for a hard problem; small simulation study"
+      ],
+      "limitations": [
+        "Routing is assumed KNOWN (fixed paths or a known Markov chain) - topology is not inferred",
+        "Poisson assumption",
+        "Organiser read abstract only"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)"
+      ]
+    },
+    {
+      "id": "PAPER_MARGOLIN2006",
+      "type": "PAPER",
+      "participant_id": "P10",
+      "title": "ARACNE: An Algorithm for the Reconstruction of Gene Regulatory Networks in a Mammalian Cellular Context",
+      "authors": [
+        "Adam A Margolin",
+        "Ilya M. Nemenman",
+        "Katia Basso",
+        "Chris H. Wiggins",
+        "Gustavo Stolovitzky",
+        "Riccardo Dalla Favera",
+        "Andrea Califano"
+      ],
+      "year": 2006,
+      "first_public_year": 2006,
+      "venue": "BMC Bioinformatics",
+      "volume": "7",
+      "issue": "S1",
+      "pages": "S7-S7",
+      "doi": "10.1186/1471-2105-7-S1-S7",
+      "doi_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+      "open_access_url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-S1-S7",
+      "access_note": "Open access (BMC Bioinformatics). Full text reviewed by organiser.",
+      "abstract": "BACKGROUND: Elucidating gene regulatory networks is crucial for understanding normal cell physiology and complex pathologic phenotypes. Existing computational methods for the genome-wide \"reverse engineering\" of such networks have been successful only for lower eukaryotes with simple genomes. Here we present ARACNE, a novel algorithm, using microarray expression profiles, specifically designed to scale up to the complexity of regulatory networks in mammalian cells, yet general enough to address a wider range of network deconvolution problems. This method uses an information theoretic approach to eliminate the majority of indirect interactions inferred by co-expression methods. RESULTS: We prove that ARACNE reconstructs the network exactly (asymptotically) if the effect of loops in the network topology is negligible, and we show that the algorithm works well in practice, even in the presence of numerous loops and complex topologies. We assess ARACNE's ability to reconstruct transcriptional regulatory networks using both a realistic synthetic dataset and a microarray dataset from human B cells. On synthetic datasets ARACNE achieves very low error rates and outperforms established methods, such as Relevance Networks and Bayesian Networks. Application to the deconvolution of genetic networks in human B cells demonstrates ARACNE's ability to infer validated transcriptional targets of the cMYC proto-oncogene. We also study the effects of misestimation of mutual information on network reconstruction, and show that algorithms based on mutual information ranking are more resilient to estimation errors. CONCLUSION: ARACNE shows promise in identifying direct transcriptional interactions in mammalian cellular networks, a problem that has challenged existing reverse engineering algorithms. This approach should enhance our ability to use microarray data to elucidate functional mechanisms that underlie cellular processes and to identify molecular targets of pharmacological compounds in mammalian cellular networks.",
+      "domain": "DOM_BIO",
+      "key_problem": "Reverse-engineer gene regulatory networks in mammalian cells from microarray expression profiles.",
+      "methods": [
+        "Pairwise mutual information between genes",
+        "Data Processing Inequality (DPI) to remove indirect interactions"
+      ],
+      "findings": [
+        "Exact (asymptotic) reconstruction when loops are negligible",
+        "Outperforms Relevance Networks and Bayesian Networks on synthetic data",
+        "Recovers validated cMYC targets in human B cells"
+      ],
+      "limitations": [
+        "All network nodes are observed genes - no hidden nodes are introduced",
+        "Sensitive to mutual-information estimation error",
+        "Networks with many loops are only approximately recovered"
+      ],
+      "evidence_refs": [
+        "Full text (BMC open access) p.5 (Theorems 1-3, relation to Chow-Liu)"
+      ]
+    },
+    {
+      "id": "PAPER_ERDOS1999",
+      "type": "PAPER",
+      "participant_id": "P11",
+      "title": "A few logs suffice to build (almost) all trees (I)",
+      "authors": [
+        "P�ter L. Erd?s",
+        "Michael A. Steel",
+        "L�szl� A. Sz�kely",
+        "Tandy J. Warnow"
+      ],
+      "year": 1999,
+      "first_public_year": 1999,
+      "venue": "Random Structures and Algorithms",
+      "volume": "14",
+      "issue": "2",
+      "pages": "153-184",
+      "doi": "10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+      "doi_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+      "open_access_url": null,
+      "access_note": "Paywalled (Wiley). Abstract and bibliographic metadata only.",
+      "abstract": "A phylogenetic tree, also called an “evolutionary tree,” is a leaf-labeled tree which represents the evolutionary history for a set of species, and the construction of such trees is a fundamental problem in biology. Here we address the issue of how many sequence sites are required in order to recover the tree with high probability when the sites evolve under standard Markov-style i.i.d. mutation models. We provide analytic upper and lower bounds for the required sequence length, by developing a new polynomial time algorithm. In particular, we show when the mutation probabilities are bounded the required sequence length can grow surprisingly slowly (a power of log n) in the number n of sequences, for almost all trees.",
+      "domain": "DOM_CS",
+      "key_problem": "How many sequence sites are needed to recover a phylogenetic tree with high probability under Markov mutation models?",
+      "methods": [
+        "A new polynomial-time tree reconstruction algorithm",
+        "Analytic upper and lower bounds on required sequence length"
+      ],
+      "findings": [
+        "With bounded mutation probabilities the required sequence length grows only as a power of log n for almost all trees"
+      ],
+      "limitations": [
+        "Theoretical; assumes i.i.d. Markov-style site evolution",
+        "Organiser read abstract only"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)",
+        "Characterised in Choi et al. 2011 p.4 and Bhamidi et al. 2010 p.7"
+      ]
+    },
+    {
+      "id": "PAPER_NITATIKONDA2011",
+      "type": "PAPER",
+      "participant_id": "P12",
+      "title": "Network Tomography Based on Additive Metrics",
+      "authors": [
+        "Jian Ni",
+        "Sekhar Tatikonda"
+      ],
+      "year": 2011,
+      "first_public_year": 2008,
+      "venue": "IEEE Transactions on Information Theory",
+      "volume": "57",
+      "issue": "12",
+      "pages": "7798-7809",
+      "doi": "10.1109/TIT.2011.2168901",
+      "doi_url": "https://doi.org/10.1109/TIT.2011.2168901",
+      "open_access_url": "https://arxiv.org/abs/0809.0158",
+      "access_note": "Published version paywalled (IEEE); author preprint open on arXiv (0809.0158). Full text of the preprint reviewed by organiser. A conference version appeared at CISS 2008 (doi:10.1109/CISS.2008.4558692).",
+      "abstract": "Inference of the network structure (e.g., routing topology) and dynamics (e.g., link performance) is an essential component in many network design and management tasks. In this paper we propose a new, general framework for analyzing and designing routing topology and link performance inference algorithms using ideas and tools from phylogenetic inference in evolutionary biology. The framework is applicable to a variety of measurement techniques. Based on the framework we introduce and develop several polynomial-time distance-based inference algorithms with provable performance. We provide sufficient conditions for the correctness of the algorithms. We show that the algorithms are consistent (return correct topology and link performance with an increasing sample size) and robust (can tolerate a certain level of measurement errors). In addition, we establish certain optimality properties of the algorithms (i.e., they achieve the optimal l-infinity-radius) and demonstrate their effectiveness via model simulation.",
+      "domain": "DOM_NET",
+      "key_problem": "Infer the routing topology and link performance from a source to a set of end hosts using end-to-end measurements.",
+      "methods": [
+        "General framework built on additive metrics (path metric = sum of link metrics)",
+        "Neighbor-Joining (NJ) and a new Rooted Neighbor-Joining (RNJ) algorithm",
+        "Distance-based polynomial-time inference algorithms"
+      ],
+      "findings": [
+        "Algorithms are consistent and robust to bounded measurement error",
+        "RNJ achieves the optimal l-infinity radius",
+        "Effectiveness shown by model simulation"
+      ],
+      "limitations": [
+        "Assumes tree-shaped routing and an additive metric",
+        "Evaluation by model simulation (preprint)"
+      ],
+      "evidence_refs": [
+        "Full text arXiv:0809.0158 p.3 (related work), p.5 (analogy), p.13 (Alg. 1), p.15 (Alg. 2)"
+      ]
+    },
+    {
+      "id": "PAPER_COATES2002",
+      "type": "PAPER",
+      "participant_id": "P13",
+      "title": "Maximum likelihood network topology identification from edge-based unicast measurements",
+      "authors": [
+        "Mark Coates",
+        "Rui Castro",
+        "Robert Marek Nowak",
+        "Manik Gadhiok",
+        "Ryan King",
+        "Yolanda Tsang"
+      ],
+      "year": 2002,
+      "first_public_year": 2002,
+      "venue": "ACM SIGMETRICS International Conference on Measurement and Modeling of Computer Systems (SIGMETRICS)",
+      "volume": null,
+      "issue": null,
+      "pages": "11-20",
+      "doi": "10.1145/511334.511337",
+      "doi_url": "https://doi.org/10.1145/511334.511337",
+      "open_access_url": null,
+      "access_note": "Paywalled (ACM SIGMETRICS). Abstract and bibliographic metadata only.",
+      "abstract": "Network tomography is a process for inferring \"internal\" link-level delay and loss performance information based on end-to-end (edge) network measurements. These methods require knowledge of the network topology; therefore a first crucial step in the tomography process is topology identification. This paper considers the problem of discovering network topology solely from host-based, unicast measurements, without internal network cooperation. First, we introduce a novel delay-based measurement scheme that does not require clock synchronization, making it more practical than other previous proposals. In contrast to methods that rely on network cooperation , our methodology has the potential to identify layer two elements (provided they are logical topology branching points and induce some measurable delay). Second, we propose a maximum penalized likelihood criterion for topology identification. This is a global optimality criterion, in contrast to other recent proposals for topology identification that employ suboptimal, pair-merging strategies. We develop a novel Markov Chain Monte Carlo (MCMC) procedure for rapid determination of the most likely topologies. The performance of our new probing scheme and identification algorithm is explored through simulation and Internet experiments.",
+      "domain": "DOM_NET",
+      "key_problem": "Discover network topology solely from host-based unicast measurements, without cooperation from internal routers.",
+      "methods": [
+        "Delay-based unicast measurement scheme needing no clock synchronisation",
+        "Maximum penalised likelihood criterion for topology",
+        "Markov chain Monte Carlo search over topologies"
+      ],
+      "findings": [
+        "Can identify layer-2 branching points that induce measurable delay",
+        "Evaluated in simulation and Internet experiments"
+      ],
+      "limitations": [
+        "Global search is more expensive than pair-merging strategies",
+        "Organiser read abstract only"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)"
+      ]
+    },
+    {
+      "id": "PAPER_CASTRO2004",
+      "type": "PAPER",
+      "participant_id": "P14",
+      "title": "Network Tomography: Recent Developments",
+      "authors": [
+        "Rui Castro",
+        "Mark Coates",
+        "Gang Liang",
+        "Robert Marek Nowak",
+        "Bin Yu"
+      ],
+      "year": 2004,
+      "first_public_year": 2004,
+      "venue": "Statistical Science",
+      "volume": "19",
+      "issue": "3",
+      "pages": "499-517",
+      "doi": "10.1214/088342304000000422",
+      "doi_url": "https://doi.org/10.1214/088342304000000422",
+      "open_access_url": "https://projecteuclid.org/journals/statistical-science/volume-19/issue-3/Network-Tomography-Recent-Developments/10.1214/088342304000000422.full",
+      "access_note": "Open access at Project Euclid. Review article (secondary source). Abstract reviewed; automated full-text download was blocked by the host.",
+      "abstract": "Today’s Internet is a massive, distributed network which continues to explode in size as e-commerce and related activities grow. The heterogeneous and largely unregulated structure of the Internet renders tasks such as dynamic routing, optimized service provision, service level verification and detection of anomalous/malicious behavior extremely challenging. The problem is compounded by the fact that one cannot rely on the cooperation of individual servers and routers to aid in the collection of network traffic measurements vital for these tasks. In many ways, network monitoring and inference problems bear a strong resemblance to other “inverse problems” in which key aspects of a system are not directly observable. Familiar signal processing or statistical problems such as tomographic image reconstruction and phylogenetic tree identification have interesting connections to those arising in networking. This article introduces network tomography, a new field which we believe will benefit greatly from the wealth of statistical theory and algorithms. It focuses especially on recent developments in the field including the application of pseudo-likelihood methods and tree estimation formulations.",
+      "domain": "DOM_SIG",
+      "key_problem": "Survey network tomography: inferring internal network characteristics that are not directly observable.",
+      "methods": [
+        "Review of pseudo-likelihood methods and tree-estimation formulations"
+      ],
+      "findings": [
+        "Network monitoring problems resemble other inverse problems; tomographic image reconstruction and phylogenetic tree identification have interesting connections to networking problems"
+      ],
+      "limitations": [
+        "Review article - a secondary source; claims should be traced to the primary papers it cites",
+        "Organiser read abstract only"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)"
+      ]
+    },
+    {
+      "id": "DOM_BIO",
+      "type": "DOMAIN",
+      "label": "Biology & biomedical science"
+    },
+    {
+      "id": "DOM_CS",
+      "type": "DOMAIN",
+      "label": "Computer science, graph theory & machine learning"
+    },
+    {
+      "id": "DOM_NET",
+      "type": "DOMAIN",
+      "label": "Networking & distributed systems"
+    },
+    {
+      "id": "DOM_SIG",
+      "type": "DOMAIN",
+      "label": "Signal processing, statistics & applied mathematics"
+    },
+    {
+      "id": "PROB_HIDDEN_TREE",
+      "type": "PROBLEM",
+      "label": "Reconstruct a hidden tree (branching structure and edge parameters) when only its leaves / end-points can be observed"
+    },
+    {
+      "id": "PROB_LINK_PERFORMANCE",
+      "type": "PROBLEM",
+      "label": "Infer internal link performance (loss, delay, bandwidth) from end-to-end measurements"
+    },
+    {
+      "id": "PROB_TRAFFIC_MATRIX",
+      "type": "PROBLEM",
+      "label": "Estimate origin-destination traffic intensities from link-level counts"
+    },
+    {
+      "id": "PROB_DEPENDENCE_TREE",
+      "type": "PROBLEM",
+      "label": "Approximate a joint probability distribution by a tree of pairwise dependencies"
+    },
+    {
+      "id": "PROB_SAMPLE_COMPLEXITY",
+      "type": "PROBLEM",
+      "label": "Determine how much data is needed to recover a tree reliably"
+    },
+    {
+      "id": "PROB_GENE_NETWORK",
+      "type": "PROBLEM",
+      "label": "Reverse-engineer a gene regulatory network from expression profiles"
+    },
+    {
+      "id": "PROB_SPARSE_RECOVERY",
+      "type": "PROBLEM",
+      "label": "Recover a sparse signal from incomplete frequency samples"
+    },
+    {
+      "id": "PROB_REPLICA_CONSISTENCY",
+      "type": "PROBLEM",
+      "label": "Drive replicated database copies to consistency after updates"
+    },
+    {
+      "id": "METH_NEIGHBOR_JOINING",
+      "type": "METHOD",
+      "label": "Neighbor-joining: iteratively join the pair of nodes that minimises total tree length, introducing a hidden parent"
+    },
+    {
+      "id": "METH_ROOTED_NJ",
+      "type": "METHOD",
+      "label": "Rooted neighbor-joining (RNJ) for routing trees with a known source"
+    },
+    {
+      "id": "METH_LOSS_CORRELATION",
+      "type": "METHOD",
+      "label": "Group receivers by correlation of their packet-loss patterns"
+    },
+    {
+      "id": "METH_TOPOLOGY_ESTIMATORS",
+      "type": "METHOD",
+      "label": "Grouping / maximum-likelihood / Bayesian multicast topology estimators"
+    },
+    {
+      "id": "METH_PENALISED_ML_MCMC",
+      "type": "METHOD",
+      "label": "Maximum penalised likelihood topology search by MCMC"
+    },
+    {
+      "id": "METH_ADDITIVE_METRIC",
+      "type": "METHOD",
+      "label": "Distance-based reconstruction from additive (tree) metrics"
+    },
+    {
+      "id": "METH_SHORT_PATHS",
+      "type": "METHOD",
+      "label": "Reconstruction from short-path distances only (low sample complexity)"
+    },
+    {
+      "id": "METH_EM_MOMENTS",
+      "type": "METHOD",
+      "label": "Method of moments + EM for a linear inverse problem with positivity"
+    },
+    {
+      "id": "METH_CHOW_LIU",
+      "type": "METHOD",
+      "label": "Chow-Liu optimal dependence tree"
+    },
+    {
+      "id": "METH_CLGROUPING",
+      "type": "METHOD",
+      "label": "Recursive grouping and CLGrouping for latent trees"
+    },
+    {
+      "id": "METH_MI_DPI",
+      "type": "METHOD",
+      "label": "Mutual information + Data Processing Inequality pruning"
+    },
+    {
+      "id": "METH_L1_MINIMISATION",
+      "type": "METHOD",
+      "label": "l1 / total-variation minimisation (convex programming)"
+    },
+    {
+      "id": "METH_EPIDEMIC_GOSSIP",
+      "type": "METHOD",
+      "label": "Randomised epidemic-style update dissemination"
+    },
+    {
+      "id": "METH_ML_PHYLOGENY",
+      "type": "METHOD",
+      "label": "Maximum-likelihood phylogenetic tree building (e.g. IQ-TREE)"
+    },
+    {
+      "id": "METH_ANCESTRAL_RECON",
+      "type": "METHOD",
+      "label": "Ancestral state reconstruction for internal (unsampled) tree nodes (e.g. TreeTime)"
+    },
+    {
+      "id": "PRIN_LEAF_ONLY_TREE",
+      "type": "PRINCIPLE",
+      "label": "Hidden-tree reconstruction from leaf-only measurements: the similarity (or shared loss/delay/mutation) between two observed endpoints grows with the length of the path they share inside an unobserved tree - an additive tree metric - so the hidden branching structure, including unobserved internal nodes, can be recovered from endpoint measurements alone (typically by repeatedly grouping the closest endpoints under a new hidden parent)."
+    },
+    {
+      "id": "PRIN_INVERSE_PROBLEM",
+      "type": "PRINCIPLE",
+      "label": "Indirect-measurement inverse problems: estimate unobservable internal quantities from aggregate measurements through a known measurement model."
+    },
+    {
+      "id": "PRIN_MI_DEPENDENCE",
+      "type": "PRINCIPLE",
+      "label": "Mutual information between observed variables reveals their direct dependency structure."
+    },
+    {
+      "id": "PRIN_SPARSITY",
+      "type": "PRINCIPLE",
+      "label": "Sparsity allows exact recovery from fewer measurements than unknowns."
+    },
+    {
+      "id": "PRIN_EPIDEMIC_SPREAD",
+      "type": "PRINCIPLE",
+      "label": "Randomised peer-to-peer spreading reaches every node quickly (epidemic dynamics)."
+    },
+    {
+      "id": "APP_NEXTSTRAIN",
+      "type": "APPLICATION",
+      "label": "Nextstrain (nextstrain.org) - real-time pathogen phylogenetics platform",
+      "description": "Open-source platform (database of viral genomes, bioinformatics pipeline 'Augur', visualisation 'Auspice') giving a real-time view of the evolution and spread of pathogens such as influenza and SARS-CoV-2.",
+      "evidence_urls": [
+        "https://doi.org/10.1093/bioinformatics/bty407",
+        "https://docs.nextstrain.org/en/latest/learn/about.html",
+        "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/tree.html",
+        "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/ancestral.html",
+        "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/refine.html"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "E001",
+      "source": "PAPER_DUFFIELD2002",
+      "target": "PAPER_RATNASAMY1999",
+      "type": "CITES",
+      "explanation": "Multicast topology inference from measured end-to-end loss lists Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DUFFIELD2002",
+          "doi_or_url": "https://doi.org/10.1109/18.971737",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2141799817 contains https://openalex.org/W2025651888"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E002",
+      "source": "PAPER_DUFFIELD2002",
+      "target": "PAPER_VARDI1996",
+      "type": "CITES",
+      "explanation": "Multicast topology inference from measured end-to-end loss lists Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DUFFIELD2002",
+          "doi_or_url": "https://doi.org/10.1109/18.971737",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2141799817 contains https://openalex.org/W2044807855"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E003",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_ERDOS1999",
+      "type": "CITES",
+      "explanation": "Network delay inference from additive metrics lists A few logs suffice to build (almost) all trees (I) in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2952664795 contains https://openalex.org/W160062981"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E004",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_VARDI1996",
+      "type": "CITES",
+      "explanation": "Network delay inference from additive metrics lists Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2952664795 contains https://openalex.org/W2044807855"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E005",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "CITES",
+      "explanation": "Network delay inference from additive metrics lists The neighbor-joining method: a new method for reconstructing phylogenetic trees in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2952664795 contains https://openalex.org/W2097706568"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E006",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_CASTRO2004",
+      "type": "CITES",
+      "explanation": "Network delay inference from additive metrics lists Network Tomography: Recent Developments in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2952664795 contains https://openalex.org/W2098865491"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E007",
+      "source": "PAPER_MARGOLIN2006",
+      "target": "PAPER_CHOWLIU1968",
+      "type": "CITES",
+      "explanation": "ARACNE: An Algorithm for the Reconstruction of Gene Regulatory Networks in a Mammalian Cellular Context lists Approximating discrete probability distributions with dependence trees in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_MARGOLIN2006",
+          "doi_or_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2163296115 contains https://openalex.org/W2163166770"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E008",
+      "source": "PAPER_ERDOS1999",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "CITES",
+      "explanation": "A few logs suffice to build (almost) all trees (I) lists The neighbor-joining method: a new method for reconstructing phylogenetic trees in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_ERDOS1999",
+          "doi_or_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W160062981 contains https://openalex.org/W2097706568"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E009",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_COATES2002",
+      "type": "CITES",
+      "explanation": "Network Tomography Based on Additive Metrics lists Maximum likelihood network topology identification from edge-based unicast measurements in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W1999288870"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E010",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_RATNASAMY1999",
+      "type": "CITES",
+      "explanation": "Network Tomography Based on Additive Metrics lists Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2025651888"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E011",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_VARDI1996",
+      "type": "CITES",
+      "explanation": "Network Tomography Based on Additive Metrics lists Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2044807855"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E012",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "CITES",
+      "explanation": "Network Tomography Based on Additive Metrics lists The neighbor-joining method: a new method for reconstructing phylogenetic trees in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2097706568"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E013",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_CASTRO2004",
+      "type": "CITES",
+      "explanation": "Network Tomography Based on Additive Metrics lists Network Tomography: Recent Developments in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2098865491"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E014",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_DUFFIELD2002",
+      "type": "CITES",
+      "explanation": "Network Tomography Based on Additive Metrics lists Multicast topology inference from measured end-to-end loss in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2141799817"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E015",
+      "source": "PAPER_COATES2002",
+      "target": "PAPER_RATNASAMY1999",
+      "type": "CITES",
+      "explanation": "Maximum likelihood network topology identification from edge-based unicast measurements lists Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_COATES2002",
+          "doi_or_url": "https://doi.org/10.1145/511334.511337",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W1999288870 contains https://openalex.org/W2025651888"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E016",
+      "source": "PAPER_COATES2002",
+      "target": "PAPER_DUFFIELD2002",
+      "type": "CITES",
+      "explanation": "Maximum likelihood network topology identification from edge-based unicast measurements lists Multicast topology inference from measured end-to-end loss in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_COATES2002",
+          "doi_or_url": "https://doi.org/10.1145/511334.511337",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W1999288870 contains https://openalex.org/W2141799817"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E017",
+      "source": "PAPER_CASTRO2004",
+      "target": "PAPER_COATES2002",
+      "type": "CITES",
+      "explanation": "Network Tomography: Recent Developments lists Maximum likelihood network topology identification from edge-based unicast measurements in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2098865491 contains https://openalex.org/W1999288870"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E018",
+      "source": "PAPER_CASTRO2004",
+      "target": "PAPER_RATNASAMY1999",
+      "type": "CITES",
+      "explanation": "Network Tomography: Recent Developments lists Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2098865491 contains https://openalex.org/W2025651888"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E019",
+      "source": "PAPER_CASTRO2004",
+      "target": "PAPER_VARDI1996",
+      "type": "CITES",
+      "explanation": "Network Tomography: Recent Developments lists Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2098865491 contains https://openalex.org/W2044807855"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E020",
+      "source": "PAPER_CASTRO2004",
+      "target": "PAPER_DUFFIELD2002",
+      "type": "CITES",
+      "explanation": "Network Tomography: Recent Developments lists Multicast topology inference from measured end-to-end loss in its references.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Reference list",
+          "basis": "OpenAlex referenced_works",
+          "record": "OpenAlex referenced_works of https://openalex.org/W2098865491 contains https://openalex.org/W2141799817"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E021",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "CITES",
+      "explanation": "Learning Latent Tree Graphical Models cites The neighbor-joining method: a new method for reconstructing phylogenetic trees (verified in the full-text reference list).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "p.3 and p.4 (Sec. 1.1); reference list",
+          "basis": "full text (open-access PDF)",
+          "quote": "neighbor-joining (Saitou and Nei, 1987) computations"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E022",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_CHOWLIU1968",
+      "type": "CITES",
+      "explanation": "Learning Latent Tree Graphical Models cites Approximating discrete probability distributions with dependence trees (verified in the full-text reference list).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "p.3; Sec. 5.1 p.14; reference list",
+          "basis": "full text (open-access PDF)",
+          "quote": "producing the Chow-Liu tree for the observed variables without any hidden nodes"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E023",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_ERDOS1999",
+      "type": "CITES",
+      "explanation": "Learning Latent Tree Graphical Models cites A few logs suffice to build (almost) all trees (I) (verified in the full-text reference list).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "p.4 and p.10 (Prop. 3); reference list",
+          "basis": "full text (open-access PDF)",
+          "quote": "are additive tree metrics (Erdos et al., 1999)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E024",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_CASTRO2004",
+      "type": "CITES",
+      "explanation": "Learning Latent Tree Graphical Models cites Network Tomography: Recent Developments (verified in the full-text reference list).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "p.4; reference list p.39",
+          "basis": "full text (open-access PDF)",
+          "quote": "related to the emerging field of network tomography (Castro et al., 2004)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E025",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_BHAMIDI2010",
+      "type": "CITES",
+      "explanation": "Learning Latent Tree Graphical Models cites Network delay inference from additive metrics (verified in the full-text reference list).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "p.4; reference list p.39 (cited as the arXiv/to-appear version)",
+          "basis": "full text (open-access PDF)",
+          "quote": "(Tsang et al., 2003; Bhamidi et al., 2009)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E026",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_NITATIKONDA2011",
+      "type": "CITES",
+      "explanation": "Network delay inference from additive metrics cites Network Tomography Based on Additive Metrics (verified in the full-text reference list).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://arxiv.org/abs/math/0604367",
+          "location": "p.5 (Sec. 1.3); reference [21] p.22 (CISS 2008 conference version of the same work)",
+          "basis": "full text (open-access PDF)",
+          "quote": "More recently, Ni and Tatikonda [19, 20, 21, 22]"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E027",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "USES_METHOD",
+      "explanation": "Ni & Tatikonda present and analyse the neighbor-joining algorithm (Algorithm 1) as a routing-topology inference algorithm.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://arxiv.org/abs/0809.0158",
+          "location": "Sec. 4, Algorithm 1, p.13",
+          "basis": "full text (arXiv preprint)",
+          "quote": "Algorithm 1: Neighbor-Joining (NJ) Algorithm for Binary Trees"
+        },
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://arxiv.org/abs/math/0604367",
+          "location": "Sec. 1.3, p.5",
+          "basis": "full text (arXiv)",
+          "quote": "The basic algorithm they consider is the well-known Neighbor-Joining (NJ) algorithm"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E028",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "EXTENDS",
+      "explanation": "Ni & Tatikonda introduce Rooted Neighbor-Joining (RNJ), described as a rooted version of NJ for routing trees with a known source.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://arxiv.org/abs/0809.0158",
+          "location": "Sec. 5.1, Algorithm 2, p.15",
+          "basis": "full text (arXiv preprint)",
+          "quote": "an algorithm which can be viewed as a rooted version of the NJ algorithm"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E029",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "USES_METHOD",
+      "explanation": "Choi et al. use neighbor-joining inside CLGrouping (CLNJ) and as an experimental baseline.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "p.3 (Sec. 1); p.25 (Sec. 7)",
+          "basis": "full text (arXiv)",
+          "quote": "We compare the neighbor-joining method (NJ) (Saitou and Nei, 1987) with recursive grouping (RG), Chow-Liu Neighbor Joining (CLNJ)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E030",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "EXTENDS",
+      "explanation": "Choi et al. propose a relaxed neighbor-joining for estimated distances (Sec. 6.2). Whether this is an extension or a robustness variant needs expert judgement.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "Sec. 6.2, p.23",
+          "basis": "full text (arXiv)",
+          "quote": "we describe how NJ can be relaxed when the true distances are unavailable"
+        }
+      ],
+      "status": "REQUIRES_REVIEW",
+      "reviewer_notes": "Defensible; treated as neutral in scoring until an organiser decides."
+    },
+    {
+      "id": "E031",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_CHOWLIU1968",
+      "type": "USES_METHOD",
+      "explanation": "CLGrouping's first step builds the Chow-Liu tree over the observed variables.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "p.3 and Sec. 5.1 p.14",
+          "basis": "full text (arXiv)",
+          "quote": "producing the Chow-Liu tree for the observed variables without any hidden nodes"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E032",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_CHOWLIU1968",
+      "type": "EXTENDS",
+      "explanation": "CLGrouping transforms the Chow-Liu tree into a latent tree (Sec. 5.3). Defensible as an extension; needs review.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "Sec. 5 overview, p.14",
+          "basis": "full text (arXiv)",
+          "quote": "derive a simple transformation of the Chow-Liu tree to obtain the latent tree"
+        }
+      ],
+      "status": "REQUIRES_REVIEW",
+      "reviewer_notes": "Neutral in scoring."
+    },
+    {
+      "id": "E033",
+      "source": "PAPER_MARGOLIN2006",
+      "target": "PAPER_CHOWLIU1968",
+      "type": "EXTENDS",
+      "explanation": "ARACNE is presented as a natural generalisation of the Chow-Liu algorithm that drops the tree assumption.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_MARGOLIN2006",
+          "doi_or_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+          "location": "Results/Theory, Theorems 1-2, p.5",
+          "basis": "full text (BMC open access)",
+          "quote": "ARACNE can be viewed as a natural generalization of the Chow-Liu algorithm which overcomes the biologically-unrealistic tree assumption of the latter."
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E034",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_NITATIKONDA2011",
+      "type": "SHARES_PRINCIPLE",
+      "explanation": "Both reconstruct routing trees from distance-based (additive tree metric) techniques borrowed from phylogenetics.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://arxiv.org/abs/math/0604367",
+          "location": "Sec. 1.3, p.5",
+          "basis": "full text (arXiv)",
+          "quote": "Ni and Tatikonda ... used phylogenetic techniques to recover the routing tree topology in this context. Similarly to the current paper, they use distance-based techniques."
+        },
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://arxiv.org/abs/0809.0158",
+          "location": "Sec. 1, p.3",
+          "basis": "full text (arXiv preprint)",
+          "quote": "The framework is built upon additive metrics."
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": "",
+      "principle": "PRIN_LEAF_ONLY_TREE"
+    },
+    {
+      "id": "E035",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_ERDOS1999",
+      "type": "SHARES_PRINCIPLE",
+      "explanation": "Choi et al.'s information distances are additive tree metrics in the sense used by Erdős et al.; both recover trees from additive distances between observed nodes.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "Proposition 3, p.10",
+          "basis": "full text (arXiv)",
+          "quote": "The information distances dij defined in (8), (9), and (10) are additive tree metrics (Erdos et al., 1999)."
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": "",
+      "principle": "PRIN_LEAF_ONLY_TREE"
+    },
+    {
+      "id": "E036",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_ERDOS1999",
+      "type": "SHARES_PRINCIPLE",
+      "explanation": "Bhamidi et al. rely on Erdős et al.'s insight that trees can be recovered from short-path distances only, giving poly(log n) sample complexity in both papers.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://arxiv.org/abs/math/0604367",
+          "location": "Sec. 2, p.7",
+          "basis": "full text (arXiv)",
+          "quote": "Erdos et al. [9] showed that one can reconstruct trees with much fewer samples by ignoring those distances corresponding to paths longer than O(log n)."
+        },
+        {
+          "supporting_source": "PAPER_ERDOS1999",
+          "doi_or_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "the required sequence length can grow surprisingly slowly (a power of log n)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": "",
+      "principle": "PRIN_LEAF_ONLY_TREE"
+    },
+    {
+      "id": "E037",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_ERDOS1999",
+      "type": "USES_METHOD",
+      "explanation": "Bhamidi et al. may directly adapt Erdős et al.'s algorithm; the abstract-level and p.7 evidence supports the shared principle but the exact algorithmic reuse needs full reading of Sec. 3-4.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://arxiv.org/abs/math/0604367",
+          "location": "Sec. 2-4",
+          "basis": "full text (arXiv)"
+        }
+      ],
+      "status": "REQUIRES_REVIEW",
+      "reviewer_notes": "Neutral in scoring."
+    },
+    {
+      "id": "E038",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "USES_METHOD",
+      "explanation": "REJECTED: Bhamidi et al. discuss NJ but explain that NJ uses all pairwise distances, which is what their method avoids.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://arxiv.org/abs/math/0604367",
+          "location": "Sec. 2, p.7",
+          "basis": "full text (arXiv)",
+          "quote": "Distance-based methods ... such as UPGMA [26] or Neighbor-Joining (NJ) [24], typically make use of all pairwise distances between leaves. This leads to difficulties because 'long' distances are more 'noisy'"
+        }
+      ],
+      "status": "REJECTED",
+      "reviewer_notes": "Ordinary false positive: a teaching example of reading the method rather than the citation.",
+      "false_edge_class": "ordinary"
+    },
+    {
+      "id": "E039",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "ANALOGOUS_PROBLEM",
+      "explanation": "Ni & Tatikonda state that network routing-topology inference is similar to phylogenetic inference: terminal nodes are observed, internal nodes (routers / extinct ancestors) are hidden.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://arxiv.org/abs/0809.0158",
+          "location": "Sec. 2, p.5",
+          "basis": "full text (arXiv preprint)",
+          "quote": "We want to point out that the network inference problem is similar to the phylogenetic inference problem in evolutionary biology."
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E040",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "ANALOGOUS_PROBLEM",
+      "explanation": "Bhamidi et al. treat multicast inference as a phylogenetic reconstruction problem.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://arxiv.org/abs/math/0604367",
+          "location": "Abstract p.1; Sec. 1.3 p.5",
+          "basis": "full text (arXiv)",
+          "quote": "the multicast link loss problem is in essence a special case of the standard model of DNA evolution used in biology"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E041",
+      "source": "PAPER_CHOI2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "ANALOGOUS_PROBLEM",
+      "explanation": "Choi et al. note latent-tree reconstruction has been studied extensively in phylogenetics, where only leaves (extant species) are observed.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "Sec. 1.1, p.4",
+          "basis": "full text (arXiv)",
+          "quote": "The reconstruction of latent trees has been studied extensively by the phylogenetic community"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E042",
+      "source": "PAPER_ERDOS1999",
+      "target": "PAPER_SAITOUNEI1987",
+      "type": "ANALOGOUS_PROBLEM",
+      "explanation": "Both papers address reconstruction of a phylogenetic tree from data observed at the leaves (the same problem: Erdős et al. study its sample complexity).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_ERDOS1999",
+          "doi_or_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+          "location": "Abstract",
+          "basis": "abstract"
+        },
+        {
+          "supporting_source": "PAPER_SAITOUNEI1987",
+          "doi_or_url": "https://doi.org/10.1093/oxfordjournals.molbev.a040454",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E043",
+      "source": "PAPER_DUFFIELD2002",
+      "target": "PAPER_RATNASAMY1999",
+      "type": "ANALOGOUS_PROBLEM",
+      "explanation": "Both infer the topology of a multicast tree from measurements made only at the receivers (the same problem; Duffield et al. cite Ratnasamy & McCanne).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DUFFIELD2002",
+          "doi_or_url": "https://doi.org/10.1109/18.971737",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "use loss measurements to infer the underlying multicast topology"
+        },
+        {
+          "supporting_source": "PAPER_RATNASAMY1999",
+          "doi_or_url": "https://doi.org/10.1109/INFCOM.1999.749302",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "inferring the internal structure of a multicast distribution tree using only observations made at the end hosts"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E044",
+      "source": "PAPER_COATES2002",
+      "target": "PAPER_RATNASAMY1999",
+      "type": "ANALOGOUS_PROBLEM",
+      "explanation": "Coates et al. address the same topology-identification problem with unicast instead of multicast probes.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_COATES2002",
+          "doi_or_url": "https://doi.org/10.1145/511334.511337",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "discovering network topology solely from host-based, unicast measurements, without internal network cooperation"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E045",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_RATNASAMY1999",
+      "type": "ANALOGOUS_PROBLEM",
+      "explanation": "Ni & Tatikonda list Ratnasamy & McCanne among multicast-probing approaches to the routing-topology inference problem they address.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://arxiv.org/abs/0809.0158",
+          "location": "Sec. 1, p.3",
+          "basis": "full text (arXiv preprint)",
+          "quote": "multicast probing based approaches (e.g., [6], [13], [19], [22], [23])"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E046",
+      "source": "PAPER_CHOWLIU1968",
+      "target": "DOM_CS",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Approximating discrete probability distributions with dependence trees (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOWLIU1968",
+          "doi_or_url": "https://doi.org/10.1109/TIT.1968.1054142",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E047",
+      "source": "PAPER_DUFFIELD2002",
+      "target": "DOM_NET",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Multicast topology inference from measured end-to-end loss (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DUFFIELD2002",
+          "doi_or_url": "https://doi.org/10.1109/18.971737",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E048",
+      "source": "PAPER_SAITOUNEI1987",
+      "target": "DOM_BIO",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of The neighbor-joining method: a new method for reconstructing phylogenetic trees (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_SAITOUNEI1987",
+          "doi_or_url": "https://doi.org/10.1093/oxfordjournals.molbev.a040454",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E049",
+      "source": "PAPER_CANDES2006",
+      "target": "DOM_SIG",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CANDES2006",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2005.862083",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E050",
+      "source": "PAPER_RATNASAMY1999",
+      "target": "DOM_NET",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_RATNASAMY1999",
+          "doi_or_url": "https://doi.org/10.1109/INFCOM.1999.749302",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E051",
+      "source": "PAPER_CHOI2011",
+      "target": "DOM_CS",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Learning Latent Tree Graphical Models (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://doi.org/10.48550/arXiv.1009.2722",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E052",
+      "source": "PAPER_DEMERS1987",
+      "target": "DOM_NET",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Epidemic algorithms for replicated database maintenance (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DEMERS1987",
+          "doi_or_url": "https://doi.org/10.1145/41840.41841",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E053",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "DOM_SIG",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Network delay inference from additive metrics (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E054",
+      "source": "PAPER_VARDI1996",
+      "target": "DOM_SIG",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_VARDI1996",
+          "doi_or_url": "https://doi.org/10.1080/01621459.1996.10476697",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E055",
+      "source": "PAPER_MARGOLIN2006",
+      "target": "DOM_BIO",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of ARACNE: An Algorithm for the Reconstruction of Gene Regulatory Networks in a Mammalian Cellular Context (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_MARGOLIN2006",
+          "doi_or_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E056",
+      "source": "PAPER_ERDOS1999",
+      "target": "DOM_CS",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of A few logs suffice to build (almost) all trees (I) (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_ERDOS1999",
+          "doi_or_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E057",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "DOM_NET",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Network Tomography Based on Additive Metrics (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E058",
+      "source": "PAPER_COATES2002",
+      "target": "DOM_NET",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Maximum likelihood network topology identification from edge-based unicast measurements (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_COATES2002",
+          "doi_or_url": "https://doi.org/10.1145/511334.511337",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E059",
+      "source": "PAPER_CASTRO2004",
+      "target": "DOM_SIG",
+      "type": "IN_DOMAIN",
+      "explanation": "Primary discipline of Network Tomography: Recent Developments (venue and framing).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E060",
+      "source": "PAPER_RATNASAMY1999",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_RATNASAMY1999",
+          "doi_or_url": "https://doi.org/10.1109/INFCOM.1999.749302",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E061",
+      "source": "PAPER_RATNASAMY1999",
+      "target": "PROB_LINK_PERFORMANCE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_RATNASAMY1999",
+          "doi_or_url": "https://doi.org/10.1109/INFCOM.1999.749302",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E062",
+      "source": "PAPER_DUFFIELD2002",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Multicast topology inference from measured end-to-end loss (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DUFFIELD2002",
+          "doi_or_url": "https://doi.org/10.1109/18.971737",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E063",
+      "source": "PAPER_COATES2002",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Maximum likelihood network topology identification from edge-based unicast measurements (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_COATES2002",
+          "doi_or_url": "https://doi.org/10.1145/511334.511337",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E064",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network Tomography Based on Additive Metrics (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E065",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PROB_LINK_PERFORMANCE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network Tomography Based on Additive Metrics (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E066",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PROB_LINK_PERFORMANCE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network delay inference from additive metrics (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E067",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network delay inference from additive metrics (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E068",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PROB_SAMPLE_COMPLEXITY",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network delay inference from additive metrics (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E069",
+      "source": "PAPER_SAITOUNEI1987",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of The neighbor-joining method: a new method for reconstructing phylogenetic trees (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_SAITOUNEI1987",
+          "doi_or_url": "https://doi.org/10.1093/oxfordjournals.molbev.a040454",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E070",
+      "source": "PAPER_ERDOS1999",
+      "target": "PROB_SAMPLE_COMPLEXITY",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of A few logs suffice to build (almost) all trees (I) (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_ERDOS1999",
+          "doi_or_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E071",
+      "source": "PAPER_ERDOS1999",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of A few logs suffice to build (almost) all trees (I) (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_ERDOS1999",
+          "doi_or_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E072",
+      "source": "PAPER_CHOI2011",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Learning Latent Tree Graphical Models (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://doi.org/10.48550/arXiv.1009.2722",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E073",
+      "source": "PAPER_CHOI2011",
+      "target": "PROB_DEPENDENCE_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Learning Latent Tree Graphical Models (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://doi.org/10.48550/arXiv.1009.2722",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E074",
+      "source": "PAPER_CHOWLIU1968",
+      "target": "PROB_DEPENDENCE_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Approximating discrete probability distributions with dependence trees (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOWLIU1968",
+          "doi_or_url": "https://doi.org/10.1109/TIT.1968.1054142",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E075",
+      "source": "PAPER_VARDI1996",
+      "target": "PROB_TRAFFIC_MATRIX",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_VARDI1996",
+          "doi_or_url": "https://doi.org/10.1080/01621459.1996.10476697",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E076",
+      "source": "PAPER_CASTRO2004",
+      "target": "PROB_LINK_PERFORMANCE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network Tomography: Recent Developments (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E077",
+      "source": "PAPER_CASTRO2004",
+      "target": "PROB_TRAFFIC_MATRIX",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network Tomography: Recent Developments (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E078",
+      "source": "PAPER_CASTRO2004",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Network Tomography: Recent Developments (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E079",
+      "source": "PAPER_MARGOLIN2006",
+      "target": "PROB_GENE_NETWORK",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of ARACNE: An Algorithm for the Reconstruction of Gene Regulatory Networks in a Mammalian Cellular Context (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_MARGOLIN2006",
+          "doi_or_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E080",
+      "source": "PAPER_CANDES2006",
+      "target": "PROB_SPARSE_RECOVERY",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CANDES2006",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2005.862083",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E081",
+      "source": "PAPER_DEMERS1987",
+      "target": "PROB_REPLICA_CONSISTENCY",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of Epidemic algorithms for replicated database maintenance (see key_problem).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DEMERS1987",
+          "doi_or_url": "https://doi.org/10.1145/41840.41841",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E082",
+      "source": "PAPER_SAITOUNEI1987",
+      "target": "METH_NEIGHBOR_JOINING",
+      "type": "USES_METHOD",
+      "explanation": "The neighbor-joining method: a new method for reconstructing phylogenetic trees uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_SAITOUNEI1987",
+          "doi_or_url": "https://doi.org/10.1093/oxfordjournals.molbev.a040454",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E083",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "METH_NEIGHBOR_JOINING",
+      "type": "USES_METHOD",
+      "explanation": "Network Tomography Based on Additive Metrics uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E084",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "METH_ROOTED_NJ",
+      "type": "USES_METHOD",
+      "explanation": "Network Tomography Based on Additive Metrics uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E085",
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "METH_ADDITIVE_METRIC",
+      "type": "USES_METHOD",
+      "explanation": "Network Tomography Based on Additive Metrics uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2011.2168901",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E086",
+      "source": "PAPER_CHOI2011",
+      "target": "METH_NEIGHBOR_JOINING",
+      "type": "USES_METHOD",
+      "explanation": "Learning Latent Tree Graphical Models uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://doi.org/10.48550/arXiv.1009.2722",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E087",
+      "source": "PAPER_CHOI2011",
+      "target": "METH_CHOW_LIU",
+      "type": "USES_METHOD",
+      "explanation": "Learning Latent Tree Graphical Models uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://doi.org/10.48550/arXiv.1009.2722",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E088",
+      "source": "PAPER_CHOI2011",
+      "target": "METH_CLGROUPING",
+      "type": "USES_METHOD",
+      "explanation": "Learning Latent Tree Graphical Models uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://doi.org/10.48550/arXiv.1009.2722",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E089",
+      "source": "PAPER_CHOI2011",
+      "target": "METH_ADDITIVE_METRIC",
+      "type": "USES_METHOD",
+      "explanation": "Learning Latent Tree Graphical Models uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://doi.org/10.48550/arXiv.1009.2722",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E090",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "METH_ADDITIVE_METRIC",
+      "type": "USES_METHOD",
+      "explanation": "Network delay inference from additive metrics uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E091",
+      "source": "PAPER_BHAMIDI2010",
+      "target": "METH_SHORT_PATHS",
+      "type": "USES_METHOD",
+      "explanation": "Network delay inference from additive metrics uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://doi.org/10.1002/rsa.20305",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E092",
+      "source": "PAPER_ERDOS1999",
+      "target": "METH_SHORT_PATHS",
+      "type": "USES_METHOD",
+      "explanation": "A few logs suffice to build (almost) all trees (I) uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_ERDOS1999",
+          "doi_or_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": "Characterisation of Erdős et al.'s algorithm as short-path based comes from Bhamidi et al. 2010 p.7 and Choi et al. 2011 p.4."
+    },
+    {
+      "id": "E093",
+      "source": "PAPER_RATNASAMY1999",
+      "target": "METH_LOSS_CORRELATION",
+      "type": "USES_METHOD",
+      "explanation": "Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_RATNASAMY1999",
+          "doi_or_url": "https://doi.org/10.1109/INFCOM.1999.749302",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E094",
+      "source": "PAPER_DUFFIELD2002",
+      "target": "METH_TOPOLOGY_ESTIMATORS",
+      "type": "USES_METHOD",
+      "explanation": "Multicast topology inference from measured end-to-end loss uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DUFFIELD2002",
+          "doi_or_url": "https://doi.org/10.1109/18.971737",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E095",
+      "source": "PAPER_COATES2002",
+      "target": "METH_PENALISED_ML_MCMC",
+      "type": "USES_METHOD",
+      "explanation": "Maximum likelihood network topology identification from edge-based unicast measurements uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_COATES2002",
+          "doi_or_url": "https://doi.org/10.1145/511334.511337",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E096",
+      "source": "PAPER_VARDI1996",
+      "target": "METH_EM_MOMENTS",
+      "type": "USES_METHOD",
+      "explanation": "Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_VARDI1996",
+          "doi_or_url": "https://doi.org/10.1080/01621459.1996.10476697",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E097",
+      "source": "PAPER_CHOWLIU1968",
+      "target": "METH_CHOW_LIU",
+      "type": "USES_METHOD",
+      "explanation": "Approximating discrete probability distributions with dependence trees uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOWLIU1968",
+          "doi_or_url": "https://doi.org/10.1109/TIT.1968.1054142",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E098",
+      "source": "PAPER_MARGOLIN2006",
+      "target": "METH_MI_DPI",
+      "type": "USES_METHOD",
+      "explanation": "ARACNE: An Algorithm for the Reconstruction of Gene Regulatory Networks in a Mammalian Cellular Context uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_MARGOLIN2006",
+          "doi_or_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+          "location": "Abstract / methods",
+          "basis": "full text"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E099",
+      "source": "PAPER_CANDES2006",
+      "target": "METH_L1_MINIMISATION",
+      "type": "USES_METHOD",
+      "explanation": "Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CANDES2006",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2005.862083",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E100",
+      "source": "PAPER_DEMERS1987",
+      "target": "METH_EPIDEMIC_GOSSIP",
+      "type": "USES_METHOD",
+      "explanation": "Epidemic algorithms for replicated database maintenance uses this method (see methods field).",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DEMERS1987",
+          "doi_or_url": "https://doi.org/10.1145/41840.41841",
+          "location": "Abstract / methods",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E101",
+      "source": "METH_ROOTED_NJ",
+      "target": "METH_NEIGHBOR_JOINING",
+      "type": "EXTENDS",
+      "explanation": "RNJ is a rooted version of NJ.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://arxiv.org/abs/0809.0158",
+          "location": "p.15",
+          "basis": "full text (arXiv preprint)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E102",
+      "source": "METH_CLGROUPING",
+      "target": "METH_CHOW_LIU",
+      "type": "EXTENDS",
+      "explanation": "CLGrouping starts from and transforms the Chow-Liu tree.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "Sec. 5, p.14",
+          "basis": "full text (arXiv)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E103",
+      "source": "METH_MI_DPI",
+      "target": "METH_CHOW_LIU",
+      "type": "EXTENDS",
+      "explanation": "ARACNE generalises Chow-Liu beyond trees.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_MARGOLIN2006",
+          "doi_or_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+          "location": "p.5",
+          "basis": "full text (BMC)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E104",
+      "source": "METH_NEIGHBOR_JOINING",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "NJ builds a tree with hidden internal nodes from distances between observed taxa.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_SAITOUNEI1987",
+          "doi_or_url": "https://doi.org/10.1093/oxfordjournals.molbev.a040454",
+          "location": "Abstract",
+          "basis": "abstract"
+        },
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "p.4",
+          "basis": "full text (arXiv)",
+          "quote": "recursively pairing two nodes that are the closest neighbors in the true latent tree and introducing a hidden node as the parent of the two nodes"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E105",
+      "source": "METH_ROOTED_NJ",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "RNJ recovers routing trees from end-host distances.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://arxiv.org/abs/0809.0158",
+          "location": "p.15",
+          "basis": "full text (arXiv preprint)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E106",
+      "source": "METH_ADDITIVE_METRIC",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Additive metrics make endpoint distances sums of hidden edge lengths.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_NITATIKONDA2011",
+          "doi_or_url": "https://arxiv.org/abs/0809.0158",
+          "location": "p.3",
+          "basis": "full text (arXiv preprint)",
+          "quote": "Under an additive metric the path metric (path length) is expressed as the summation of the link metrics (link lengths) along the path. The basic idea is to use (estimated) distances between the terminal nodes (end hosts) to infer the routing tree topology"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E107",
+      "source": "METH_SHORT_PATHS",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Short-path tree reconstruction is a sample-efficient realisation of the principle.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_BHAMIDI2010",
+          "doi_or_url": "https://arxiv.org/abs/math/0604367",
+          "location": "p.7",
+          "basis": "full text (arXiv)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E108",
+      "source": "METH_CLGROUPING",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Latent-tree learning recovers hidden nodes from observed-variable distances.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOI2011",
+          "doi_or_url": "https://arxiv.org/abs/1009.2722",
+          "location": "Abstract",
+          "basis": "full text (arXiv)"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E109",
+      "source": "METH_LOSS_CORRELATION",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Receivers that share more of the multicast tree see correlated losses, revealing the hidden internal structure from end-host observations.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_RATNASAMY1999",
+          "doi_or_url": "https://doi.org/10.1109/INFCOM.1999.749302",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "By noting correlations of loss patterns across the receiver set ... we can determine both the underlying multicast tree structure"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": "Abstract supports leaf-only inference via loss correlation. Whether the grouping is agglomerative pair-merging needs full-text review (Coates et al. 2002 abstract describes prior proposals as pair-merging)."
+    },
+    {
+      "id": "E110",
+      "source": "METH_TOPOLOGY_ESTIMATORS",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "The grouping estimator exploits that loss grows with path length - a shared-path metric.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DUFFIELD2002",
+          "doi_or_url": "https://doi.org/10.1109/18.971737",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "a grouping estimator that exploits the monotonicity of loss rates with increasing path length"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E111",
+      "source": "METH_PENALISED_ML_MCMC",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Topology identified from host-only measurements; uses a global likelihood rather than pair-merging.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_COATES2002",
+          "doi_or_url": "https://doi.org/10.1145/511334.511337",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "In contrast to other recent proposals for topology identification that employ suboptimal, pair-merging strategies"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E112",
+      "source": "METH_ML_PHYLOGENY",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Maximum-likelihood phylogenetics infers the tree relating sampled sequences.",
+      "evidence": [
+        {
+          "supporting_source": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/tree.html",
+          "doi_or_url": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/tree.html",
+          "location": "augur tree: --method, Default: 'iqtree'",
+          "basis": "official documentation"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E113",
+      "source": "METH_ANCESTRAL_RECON",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Ancestral reconstruction assigns states to unobserved internal nodes from their descendants.",
+      "evidence": [
+        {
+          "supporting_source": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/ancestral.html",
+          "doi_or_url": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/ancestral.html",
+          "location": "augur ancestral: description",
+          "basis": "official documentation",
+          "quote": "Each internal node gets assigned a nucleotide sequence that maximizes a likelihood on the tree given its descendants and its parent node."
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E114",
+      "source": "METH_CHOW_LIU",
+      "target": "PRIN_MI_DEPENDENCE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Chow-Liu selects the pairwise dependencies that minimise information loss.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CHOWLIU1968",
+          "doi_or_url": "https://doi.org/10.1109/TIT.1968.1054142",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E115",
+      "source": "METH_MI_DPI",
+      "target": "PRIN_MI_DEPENDENCE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "ARACNE ranks interactions by mutual information.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_MARGOLIN2006",
+          "doi_or_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "This method uses an information theoretic approach to eliminate the majority of indirect interactions"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E116",
+      "source": "METH_EM_MOMENTS",
+      "target": "PRIN_INVERSE_PROBLEM",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Vardi's estimator solves a linear inverse problem.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_VARDI1996",
+          "doi_or_url": "https://doi.org/10.1080/01621459.1996.10476697",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "a linear inverse problem with positivity restrictions"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E117",
+      "source": "METH_PENALISED_ML_MCMC",
+      "target": "PRIN_INVERSE_PROBLEM",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Network tomography infers internal performance from edge measurements.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_COATES2002",
+          "doi_or_url": "https://doi.org/10.1145/511334.511337",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E118",
+      "source": "METH_L1_MINIMISATION",
+      "target": "PRIN_SPARSITY",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Exact recovery of sparse signals by l1 minimisation.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CANDES2006",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2005.862083",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E119",
+      "source": "METH_L1_MINIMISATION",
+      "target": "PRIN_INVERSE_PROBLEM",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Reconstructing an object from incomplete frequency samples is an underdetermined inverse problem.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CANDES2006",
+          "doi_or_url": "https://doi.org/10.1109/TIT.2005.862083",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E120",
+      "source": "METH_EPIDEMIC_GOSSIP",
+      "target": "PRIN_EPIDEMIC_SPREAD",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "The algorithms are analysed by analogy with epidemics.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_DEMERS1987",
+          "doi_or_url": "https://doi.org/10.1145/41840.41841",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "The algorithms are closely analogous to epidemics"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E121",
+      "source": "PAPER_CASTRO2004",
+      "target": "PRIN_INVERSE_PROBLEM",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Castro et al. frame network tomography as an inverse problem.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "Familiar signal processing or statistical problems such as tomographic image reconstruction and phylogenetic tree identification have interesting connections to those arising in networking."
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E122",
+      "source": "PAPER_CASTRO2004",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Castro et al. review tree-estimation formulations and name the phylogenetics connection.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_CASTRO2004",
+          "doi_or_url": "https://doi.org/10.1214/088342304000000422",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "Familiar signal processing or statistical problems such as tomographic image reconstruction and phylogenetic tree identification have interesting connections to those arising in networking."
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E123",
+      "source": "APP_NEXTSTRAIN",
+      "target": "PRIN_LEAF_ONLY_TREE",
+      "type": "OPERATIONALISES",
+      "explanation": "Nextstrain routinely reconstructs phylogenetic trees of pathogens from sampled genomes (the leaves) and infers sequences, dates and locations for unobserved internal nodes (common ancestors) to track outbreaks in near real time.",
+      "evidence": [
+        {
+          "supporting_source": "https://doi.org/10.1093/bioinformatics/bty407",
+          "doi_or_url": "https://doi.org/10.1093/bioinformatics/bty407",
+          "location": "Abstract",
+          "basis": "peer-reviewed application paper",
+          "quote": "Nextstrain consists of a database of viral genomes, a bioinformatics pipeline for phylodynamics analysis, and an interactive visualization platform."
+        },
+        {
+          "supporting_source": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/ancestral.html",
+          "doi_or_url": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/ancestral.html",
+          "location": "augur ancestral",
+          "basis": "official documentation",
+          "quote": "Each internal node gets assigned a nucleotide sequence that maximizes a likelihood on the tree given its descendants and its parent node."
+        },
+        {
+          "supporting_source": "https://docs.nextstrain.org/en/latest/learn/interpret/how-to-read-a-tree.html",
+          "doi_or_url": "https://docs.nextstrain.org/en/latest/learn/interpret/how-to-read-a-tree.html",
+          "location": "How to read a phylogenetic tree",
+          "basis": "official documentation",
+          "quote": "possible locations of internal nodes can be inferred using mathematical models as well"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": "No historical lineage from the corpus papers to Nextstrain is claimed. Nextstrain's default tree builder is IQ-TREE (maximum likelihood), not neighbor-joining."
+    },
+    {
+      "id": "E124",
+      "source": "APP_NEXTSTRAIN",
+      "target": "METH_ML_PHYLOGENY",
+      "type": "APPLICATION_OF",
+      "explanation": "augur tree builds trees with IQ-TREE (default), RAxML or FastTree.",
+      "evidence": [
+        {
+          "supporting_source": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/tree.html",
+          "doi_or_url": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/tree.html",
+          "location": "--method",
+          "basis": "official documentation",
+          "quote": "--method Possible choices: fasttree, raxml, iqtree ... Default: 'iqtree'"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E125",
+      "source": "APP_NEXTSTRAIN",
+      "target": "METH_ANCESTRAL_RECON",
+      "type": "APPLICATION_OF",
+      "explanation": "augur ancestral / augur refine use TreeTime to infer internal-node sequences and dates.",
+      "evidence": [
+        {
+          "supporting_source": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/refine.html",
+          "doi_or_url": "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/refine.html",
+          "location": "--timetree",
+          "basis": "official documentation",
+          "quote": "produce timetree using treetime"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E126",
+      "source": "APP_NEXTSTRAIN",
+      "target": "PROB_HIDDEN_TREE",
+      "type": "APPLICATION_OF",
+      "explanation": "Pathogen phylogenetics is the hidden-tree problem with sampled genomes as leaves.",
+      "evidence": [
+        {
+          "supporting_source": "https://doi.org/10.1093/bioinformatics/bty407",
+          "doi_or_url": "https://doi.org/10.1093/bioinformatics/bty407",
+          "location": "Abstract",
+          "basis": "peer-reviewed application paper"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    }
+  ]
+}

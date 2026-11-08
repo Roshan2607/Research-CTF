@@ -1,0 +1,17 @@
+# Core
+networkx>=3.2
+pandas>=2.0
+streamlit>=1.37
+python-dotenv>=1.0
+# Challenge documents (wrapper cards + extraction checks)
+reportlab>=4.0
+pymupdf>=1.24
+pypdf>=4.0
+# Metadata refresh (scripts/fetch_metadata.py, scripts/verify_evidence.py)
+requests>=2.31
+# Tests
+pytest>=8.0
+
+graphviz>=0.20
+
+extra-streamlit-components>=0.1.71

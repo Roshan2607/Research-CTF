@@ -1,0 +1,58 @@
+{
+  "_comment": "ORGANISER ONLY. Verified alternative routes from the base paper to the target. Every supporting edge is VERIFIED in master_graph.json and is part of the scoring reference set, so teams that follow any of these routes earn credit.",
+  "paths": [
+    {
+      "id": "ALT-A",
+      "label": "Direct tomography-to-phylogenetics route",
+      "path": ["PAPER_RATNASAMY1999", "PAPER_NITATIKONDA2011", "PAPER_SAITOUNEI1987"],
+      "path_participant_ids": ["P05", "P12", "P03"],
+      "supporting_edges": [
+        ["PAPER_NITATIKONDA2011", "PAPER_RATNASAMY1999", "CITES"],
+        ["PAPER_NITATIKONDA2011", "PAPER_SAITOUNEI1987", "CITES"],
+        ["PAPER_NITATIKONDA2011", "PAPER_SAITOUNEI1987", "USES_METHOD"],
+        ["PAPER_NITATIKONDA2011", "PAPER_SAITOUNEI1987", "EXTENDS"],
+        ["PAPER_NITATIKONDA2011", "PAPER_SAITOUNEI1987", "ANALOGOUS_PROBLEM"]
+      ],
+      "verification_status": "VERIFIED",
+      "notes": "Shortest and most explicit route: Ni & Tatikonda run neighbor-joining (Alg. 1, p.13) and derive rooted NJ (Alg. 2, p.15)."
+    },
+    {
+      "id": "ALT-B",
+      "label": "Machine-learning (latent tree) route",
+      "path": ["PAPER_RATNASAMY1999", "PAPER_CASTRO2004", "PAPER_CHOI2011", "PAPER_SAITOUNEI1987"],
+      "path_participant_ids": ["P05", "P14", "P06", "P03"],
+      "supporting_edges": [
+        ["PAPER_CASTRO2004", "PAPER_RATNASAMY1999", "CITES"],
+        ["PAPER_CHOI2011", "PAPER_CASTRO2004", "CITES"],
+        ["PAPER_CHOI2011", "PAPER_SAITOUNEI1987", "CITES"],
+        ["PAPER_CHOI2011", "PAPER_SAITOUNEI1987", "USES_METHOD"],
+        ["PAPER_CHOI2011", "PAPER_SAITOUNEI1987", "ANALOGOUS_PROBLEM"]
+      ],
+      "verification_status": "VERIFIED",
+      "notes": "Castro et al.'s review names the phylogenetics connection in its abstract. Choi et al. link phylogenetics to network tomography (p.4) and use NJ inside CLNJ. Weaker first hop: citation plus review-level framing only."
+    },
+    {
+      "id": "ALT-C",
+      "label": "Sample-complexity (theory) route",
+      "path": ["PAPER_RATNASAMY1999", "PAPER_NITATIKONDA2011", "PAPER_BHAMIDI2010", "PAPER_ERDOS1999", "PAPER_SAITOUNEI1987"],
+      "path_participant_ids": ["P05", "P12", "P08", "P11", "P03"],
+      "supporting_edges": [
+        ["PAPER_NITATIKONDA2011", "PAPER_RATNASAMY1999", "CITES"],
+        ["PAPER_BHAMIDI2010", "PAPER_NITATIKONDA2011", "CITES"],
+        ["PAPER_BHAMIDI2010", "PAPER_ERDOS1999", "CITES"],
+        ["PAPER_BHAMIDI2010", "PAPER_ERDOS1999", "SHARES_PRINCIPLE"],
+        ["PAPER_ERDOS1999", "PAPER_SAITOUNEI1987", "CITES"],
+        ["PAPER_ERDOS1999", "PAPER_SAITOUNEI1987", "ANALOGOUS_PROBLEM"]
+      ],
+      "verification_status": "VERIFIED",
+      "notes": "Reaches the target through the theory of how much data hidden-tree reconstruction needs (poly(log n) samples)."
+    }
+  ],
+  "also_traversable_unregistered": [
+    {
+      "path_participant_ids": ["P05", "P02", "P12", "P03"],
+      "notes": "Via Duffield et al. (P12 cites P02). Verified edges exist, but the P02 hop carries no extra conceptual content. Listed for completeness."
+    }
+  ],
+  "review_process": "A team may argue for a route not listed here. Its edges enter the organiser review queue with the team's evidence_reference. Once an organiser verifies them (graph.validation.promote_edge), they join the scoring reference set and the team is rescored."
+}

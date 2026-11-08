@@ -1,0 +1,57 @@
+{
+  "_comment": "ORGANISER ONLY. Decoy papers: genuine, unaltered literature that is easy to connect to the hidden-tree pathway on surface similarity, but does not support the methodological transfer. Reading a decoy is never penalised; asserting an unsupported edge involving one is (weight from config: decoy_induced).",
+  "decoys": [
+    {
+      "participant_id": "P04",
+      "internal_id": "PAPER_CANDES2006",
+      "surface_similarity": "The title almost restates the workshop theme: 'exact signal reconstruction from highly incomplete frequency information'. Same venue (IEEE Trans. Information Theory) as two pathway papers.",
+      "why_misleading": "The unknown is a sparse signal on a known grid, recovered by l1 / total-variation convex optimisation. There is no hidden graph or tree, no leaf-only observation model, no additive path metric and no grouping of endpoints. 'Incomplete information' here means missing Fourier coefficients, not unobserved internal nodes.",
+      "legitimate_relations": "None verified to the pathway papers. Treated as neutral (defensible, not rewarded): ANALOGOUS_PROBLEM with P09 (both underdetermined linear inverse problems) and with P14 (Castro et al. mention tomographic image reconstruction; Candès et al. reconstruct images from partial Fourier data).",
+      "decoy_induced_false_edges": [
+        ["P04", "P05", "SHARES_PRINCIPLE"],
+        ["P04", "P05", "ANALOGOUS_PROBLEM"],
+        ["P04", "P03", "SHARES_PRINCIPLE"],
+        ["P04", "P03", "ANALOGOUS_PROBLEM"],
+        ["P04", "P13", "ANALOGOUS_PROBLEM"],
+        ["P04", "P12", "SHARES_PRINCIPLE"],
+        ["P04", "P09", "EXTENDS"],
+        ["P04", "P09", "USES_METHOD"]
+      ],
+      "teaching_point": "Keyword overlap ('reconstruction', 'incomplete') is not a methodological relationship. Ask: what is hidden, what is observed, and what method does the inference?"
+    },
+    {
+      "participant_id": "P07",
+      "internal_id": "PAPER_DEMERS1987",
+      "surface_similarity": "Biological vocabulary ('epidemic', 'infection', epidemiology literature) in a networking / distributed-systems paper about disseminating data to many sites, like multicast.",
+      "why_misleading": "Demers et al. spread KNOWN updates using randomised gossip and analyse it with epidemic models. Nothing unobserved is reconstructed, no tree is inferred, and the biology link is an analogy for dissemination dynamics, not for ancestry or phylogeny. It is a tempting false bridge to pathogen-tracking applications.",
+      "legitimate_relations": "None to other corpus papers.",
+      "decoy_induced_false_edges": [
+        ["P07", "P05", "ANALOGOUS_PROBLEM"],
+        ["P07", "P05", "SHARES_PRINCIPLE"],
+        ["P07", "P03", "ANALOGOUS_PROBLEM"],
+        ["P07", "P03", "SHARES_PRINCIPLE"],
+        ["P07", "P02", "ANALOGOUS_PROBLEM"],
+        ["P07", "P10", "SHARES_PRINCIPLE"]
+      ],
+      "teaching_point": "Shared vocabulary across disciplines can be a metaphor rather than a shared method. Check what the 'epidemic' actually computes."
+    },
+    {
+      "participant_id": "P10",
+      "internal_id": "PAPER_MARGOLIN2006",
+      "surface_similarity": "Reconstructs a hidden biological network from indirect data (gene expression), uses information-theoretic distances, and builds on a tree algorithm (Chow-Liu). It sits next to the target paper's discipline.",
+      "why_misleading": "Every node in an ARACNE network is an OBSERVED gene. ARACNE never introduces unobserved internal nodes and its output is not a tree (it is designed for loops). It prunes indirect edges with the Data Processing Inequality on triplets of observed genes. That is a different principle (mutual-information dependence) from leaf-only hidden-tree reconstruction.",
+      "legitimate_relations": "VERIFIED and rewarded: P10 CITES P01 and P10 EXTENDS P01 ('natural generalization of the Chow-Liu algorithm', p.5). Neutral: SHARES_PRINCIPLE with P01 and with P06 (mutual-information / Chow-Liu foundation).",
+      "decoy_induced_false_edges": [
+        ["P10", "P03", "SHARES_PRINCIPLE"],
+        ["P10", "P03", "ANALOGOUS_PROBLEM"],
+        ["P10", "P03", "EXTENDS"],
+        ["P10", "P03", "USES_METHOD"],
+        ["P10", "P05", "ANALOGOUS_PROBLEM"],
+        ["P10", "P05", "SHARES_PRINCIPLE"],
+        ["P10", "P12", "ANALOGOUS_PROBLEM"]
+      ],
+      "teaching_point": "A paper can be genuinely connected to part of the corpus (Chow-Liu) and still not be on the path. Look for the specific mechanism - hidden internal nodes - not just 'network reconstruction in biology'."
+    }
+  ],
+  "default_rule": "When config.decoy_incident_default is true, any other unsupported edge with a decoy at either end (not reference, not neutral, not injection) is classified as decoy-induced."
+}

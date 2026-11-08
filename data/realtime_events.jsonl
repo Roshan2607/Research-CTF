@@ -1,0 +1,98 @@
+{"at": "2026-11-08T13:44:04+00:00", "event": "team_created", "team_id": "TEAM01"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 1}
+{"at": "2026-11-08T13:44:04+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 1, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": true, "answer": "leaf-only observations"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 2}
+{"at": "2026-11-08T13:44:04+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 2, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": true, "answer": "hidden internal structure"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 3}
+{"at": "2026-11-08T13:44:04+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 3, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": true, "answer": "shared path similarity"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 4}
+{"at": "2026-11-08T13:44:04+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 4, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:44:04+00:00", "event": "team_created", "team_id": "TEAM02"}
+{"at": "2026-11-08T13:44:04+00:00", "event": "flag_attempt", "team_id": "TEAM02", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "team_created", "team_id": "TEAM01"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 1}
+{"at": "2026-11-08T13:44:32+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 1, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": true, "answer": "leaf-only observations"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 2}
+{"at": "2026-11-08T13:44:32+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 2, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": true, "answer": "hidden internal structure"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 3}
+{"at": "2026-11-08T13:44:32+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 3, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": true, "answer": "shared path similarity"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 4}
+{"at": "2026-11-08T13:44:32+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 4, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:44:32+00:00", "event": "team_created", "team_id": "TEAM02"}
+{"at": "2026-11-08T13:44:32+00:00", "event": "flag_attempt", "team_id": "TEAM02", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "team_created", "team_id": "TEAM01"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 1}
+{"at": "2026-11-08T13:45:43+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 1, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": true, "answer": "leaf-only observations"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 2}
+{"at": "2026-11-08T13:45:43+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 2, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": true, "answer": "hidden internal structure"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 3}
+{"at": "2026-11-08T13:45:43+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 3, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": true, "answer": "shared path similarity"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 4}
+{"at": "2026-11-08T13:45:43+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 4, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:45:43+00:00", "event": "team_created", "team_id": "TEAM02"}
+{"at": "2026-11-08T13:45:43+00:00", "event": "flag_attempt", "team_id": "TEAM02", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:47:43+00:00", "event": "team_created", "team_id": "TEAMTEST"}
+{"at": "2026-11-08T13:47:43+00:00", "event": "flag_attempt", "team_id": "TEAMTEST", "level": 1, "correct": false, "answer": "definitely wrong"}
+{"at": "2026-11-08T13:47:43+00:00", "event": "level_submitted", "team_id": "TEAMTEST", "level": 1, "flag_correct": false, "edge_count": 1}
+{"at": "2026-11-08T13:47:45+00:00", "event": "team_created", "team_id": "TEAM01"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 1}
+{"at": "2026-11-08T13:47:45+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 1, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": true, "answer": "leaf-only observations"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 2}
+{"at": "2026-11-08T13:47:45+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 2, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": true, "answer": "hidden internal structure"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 3}
+{"at": "2026-11-08T13:47:45+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 3, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": true, "answer": "shared path similarity"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 4}
+{"at": "2026-11-08T13:47:45+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 4, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:47:45+00:00", "event": "team_created", "team_id": "TEAM02"}
+{"at": "2026-11-08T13:47:45+00:00", "event": "flag_attempt", "team_id": "TEAM02", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "team_created", "team_id": "TEAM01"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 1, "correct": true, "answer": "tree reconstruction"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 1}
+{"at": "2026-11-08T13:49:21+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 1, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 2, "correct": true, "answer": "leaf-only observations"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 2}
+{"at": "2026-11-08T13:49:21+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 2, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 3, "correct": true, "answer": "hidden internal structure"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 3}
+{"at": "2026-11-08T13:49:21+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 3, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": false, "answer": "not it"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM01", "level": 4, "correct": true, "answer": "shared path similarity"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "draft_saved", "team_id": "TEAM01", "level": 4}
+{"at": "2026-11-08T13:49:21+00:00", "event": "level_submitted", "team_id": "TEAM01", "level": 4, "flag_correct": true, "edge_count": 0}
+{"at": "2026-11-08T13:49:21+00:00", "event": "team_created", "team_id": "TEAM02"}
+{"at": "2026-11-08T13:49:21+00:00", "event": "flag_attempt", "team_id": "TEAM02", "level": 1, "correct": true, "answer": "tree reconstruction"}

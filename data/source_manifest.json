@@ -1,0 +1,1066 @@
+{
+  "theme": "Reconstruction of Hidden Structures from Incomplete Information",
+  "generated_by": "scripts/fetch_metadata.py",
+  "generated_at": "2026-11-03T18:10:54+00:00",
+  "domains": {
+    "DOM_BIO": "Biology & biomedical science",
+    "DOM_CS": "Computer science, graph theory & machine learning",
+    "DOM_NET": "Networking & distributed systems",
+    "DOM_SIG": "Signal processing, statistics & applied mathematics"
+  },
+  "papers": [
+    {
+      "internal_id": "PAPER_CHOWLIU1968",
+      "title": "Approximating discrete probability distributions with dependence trees",
+      "authors": [
+        "C. Chow",
+        "C. Liu"
+      ],
+      "year": 1968,
+      "first_public_year": 1968,
+      "venue": "IEEE Transactions on Information Theory",
+      "volume": "14",
+      "issue": "3",
+      "pages": "462-467",
+      "doi": "10.1109/TIT.1968.1054142",
+      "doi_url": "https://doi.org/10.1109/TIT.1968.1054142",
+      "open_access_url": null,
+      "published_version": null,
+      "access_note": "Paywalled (IEEE). Abstract and bibliographic metadata only.",
+      "domain": "DOM_CS",
+      "abstract": "A method is presented to approximate optimally an n-dimensional discrete probability distribution by a product of second-order distributions, or the distribution of the first-order tree dependence. The problem is to find an optimum set of n - 1 first order dependence relationship among the n variables. It is shown that the procedure derived in this paper yields an approximation of a minimum difference in information. It is further shown that when this procedure is applied to empirical observations from an unknown distribution of tree dependence, the procedure is the maximum-likelihood estimate of the distribution.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": "OpenAlex abstract has three word-split artefacts ('ann-dimensional', 'ofn - 1first', 'thenvariables'); repaired via abstract_fixes.",
+      "openalex_id": "https://openalex.org/W2163166770",
+      "openalex_referenced_works": [
+        "https://openalex.org/W1965555277",
+        "https://openalex.org/W1965680834",
+        "https://openalex.org/W2054283432",
+        "https://openalex.org/W2061116853",
+        "https://openalex.org/W2085294315",
+        "https://openalex.org/W2088549579",
+        "https://openalex.org/W2324007084",
+        "https://openalex.org/W2328385164",
+        "https://openalex.org/W2537114668",
+        "https://openalex.org/W4255306344"
+      ],
+      "openalex_open_access": {
+        "is_oa": false,
+        "oa_status": "closed",
+        "oa_url": null,
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:12+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_DUFFIELD2002",
+      "title": "Multicast topology inference from measured end-to-end loss",
+      "authors": [
+        "Nick G. Duffield",
+        "Joseph Horowitz",
+        "Francesco Lo Presti",
+        "Don Towsley"
+      ],
+      "year": 2002,
+      "first_public_year": 2002,
+      "venue": "IEEE Transactions on Information Theory",
+      "volume": "48",
+      "issue": "1",
+      "pages": "26-45",
+      "doi": "10.1109/18.971737",
+      "doi_url": "https://doi.org/10.1109/18.971737",
+      "open_access_url": null,
+      "published_version": null,
+      "access_note": "Paywalled (IEEE). Abstract and bibliographic metadata only.",
+      "domain": "DOM_NET",
+      "abstract": "The use of multicast inference on end-to-end measurement has recently been proposed as a means to infer network internal characteristics such as packet link loss rate and delay. In this paper, we propose three types of algorithm that use loss measurements to infer the underlying multicast topology: i) a grouping estimator that exploits the monotonicity of loss rates with increasing path length; ii) a maximum-likelihood (ML) estimator (MLE); and iii) a Bayesian estimator. We establish their consistency, compare their complexity and accuracy, and analyze the modes of failure and their asymptotic probabilities.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": null,
+      "openalex_id": "https://openalex.org/W2141799817",
+      "openalex_referenced_works": [
+        "https://openalex.org/W131333509",
+        "https://openalex.org/W1820526680",
+        "https://openalex.org/W1968172088",
+        "https://openalex.org/W1988520084",
+        "https://openalex.org/W2019420194",
+        "https://openalex.org/W2025651888",
+        "https://openalex.org/W2044807855",
+        "https://openalex.org/W2071881878",
+        "https://openalex.org/W2081715952",
+        "https://openalex.org/W2084802065",
+        "https://openalex.org/W2103143481",
+        "https://openalex.org/W2145043613",
+        "https://openalex.org/W2149647489",
+        "https://openalex.org/W2162787146",
+        "https://openalex.org/W2163935672",
+        "https://openalex.org/W2166194445",
+        "https://openalex.org/W2169806804",
+        "https://openalex.org/W2796425996",
+        "https://openalex.org/W4285719527"
+      ],
+      "openalex_open_access": {
+        "is_oa": false,
+        "oa_status": "closed",
+        "oa_url": null,
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:16+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_SAITOUNEI1987",
+      "title": "The neighbor-joining method: a new method for reconstructing phylogenetic trees",
+      "authors": [
+        "Naruya Saitou",
+        "M Nei"
+      ],
+      "year": 1987,
+      "first_public_year": 1987,
+      "venue": "Molecular Biology and Evolution",
+      "volume": "4",
+      "issue": "4",
+      "pages": "406-25",
+      "doi": "10.1093/oxfordjournals.molbev.a040454",
+      "doi_url": "https://doi.org/10.1093/oxfordjournals.molbev.a040454",
+      "open_access_url": "https://academic.oup.com/mbe/article-pdf/4/4/406/11167444/7sait.pdf",
+      "published_version": null,
+      "access_note": "Free to read at the publisher (OpenAlex oa_status: bronze). Not redistributed; link only.",
+      "domain": "DOM_BIO",
+      "abstract": "A new method called the neighbor-joining method is proposed for reconstructing phylogenetic trees from evolutionary distance data. The principle of this method is to find pairs of operational taxonomic units (OTUs [= neighbors]) that minimize the total branch length at each stage of clustering of OTUs starting with a starlike tree. The branch lengths as well as the topology of a parsimonious tree can quickly be obtained by using this method. Using computer simulation, we studied the efficiency of this method in obtaining the correct unrooted tree in comparison with that of five other tree-making methods: the unweighted pair group method of analysis, Farris's method, Sattath and Tversky's method, Li's method, and Tateno et al.'s modified Farris method. The new, neighbor-joining method and Sattath and Tversky's method are shown to be generally better than the other methods.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": null,
+      "openalex_id": "https://openalex.org/W2097706568",
+      "openalex_referenced_works": [
+        "https://openalex.org/W93588716",
+        "https://openalex.org/W1525734744",
+        "https://openalex.org/W1968248848",
+        "https://openalex.org/W2005471817",
+        "https://openalex.org/W2031126546",
+        "https://openalex.org/W2041076979",
+        "https://openalex.org/W2060858410",
+        "https://openalex.org/W2075357518",
+        "https://openalex.org/W2078650268",
+        "https://openalex.org/W2088481129",
+        "https://openalex.org/W2090709028",
+        "https://openalex.org/W2118942683",
+        "https://openalex.org/W2166802878",
+        "https://openalex.org/W2298922749",
+        "https://openalex.org/W2324133927",
+        "https://openalex.org/W2760713421"
+      ],
+      "openalex_open_access": {
+        "is_oa": true,
+        "oa_status": "bronze",
+        "oa_url": "https://academic.oup.com/mbe/article-pdf/4/4/406/11167444/7sait.pdf",
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:19+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_CANDES2006",
+      "title": "Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information",
+      "authors": [
+        "Emmanuel J. Candès",
+        "Justin K. Romberg",
+        "Terence Tao"
+      ],
+      "year": 2006,
+      "first_public_year": 2006,
+      "venue": "IEEE Transactions on Information Theory",
+      "volume": "52",
+      "issue": "2",
+      "pages": "489-509",
+      "doi": "10.1109/TIT.2005.862083",
+      "doi_url": "https://doi.org/10.1109/TIT.2005.862083",
+      "open_access_url": "https://arxiv.org/abs/math/0409186",
+      "published_version": null,
+      "access_note": "Preprint on arXiv (math/0409186).",
+      "domain": "DOM_SIG",
+      "abstract": "This paper considers the model problem of reconstructing an object from incomplete frequency samples. Consider a discrete-time signal f∈C^N and a randomly chosen set of frequencies Ω. Is it possible to reconstruct f from the partial knowledge of its Fourier coefficients on the set Ω? A typical result of this paper is as follows. Suppose that f is a superposition of |T| spikes f(t)=Σ_τ∈Tf(τ)δ(t-τ) obeying |T|≤C_M·(log N)^-1 · |Ω| for some constant C_M>0. We do not know the locations of the spikes nor their amplitudes. Then with probability at least 1-O(N^-M), f can be reconstructed exactly as the solution to the ℓ_1 minimization problem. In short, exact recovery may be obtained by solving a convex optimization problem. We give numerical values for C_M which depend on the desired probability of success. Our result may be interpreted as a novel kind of nonlinear sampling theorem. In effect, it says that any signal made out of |T| spikes may be recovered by convex programming from almost every set of frequencies of size O(|T|·logN). Moreover, this is nearly optimal in the sense that any method succeeding with probability 1-O(N^-M) would in general require a number of frequency samples at least proportional to |T|·logN. The methodology extends to a variety of other situations and higher dimensions. For example, we show how one can reconstruct a piecewise constant (one- or two-dimensional) object from incomplete frequency samples - provided that the number of jumps (discontinuities) obeys the condition above - by minimizing other convex functionals such as the total variation of f.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": "IEEE Xplore math markup (/spl isin/, /sub M/, ...) is rendered as Unicode symbols by clean_abstract; wording unchanged.",
+      "openalex_id": "https://openalex.org/W2145096794",
+      "openalex_referenced_works": [
+        "https://openalex.org/W1230149588",
+        "https://openalex.org/W1983794113",
+        "https://openalex.org/W1986931325",
+        "https://openalex.org/W1986938753",
+        "https://openalex.org/W1990512479",
+        "https://openalex.org/W1997149618",
+        "https://openalex.org/W2006707084",
+        "https://openalex.org/W2012365979",
+        "https://openalex.org/W2035816523",
+        "https://openalex.org/W2059245204",
+        "https://openalex.org/W2067111814",
+        "https://openalex.org/W2075894130",
+        "https://openalex.org/W2090744237",
+        "https://openalex.org/W2099641086",
+        "https://openalex.org/W2103559027",
+        "https://openalex.org/W2115090644",
+        "https://openalex.org/W2116148865",
+        "https://openalex.org/W2125455772",
+        "https://openalex.org/W2129086087",
+        "https://openalex.org/W2129918728",
+        "https://openalex.org/W2136235822",
+        "https://openalex.org/W2154332973",
+        "https://openalex.org/W2157969180",
+        "https://openalex.org/W2158537680",
+        "https://openalex.org/W2163032969",
+        "https://openalex.org/W2167839759",
+        "https://openalex.org/W2168335598",
+        "https://openalex.org/W2337568266",
+        "https://openalex.org/W2607928667",
+        "https://openalex.org/W2798909945",
+        "https://openalex.org/W3029645440",
+        "https://openalex.org/W4240906956",
+        "https://openalex.org/W4285719527",
+        "https://openalex.org/W4293775970",
+        "https://openalex.org/W6679608192"
+      ],
+      "openalex_open_access": {
+        "is_oa": true,
+        "oa_status": "green",
+        "oa_url": "https://arxiv.org/pdf/math/0409186",
+        "any_repository_has_fulltext": true
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:23+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_RATNASAMY1999",
+      "title": "Inference of multicast routing trees and bottleneck bandwidths using end-to-end measurements",
+      "authors": [
+        "Sylvia Ratnasamy",
+        "Steven McCanne"
+      ],
+      "year": 1999,
+      "first_public_year": 1999,
+      "venue": "IEEE Conference on Computer Communications (INFOCOM)",
+      "volume": null,
+      "issue": null,
+      "pages": "353-360 vol.1",
+      "doi": "10.1109/INFCOM.1999.749302",
+      "doi_url": "https://doi.org/10.1109/INFCOM.1999.749302",
+      "open_access_url": null,
+      "published_version": null,
+      "access_note": "Paywalled (IEEE INFOCOM). Abstract and bibliographic metadata only.",
+      "domain": "DOM_NET",
+      "abstract": "The efficacy of end-to-end multicast transport protocols depends critically upon their ability to scale efficiently to a large number of receivers. Several research multicast protocols attempt to achieve this high scalability by identifying sets of co-located receivers in order to enhance loss recovery, congestion control and so forth. A number of these schemes could be enhanced and simplified by some level of explicit knowledge of the topology of the multicast distribution tree, the value of the bottleneck bandwidth along the path between the source and each individual receiver and the approximate location of the bottlenecks in the tree. In this paper, we explore the problem of inferring the internal structure of a multicast distribution tree using only observations made at the end hosts. By noting correlations of loss patterns across the receiver set and by measuring how the network perturbs the fine-grained timing structure of the packets sent from the source, we can determine both the underlying multicast tree structure as well as the bottleneck bandwidths. The simulations show that the algorithm is robust and appears to converge to the correct tree with high probability.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": null,
+      "openalex_id": "https://openalex.org/W2025651888",
+      "openalex_referenced_works": [
+        "https://openalex.org/W84621080",
+        "https://openalex.org/W1511222509",
+        "https://openalex.org/W1535283723",
+        "https://openalex.org/W1582526099",
+        "https://openalex.org/W1969971353",
+        "https://openalex.org/W1974965594",
+        "https://openalex.org/W2069499077",
+        "https://openalex.org/W2077702181",
+        "https://openalex.org/W2084802065",
+        "https://openalex.org/W2097562715",
+        "https://openalex.org/W2105269208",
+        "https://openalex.org/W2111718721",
+        "https://openalex.org/W2141487810",
+        "https://openalex.org/W2149649316",
+        "https://openalex.org/W2155952380",
+        "https://openalex.org/W2156725431",
+        "https://openalex.org/W2159535313",
+        "https://openalex.org/W2159967145",
+        "https://openalex.org/W2169600013",
+        "https://openalex.org/W2370276400",
+        "https://openalex.org/W2753542457",
+        "https://openalex.org/W4231918747",
+        "https://openalex.org/W6674843678"
+      ],
+      "openalex_open_access": {
+        "is_oa": false,
+        "oa_status": "closed",
+        "oa_url": null,
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:26+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_CHOI2011",
+      "title": "Learning Latent Tree Graphical Models",
+      "authors": [
+        "Myung Jin Choi",
+        "Vincent Y. F. Tan",
+        "Animashree Anandkumar",
+        "Alan S. Willsky"
+      ],
+      "year": 2011,
+      "first_public_year": 2011,
+      "venue": "Journal of Machine Learning Research",
+      "volume": "12",
+      "issue": "49",
+      "pages": "1771-1812",
+      "doi": "10.48550/arXiv.1009.2722",
+      "doi_url": "https://doi.org/10.48550/arXiv.1009.2722",
+      "open_access_url": "https://arxiv.org/abs/1009.2722",
+      "published_version": "Journal of Machine Learning Research 12(49):1771-1812, 2011 (https://jmlr.org/papers/v12/)",
+      "access_note": "Open access (arXiv 1009.2722; JMLR). Full text reviewed by organiser.",
+      "domain": "DOM_CS",
+      "abstract": "We study the problem of learning a latent tree graphical model where samples are available only from a subset of variables. We propose two consistent and computationally efficient algorithms for learning minimal latent trees, that is, trees without any redundant hidden nodes. Unlike many existing methods, the observed nodes (or variables) are not constrained to be leaf nodes. Our first algorithm, recursive grouping, builds the latent tree recursively by identifying sibling groups using so-called information distances. One of the main contributions of this work is our second algorithm, which we refer to as CLGrouping. CLGrouping starts with a pre-processing procedure in which a tree over the observed variables is constructed. This global step groups the observed nodes that are likely to be close to each other in the true latent tree, thereby guiding subsequent recursive grouping (or equivalent procedures) on much smaller subsets of variables. This results in more accurate and efficient learning of latent trees. We also present regularized versions of our algorithms that learn latent tree approximations of arbitrary distributions. We compare the proposed algorithms to other methods by performing extensive numerical experiments on various latent tree graphical models such as hidden Markov models and star graphs. In addition, we demonstrate the applicability of our methods on real-world datasets by modeling the dependency structure of monthly stock returns in the S&P index and of the words in the 20 newsgroups dataset.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": "OpenAlex indexes the arXiv record (year 2010); the JMLR publication year 2011 is used. OpenAlex lists no referenced works for this record, so citation edges were verified from the reference list in the full text.",
+      "openalex_id": "https://openalex.org/W1493795868",
+      "openalex_referenced_works": [],
+      "openalex_open_access": {
+        "is_oa": true,
+        "oa_status": "green",
+        "oa_url": "https://arxiv.org/pdf/1009.2722",
+        "any_repository_has_fulltext": true
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:29+00:00",
+        "apis": [
+          "OpenAlex"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_DEMERS1987",
+      "title": "Epidemic algorithms for replicated database maintenance",
+      "authors": [
+        "Alan J. Demers",
+        "Dan Greene",
+        "Carl H. Hauser",
+        "Wes Irish",
+        "John Larson"
+      ],
+      "year": 1987,
+      "first_public_year": 1987,
+      "venue": "ACM Symposium on Principles of Distributed Computing (PODC)",
+      "volume": null,
+      "issue": null,
+      "pages": "1-12",
+      "doi": "10.1145/41840.41841",
+      "doi_url": "https://doi.org/10.1145/41840.41841",
+      "open_access_url": "https://dl.acm.org/doi/pdf/10.1145/41840.41841",
+      "published_version": null,
+      "access_note": "Free to read at ACM Digital Library (bronze OA). Not redistributed; link only.",
+      "domain": "DOM_NET",
+      "abstract": "When a database is replicated at many sites, maintaining mutual consistency among the sites in the face of updates is a significant problem. This paper describes several randomized algorithms for distributing updates and driving the replicas toward consistency. The algorithms are very simple and require few guarantees from the underlying communication system, yet they ensure that the effect of every update is eventually reflected in all replicas. The cost and performance of the algorithms are tuned by choosing appropriate distributions in the randomization step. The algorithms are closely analogous to epidemics, and the epidemiology literature aids in understanding their behavior. One of the algorithms has been implemented in the Clearinghouse servers of the Xerox Corporate Internet, solving long-standing problems of high traffic and database inconsistency.",
+      "abstract_source": "organiser override (see override_notes)",
+      "override_notes": "The OpenAlex abstract for this record is corrupted OCR. The override is a character-level repair of that OCR text (no words added or removed in meaning). REVIEWER: confirm against the ACM PDF before distributing.",
+      "openalex_id": "https://openalex.org/W2038562061",
+      "openalex_referenced_works": [
+        "https://openalex.org/W114870970",
+        "https://openalex.org/W1492715660",
+        "https://openalex.org/W1506529572",
+        "https://openalex.org/W1582997254",
+        "https://openalex.org/W1963551134",
+        "https://openalex.org/W1984977694",
+        "https://openalex.org/W1991153938",
+        "https://openalex.org/W2009312542",
+        "https://openalex.org/W2041434139",
+        "https://openalex.org/W2043671329",
+        "https://openalex.org/W2059328141",
+        "https://openalex.org/W2094021108",
+        "https://openalex.org/W2130493426",
+        "https://openalex.org/W2131053137",
+        "https://openalex.org/W2131848219",
+        "https://openalex.org/W2142849519",
+        "https://openalex.org/W2306796337"
+      ],
+      "openalex_open_access": {
+        "is_oa": true,
+        "oa_status": "bronze",
+        "oa_url": "https://dl.acm.org/doi/pdf/10.1145/41840.41841",
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:33+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_BHAMIDI2010",
+      "title": "Network delay inference from additive metrics",
+      "authors": [
+        "Shankar Bhamidi",
+        "Ram Rajagopal",
+        "Sébastien Roch"
+      ],
+      "year": 2010,
+      "first_public_year": 2010,
+      "venue": "Random Structures and Algorithms",
+      "volume": "37",
+      "issue": "2",
+      "pages": "176-203",
+      "doi": "10.1002/rsa.20305",
+      "doi_url": "https://doi.org/10.1002/rsa.20305",
+      "open_access_url": "https://arxiv.org/abs/math/0604367",
+      "published_version": null,
+      "access_note": "Open access (arXiv math/0604367v2). Full text reviewed by organiser.",
+      "domain": "DOM_SIG",
+      "abstract": "We use computational phylogenetic techniques to solve a central problem in inferential network monitoring. More precisely, we design a novel algorithm for multicast-based delay inference, that is, the problem of reconstructing delay characteristics of a network from end-to-end delay measurements on network paths. Our inference algorithm is based on additive metric techniques used in phylogenetics. It runs in polynomial time and requires a sample of size only poly(log n). We also show how to recover the topology of the routing tree.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": "OpenAlex abstract: leading 'Abstract' label and trailing publisher copyright removed; 'poly(logn)' spacing repaired.",
+      "openalex_id": "https://openalex.org/W2952664795",
+      "openalex_referenced_works": [
+        "https://openalex.org/W160062981",
+        "https://openalex.org/W1573820523",
+        "https://openalex.org/W1928730978",
+        "https://openalex.org/W1968399077",
+        "https://openalex.org/W1989541071",
+        "https://openalex.org/W2011039300",
+        "https://openalex.org/W2019363670",
+        "https://openalex.org/W2019750012",
+        "https://openalex.org/W2038876634",
+        "https://openalex.org/W2044807855",
+        "https://openalex.org/W2056337147",
+        "https://openalex.org/W2057853309",
+        "https://openalex.org/W2095374884",
+        "https://openalex.org/W2097706568",
+        "https://openalex.org/W2098865491",
+        "https://openalex.org/W2112935228",
+        "https://openalex.org/W2126281557",
+        "https://openalex.org/W2128706909",
+        "https://openalex.org/W2147536240",
+        "https://openalex.org/W2162787146",
+        "https://openalex.org/W2163935672",
+        "https://openalex.org/W2166838615",
+        "https://openalex.org/W2168194668",
+        "https://openalex.org/W2169354347",
+        "https://openalex.org/W2178116779",
+        "https://openalex.org/W2295428206",
+        "https://openalex.org/W2797135730",
+        "https://openalex.org/W4233815609",
+        "https://openalex.org/W4239617799",
+        "https://openalex.org/W6764546169"
+      ],
+      "openalex_open_access": {
+        "is_oa": true,
+        "oa_status": "green",
+        "oa_url": "https://arxiv.org/pdf/math/0604367",
+        "any_repository_has_fulltext": true
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:36+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_VARDI1996",
+      "title": "Network Tomography: Estimating Source-Destination Traffic Intensities from Link Data",
+      "authors": [
+        "Y. Vardi"
+      ],
+      "year": 1996,
+      "first_public_year": 1996,
+      "venue": "Journal of the American Statistical Association",
+      "volume": "91",
+      "issue": "433",
+      "pages": "365-377",
+      "doi": "10.1080/01621459.1996.10476697",
+      "doi_url": "https://doi.org/10.1080/01621459.1996.10476697",
+      "open_access_url": null,
+      "published_version": null,
+      "access_note": "Paywalled (JASA). Abstract and bibliographic metadata only.",
+      "domain": "DOM_SIG",
+      "abstract": "The problem of estimating the node-to-node traffic intensity from repeated measurements of traffic on the links of a network is formulated and discussed under Poisson assumptions and two types of traffic-routing regimens: deterministic (a fixed known path between each directed pair of nodes) and Markovian (a random path between each directed pair of nodes, determined according to a known Markov chain fixed for that pair). Maximum likelihood estimation and related approximations are discussed, and computational difficulties are pointed out. A detailed methodology is presented for estimates based on the method of moments. The estimates are derived algorithmically, taking advantage of the fact that the first and second moment equations give rise to a linear inverse problem with positivity restrictions that can be approached by an EM algorithm, resulting in a particularly simple solution to a hard problem. A small simulation study is carried out.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": null,
+      "openalex_id": "https://openalex.org/W2044807855",
+      "openalex_referenced_works": [
+        "https://openalex.org/W1575258345",
+        "https://openalex.org/W1967374611",
+        "https://openalex.org/W1985803227",
+        "https://openalex.org/W2016585413",
+        "https://openalex.org/W2019352441",
+        "https://openalex.org/W2038218627",
+        "https://openalex.org/W2049633694",
+        "https://openalex.org/W2066872093",
+        "https://openalex.org/W2069629287",
+        "https://openalex.org/W2105818147",
+        "https://openalex.org/W2128796442",
+        "https://openalex.org/W2138854550",
+        "https://openalex.org/W2148481429",
+        "https://openalex.org/W2165551776",
+        "https://openalex.org/W2168530812",
+        "https://openalex.org/W2316630001",
+        "https://openalex.org/W2482485328",
+        "https://openalex.org/W2905059200",
+        "https://openalex.org/W3129711340",
+        "https://openalex.org/W4401501376"
+      ],
+      "openalex_open_access": {
+        "is_oa": false,
+        "oa_status": "closed",
+        "oa_url": null,
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:38+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_MARGOLIN2006",
+      "title": "ARACNE: An Algorithm for the Reconstruction of Gene Regulatory Networks in a Mammalian Cellular Context",
+      "authors": [
+        "Adam A Margolin",
+        "Ilya M. Nemenman",
+        "Katia Basso",
+        "Chris H. Wiggins",
+        "Gustavo Stolovitzky",
+        "Riccardo Dalla Favera",
+        "Andrea Califano"
+      ],
+      "year": 2006,
+      "first_public_year": 2006,
+      "venue": "BMC Bioinformatics",
+      "volume": "7",
+      "issue": "S1",
+      "pages": "S7-S7",
+      "doi": "10.1186/1471-2105-7-S1-S7",
+      "doi_url": "https://doi.org/10.1186/1471-2105-7-S1-S7",
+      "open_access_url": "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-7-S1-S7",
+      "published_version": null,
+      "access_note": "Open access (BMC Bioinformatics). Full text reviewed by organiser.",
+      "domain": "DOM_BIO",
+      "abstract": "BACKGROUND: Elucidating gene regulatory networks is crucial for understanding normal cell physiology and complex pathologic phenotypes. Existing computational methods for the genome-wide \"reverse engineering\" of such networks have been successful only for lower eukaryotes with simple genomes. Here we present ARACNE, a novel algorithm, using microarray expression profiles, specifically designed to scale up to the complexity of regulatory networks in mammalian cells, yet general enough to address a wider range of network deconvolution problems. This method uses an information theoretic approach to eliminate the majority of indirect interactions inferred by co-expression methods. RESULTS: We prove that ARACNE reconstructs the network exactly (asymptotically) if the effect of loops in the network topology is negligible, and we show that the algorithm works well in practice, even in the presence of numerous loops and complex topologies. We assess ARACNE's ability to reconstruct transcriptional regulatory networks using both a realistic synthetic dataset and a microarray dataset from human B cells. On synthetic datasets ARACNE achieves very low error rates and outperforms established methods, such as Relevance Networks and Bayesian Networks. Application to the deconvolution of genetic networks in human B cells demonstrates ARACNE's ability to infer validated transcriptional targets of the cMYC proto-oncogene. We also study the effects of misestimation of mutual information on network reconstruction, and show that algorithms based on mutual information ranking are more resilient to estimation errors. CONCLUSION: ARACNE shows promise in identifying direct transcriptional interactions in mammalian cellular networks, a problem that has challenged existing reverse engineering algorithms. This approach should enhance our ability to use microarray data to elucidate functional mechanisms that underlie cellular processes and to identify molecular targets of pharmacological compounds in mammalian cellular networks.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": null,
+      "openalex_id": "https://openalex.org/W2163296115",
+      "openalex_referenced_works": [
+        "https://openalex.org/W1530964327",
+        "https://openalex.org/W1872324379",
+        "https://openalex.org/W1972764318",
+        "https://openalex.org/W1976278894",
+        "https://openalex.org/W2007995670",
+        "https://openalex.org/W2008620264",
+        "https://openalex.org/W2022083710",
+        "https://openalex.org/W2032558547",
+        "https://openalex.org/W2076372398",
+        "https://openalex.org/W2081399997",
+        "https://openalex.org/W2099111195",
+        "https://openalex.org/W2104235597",
+        "https://openalex.org/W2109584604",
+        "https://openalex.org/W2125631472",
+        "https://openalex.org/W2137474062",
+        "https://openalex.org/W2148606196",
+        "https://openalex.org/W2150926065",
+        "https://openalex.org/W2160014402",
+        "https://openalex.org/W2161409973",
+        "https://openalex.org/W2163166770",
+        "https://openalex.org/W2166106382",
+        "https://openalex.org/W2166667584",
+        "https://openalex.org/W2168846334",
+        "https://openalex.org/W2507039649",
+        "https://openalex.org/W2595840341",
+        "https://openalex.org/W4231458249",
+        "https://openalex.org/W4254209065",
+        "https://openalex.org/W4312512934",
+        "https://openalex.org/W6635595153"
+      ],
+      "openalex_open_access": {
+        "is_oa": true,
+        "oa_status": "gold",
+        "oa_url": "https://bmcbioinformatics.biomedcentral.com/counter/pdf/10.1186/1471-2105-7-S1-S7",
+        "any_repository_has_fulltext": true
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:41+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_ERDOS1999",
+      "title": "A few logs suffice to build (almost) all trees (I)",
+      "authors": [
+        "P�ter L. Erd?s",
+        "Michael A. Steel",
+        "L�szl� A. Sz�kely",
+        "Tandy J. Warnow"
+      ],
+      "year": 1999,
+      "first_public_year": 1999,
+      "venue": "Random Structures and Algorithms",
+      "volume": "14",
+      "issue": "2",
+      "pages": "153-184",
+      "doi": "10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+      "doi_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+      "open_access_url": null,
+      "published_version": null,
+      "access_note": "Paywalled (Wiley). Abstract and bibliographic metadata only.",
+      "domain": "DOM_CS",
+      "abstract": "A phylogenetic tree, also called an “evolutionary tree,” is a leaf-labeled tree which represents the evolutionary history for a set of species, and the construction of such trees is a fundamental problem in biology. Here we address the issue of how many sequence sites are required in order to recover the tree with high probability when the sites evolve under standard Markov-style i.i.d. mutation models. We provide analytic upper and lower bounds for the required sequence length, by developing a new polynomial time algorithm. In particular, we show when the mutation probabilities are bounded the required sequence length can grow surprisingly slowly (a power of log n) in the number n of sequences, for almost all trees.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": null,
+      "openalex_id": "https://openalex.org/W160062981",
+      "openalex_referenced_works": [
+        "https://openalex.org/W1520116718",
+        "https://openalex.org/W1585896583",
+        "https://openalex.org/W1594502459",
+        "https://openalex.org/W1596886637",
+        "https://openalex.org/W1700611987",
+        "https://openalex.org/W1876421275",
+        "https://openalex.org/W1881409289",
+        "https://openalex.org/W1966972227",
+        "https://openalex.org/W1971273325",
+        "https://openalex.org/W1973505437",
+        "https://openalex.org/W1973899373",
+        "https://openalex.org/W1977998408",
+        "https://openalex.org/W1978854233",
+        "https://openalex.org/W1981192617",
+        "https://openalex.org/W1985064024",
+        "https://openalex.org/W1988442902",
+        "https://openalex.org/W1990263013",
+        "https://openalex.org/W1996803884",
+        "https://openalex.org/W2009661773",
+        "https://openalex.org/W2015332750",
+        "https://openalex.org/W2019750012",
+        "https://openalex.org/W2023998798",
+        "https://openalex.org/W2024076752",
+        "https://openalex.org/W2042959539",
+        "https://openalex.org/W2045875391",
+        "https://openalex.org/W2048303023",
+        "https://openalex.org/W2058115577",
+        "https://openalex.org/W2062342894",
+        "https://openalex.org/W2068871408",
+        "https://openalex.org/W2075503802",
+        "https://openalex.org/W2077540212",
+        "https://openalex.org/W2078621159",
+        "https://openalex.org/W2080062535",
+        "https://openalex.org/W2088484367",
+        "https://openalex.org/W2097706568",
+        "https://openalex.org/W2115540609",
+        "https://openalex.org/W2128706909",
+        "https://openalex.org/W2130727968",
+        "https://openalex.org/W2142664059",
+        "https://openalex.org/W2164557791",
+        "https://openalex.org/W2164997158",
+        "https://openalex.org/W2165908613",
+        "https://openalex.org/W2166838615",
+        "https://openalex.org/W2170671567",
+        "https://openalex.org/W2286790072",
+        "https://openalex.org/W4233212183",
+        "https://openalex.org/W4239617799",
+        "https://openalex.org/W4247332402",
+        "https://openalex.org/W4254244103",
+        "https://openalex.org/W4285719527",
+        "https://openalex.org/W6776891690"
+      ],
+      "openalex_open_access": {
+        "is_oa": false,
+        "oa_status": "closed",
+        "oa_url": null,
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:44+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_NITATIKONDA2011",
+      "title": "Network Tomography Based on Additive Metrics",
+      "authors": [
+        "Jian Ni",
+        "Sekhar Tatikonda"
+      ],
+      "year": 2011,
+      "first_public_year": 2008,
+      "venue": "IEEE Transactions on Information Theory",
+      "volume": "57",
+      "issue": "12",
+      "pages": "7798-7809",
+      "doi": "10.1109/TIT.2011.2168901",
+      "doi_url": "https://doi.org/10.1109/TIT.2011.2168901",
+      "open_access_url": "https://arxiv.org/abs/0809.0158",
+      "published_version": null,
+      "access_note": "Published version paywalled (IEEE); author preprint open on arXiv (0809.0158). Full text of the preprint reviewed by organiser. A conference version appeared at CISS 2008 (doi:10.1109/CISS.2008.4558692).",
+      "domain": "DOM_NET",
+      "abstract": "Inference of the network structure (e.g., routing topology) and dynamics (e.g., link performance) is an essential component in many network design and management tasks. In this paper we propose a new, general framework for analyzing and designing routing topology and link performance inference algorithms using ideas and tools from phylogenetic inference in evolutionary biology. The framework is applicable to a variety of measurement techniques. Based on the framework we introduce and develop several polynomial-time distance-based inference algorithms with provable performance. We provide sufficient conditions for the correctness of the algorithms. We show that the algorithms are consistent (return correct topology and link performance with an increasing sample size) and robust (can tolerate a certain level of measurement errors). In addition, we establish certain optimality properties of the algorithms (i.e., they achieve the optimal l-infinity-radius) and demonstrate their effectiveness via model simulation.",
+      "abstract_source": "organiser override (see override_notes)",
+      "override_notes": "OpenAlex has no abstract for the IEEE record; the arXiv abstract (author-provided) is used, with the LaTeX $l_\\infty$ rendered as 'l-infinity'.",
+      "openalex_id": "https://openalex.org/W2013517650",
+      "openalex_referenced_works": [
+        "https://openalex.org/W1596404044",
+        "https://openalex.org/W1965549889",
+        "https://openalex.org/W1999288870",
+        "https://openalex.org/W2004287727",
+        "https://openalex.org/W2021404592",
+        "https://openalex.org/W2025651888",
+        "https://openalex.org/W2038876634",
+        "https://openalex.org/W2044807855",
+        "https://openalex.org/W2057853309",
+        "https://openalex.org/W2071681406",
+        "https://openalex.org/W2097706568",
+        "https://openalex.org/W2098865491",
+        "https://openalex.org/W2099593134",
+        "https://openalex.org/W2104254326",
+        "https://openalex.org/W2112935228",
+        "https://openalex.org/W2114501453",
+        "https://openalex.org/W2115746347",
+        "https://openalex.org/W2115829001",
+        "https://openalex.org/W2120417050",
+        "https://openalex.org/W2121677860",
+        "https://openalex.org/W2129094430",
+        "https://openalex.org/W2129942692",
+        "https://openalex.org/W2132612294",
+        "https://openalex.org/W2133646105",
+        "https://openalex.org/W2141799817",
+        "https://openalex.org/W2144553078",
+        "https://openalex.org/W2145126914",
+        "https://openalex.org/W2152580193",
+        "https://openalex.org/W2162787146",
+        "https://openalex.org/W2163935672",
+        "https://openalex.org/W2166838615",
+        "https://openalex.org/W2168194668",
+        "https://openalex.org/W2169304372",
+        "https://openalex.org/W2295569936",
+        "https://openalex.org/W4230529600",
+        "https://openalex.org/W4233815609",
+        "https://openalex.org/W4248967014",
+        "https://openalex.org/W4250563938",
+        "https://openalex.org/W4254460663",
+        "https://openalex.org/W4388212639"
+      ],
+      "openalex_open_access": {
+        "is_oa": true,
+        "oa_status": "green",
+        "oa_url": "https://arxiv.org/pdf/0809.0158",
+        "any_repository_has_fulltext": true
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:47+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_COATES2002",
+      "title": "Maximum likelihood network topology identification from edge-based unicast measurements",
+      "authors": [
+        "Mark Coates",
+        "Rui Castro",
+        "Robert Marek Nowak",
+        "Manik Gadhiok",
+        "Ryan King",
+        "Yolanda Tsang"
+      ],
+      "year": 2002,
+      "first_public_year": 2002,
+      "venue": "ACM SIGMETRICS International Conference on Measurement and Modeling of Computer Systems (SIGMETRICS)",
+      "volume": null,
+      "issue": null,
+      "pages": "11-20",
+      "doi": "10.1145/511334.511337",
+      "doi_url": "https://doi.org/10.1145/511334.511337",
+      "open_access_url": null,
+      "published_version": null,
+      "access_note": "Paywalled (ACM SIGMETRICS). Abstract and bibliographic metadata only.",
+      "domain": "DOM_NET",
+      "abstract": "Network tomography is a process for inferring \"internal\" link-level delay and loss performance information based on end-to-end (edge) network measurements. These methods require knowledge of the network topology; therefore a first crucial step in the tomography process is topology identification. This paper considers the problem of discovering network topology solely from host-based, unicast measurements, without internal network cooperation. First, we introduce a novel delay-based measurement scheme that does not require clock synchronization, making it more practical than other previous proposals. In contrast to methods that rely on network cooperation , our methodology has the potential to identify layer two elements (provided they are logical topology branching points and induce some measurable delay). Second, we propose a maximum penalized likelihood criterion for topology identification. This is a global optimality criterion, in contrast to other recent proposals for topology identification that employ suboptimal, pair-merging strategies. We develop a novel Markov Chain Monte Carlo (MCMC) procedure for rapid determination of the most likely topologies. The performance of our new probing scheme and identification algorithm is explored through simulation and Internet experiments.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": null,
+      "openalex_id": "https://openalex.org/W1999288870",
+      "openalex_referenced_works": [
+        "https://openalex.org/W109881820",
+        "https://openalex.org/W1533169541",
+        "https://openalex.org/W1596404044",
+        "https://openalex.org/W1598222315",
+        "https://openalex.org/W1985093013",
+        "https://openalex.org/W2020999234",
+        "https://openalex.org/W2025651888",
+        "https://openalex.org/W2038694853",
+        "https://openalex.org/W2038885294",
+        "https://openalex.org/W2056760934",
+        "https://openalex.org/W2096878708",
+        "https://openalex.org/W2106706098",
+        "https://openalex.org/W2122716699",
+        "https://openalex.org/W2126004592",
+        "https://openalex.org/W2138309709",
+        "https://openalex.org/W2140104747",
+        "https://openalex.org/W2141799817",
+        "https://openalex.org/W2144040986",
+        "https://openalex.org/W2149462483",
+        "https://openalex.org/W2152112690",
+        "https://openalex.org/W2160483007",
+        "https://openalex.org/W2162787146",
+        "https://openalex.org/W2163935672",
+        "https://openalex.org/W2167390870",
+        "https://openalex.org/W2981885587",
+        "https://openalex.org/W4233377806",
+        "https://openalex.org/W4292403327",
+        "https://openalex.org/W4292691288",
+        "https://openalex.org/W6631963490",
+        "https://openalex.org/W7054556759"
+      ],
+      "openalex_open_access": {
+        "is_oa": false,
+        "oa_status": "closed",
+        "oa_url": null,
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:50+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    },
+    {
+      "internal_id": "PAPER_CASTRO2004",
+      "title": "Network Tomography: Recent Developments",
+      "authors": [
+        "Rui Castro",
+        "Mark Coates",
+        "Gang Liang",
+        "Robert Marek Nowak",
+        "Bin Yu"
+      ],
+      "year": 2004,
+      "first_public_year": 2004,
+      "venue": "Statistical Science",
+      "volume": "19",
+      "issue": "3",
+      "pages": "499-517",
+      "doi": "10.1214/088342304000000422",
+      "doi_url": "https://doi.org/10.1214/088342304000000422",
+      "open_access_url": "https://projecteuclid.org/journals/statistical-science/volume-19/issue-3/Network-Tomography-Recent-Developments/10.1214/088342304000000422.full",
+      "published_version": null,
+      "access_note": "Open access at Project Euclid. Review article (secondary source). Abstract reviewed; automated full-text download was blocked by the host.",
+      "domain": "DOM_SIG",
+      "abstract": "Today’s Internet is a massive, distributed network which continues to explode in size as e-commerce and related activities grow. The heterogeneous and largely unregulated structure of the Internet renders tasks such as dynamic routing, optimized service provision, service level verification and detection of anomalous/malicious behavior extremely challenging. The problem is compounded by the fact that one cannot rely on the cooperation of individual servers and routers to aid in the collection of network traffic measurements vital for these tasks. In many ways, network monitoring and inference problems bear a strong resemblance to other “inverse problems” in which key aspects of a system are not directly observable. Familiar signal processing or statistical problems such as tomographic image reconstruction and phylogenetic tree identification have interesting connections to those arising in networking. This article introduces network tomography, a new field which we believe will benefit greatly from the wealth of statistical theory and algorithms. It focuses especially on recent developments in the field including the application of pseudo-likelihood methods and tree estimation formulations.",
+      "abstract_source": "OpenAlex abstract_inverted_index (cleaned: see clean_abstract)",
+      "override_notes": null,
+      "openalex_id": "https://openalex.org/W2098865491",
+      "openalex_referenced_works": [
+        "https://openalex.org/W28766783",
+        "https://openalex.org/W80404851",
+        "https://openalex.org/W131333509",
+        "https://openalex.org/W204885769",
+        "https://openalex.org/W1530558628",
+        "https://openalex.org/W1533169541",
+        "https://openalex.org/W1533429117",
+        "https://openalex.org/W1552772058",
+        "https://openalex.org/W1585365342",
+        "https://openalex.org/W1596404044",
+        "https://openalex.org/W1680099247",
+        "https://openalex.org/W1802492819",
+        "https://openalex.org/W1922394927",
+        "https://openalex.org/W1965549889",
+        "https://openalex.org/W1969761972",
+        "https://openalex.org/W1970202913",
+        "https://openalex.org/W1985093013",
+        "https://openalex.org/W1995363530",
+        "https://openalex.org/W1999288870",
+        "https://openalex.org/W2002677656",
+        "https://openalex.org/W2016381774",
+        "https://openalex.org/W2025651888",
+        "https://openalex.org/W2044807855",
+        "https://openalex.org/W2046878543",
+        "https://openalex.org/W2075512048",
+        "https://openalex.org/W2095897464",
+        "https://openalex.org/W2098460029",
+        "https://openalex.org/W2099593134",
+        "https://openalex.org/W2105818147",
+        "https://openalex.org/W2110437750",
+        "https://openalex.org/W2114220616",
+        "https://openalex.org/W2115746347",
+        "https://openalex.org/W2122716699",
+        "https://openalex.org/W2126004592",
+        "https://openalex.org/W2126281557",
+        "https://openalex.org/W2138309709",
+        "https://openalex.org/W2140054106",
+        "https://openalex.org/W2140104747",
+        "https://openalex.org/W2141799817",
+        "https://openalex.org/W2141807666",
+        "https://openalex.org/W2145036943",
+        "https://openalex.org/W2160483007",
+        "https://openalex.org/W2160709761",
+        "https://openalex.org/W2162787146",
+        "https://openalex.org/W2163288162",
+        "https://openalex.org/W2163935672",
+        "https://openalex.org/W2167390870",
+        "https://openalex.org/W2167563022",
+        "https://openalex.org/W2295569936",
+        "https://openalex.org/W2313613676",
+        "https://openalex.org/W2317795240",
+        "https://openalex.org/W2471462771",
+        "https://openalex.org/W2978337448",
+        "https://openalex.org/W3012290046",
+        "https://openalex.org/W3015238834",
+        "https://openalex.org/W3207277759",
+        "https://openalex.org/W4245958676",
+        "https://openalex.org/W4250563938",
+        "https://openalex.org/W4285719527",
+        "https://openalex.org/W4292403327",
+        "https://openalex.org/W6631963490"
+      ],
+      "openalex_open_access": {
+        "is_oa": true,
+        "oa_status": "bronze",
+        "oa_url": "https://projecteuclid.org/journals/statistical-science/volume-19/issue-3/Network-Tomography-Recent-Developments/10.1214/088342304000000422.pdf",
+        "any_repository_has_fulltext": false
+      },
+      "provenance": {
+        "retrieved_at": "2026-11-03T18:10:54+00:00",
+        "apis": [
+          "OpenAlex",
+          "Crossref"
+        ]
+      }
+    }
+  ],
+  "citations_in_corpus": [
+    {
+      "source": "PAPER_DUFFIELD2002",
+      "target": "PAPER_RATNASAMY1999",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2141799817 contains https://openalex.org/W2025651888"
+    },
+    {
+      "source": "PAPER_DUFFIELD2002",
+      "target": "PAPER_VARDI1996",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2141799817 contains https://openalex.org/W2044807855"
+    },
+    {
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_ERDOS1999",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2952664795 contains https://openalex.org/W160062981"
+    },
+    {
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_VARDI1996",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2952664795 contains https://openalex.org/W2044807855"
+    },
+    {
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_SAITOUNEI1987",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2952664795 contains https://openalex.org/W2097706568"
+    },
+    {
+      "source": "PAPER_BHAMIDI2010",
+      "target": "PAPER_CASTRO2004",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2952664795 contains https://openalex.org/W2098865491"
+    },
+    {
+      "source": "PAPER_MARGOLIN2006",
+      "target": "PAPER_CHOWLIU1968",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2163296115 contains https://openalex.org/W2163166770"
+    },
+    {
+      "source": "PAPER_ERDOS1999",
+      "target": "PAPER_SAITOUNEI1987",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W160062981 contains https://openalex.org/W2097706568"
+    },
+    {
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_COATES2002",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W1999288870"
+    },
+    {
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_RATNASAMY1999",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2025651888"
+    },
+    {
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_VARDI1996",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2044807855"
+    },
+    {
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_SAITOUNEI1987",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2097706568"
+    },
+    {
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_CASTRO2004",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2098865491"
+    },
+    {
+      "source": "PAPER_NITATIKONDA2011",
+      "target": "PAPER_DUFFIELD2002",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2013517650 contains https://openalex.org/W2141799817"
+    },
+    {
+      "source": "PAPER_COATES2002",
+      "target": "PAPER_RATNASAMY1999",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W1999288870 contains https://openalex.org/W2025651888"
+    },
+    {
+      "source": "PAPER_COATES2002",
+      "target": "PAPER_DUFFIELD2002",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W1999288870 contains https://openalex.org/W2141799817"
+    },
+    {
+      "source": "PAPER_CASTRO2004",
+      "target": "PAPER_COATES2002",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2098865491 contains https://openalex.org/W1999288870"
+    },
+    {
+      "source": "PAPER_CASTRO2004",
+      "target": "PAPER_RATNASAMY1999",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2098865491 contains https://openalex.org/W2025651888"
+    },
+    {
+      "source": "PAPER_CASTRO2004",
+      "target": "PAPER_VARDI1996",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2098865491 contains https://openalex.org/W2044807855"
+    },
+    {
+      "source": "PAPER_CASTRO2004",
+      "target": "PAPER_DUFFIELD2002",
+      "evidence": "OpenAlex referenced_works of https://openalex.org/W2098865491 contains https://openalex.org/W2141799817"
+    }
+  ],
+  "notes": [
+    "Abstracts are reproduced for educational, non-commercial workshop use with full attribution; full texts are NOT redistributed - participants follow DOI / open-access links.",
+    "citations_in_corpus lists only citations visible in OpenAlex. Additional citations verified manually from full-text reference lists are recorded as evidence on CITES edges in the master graph."
+  ]
+}

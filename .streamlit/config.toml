@@ -1,0 +1,4 @@
+[server]
+# Keep a disconnected browser session alive for up to 8 hours so brief
+# Wi-Fi interruptions/reconnects do not force participants to sign in again.
+disconnectedSessionTTL = 28800
