@@ -53,7 +53,7 @@ def _read_frame(data) -> pd.DataFrame:
     raise TypeError("submission must be CSV text, bytes or a DataFrame")
 
 
-def parse_submission(data, infos: dict[str, PaperInfo], max_rows: int = 300) -> ParsedSubmission:
+def parse_submission(data, infos: dict[str, PaperInfo], max_rows: int = 300, allow_any_pair: bool = False) -> ParsedSubmission:
     """Validate a participant edge list. Does not use the answer key."""
     out = ParsedSubmission()
     try:
@@ -92,11 +92,8 @@ def parse_submission(data, infos: dict[str, PaperInfo], max_rows: int = 300) -> 
         if not row_errs:
             if s == t:
                 row_errs.append("a paper cannot relate to itself")
-            elif rel in TEMPORAL_RELATIONS and not is_valid_candidate(s, t, rel, infos):
-                row_errs.append(
-                    f"invalid direction: {s} ({infos[s].year}) cannot {rel} {t} (first public {infos[t].first_public_year}). "
-                    "Directed relations go from the newer / using paper to the older / used paper."
-                )
+        if not allow_any_pair and not row_errs and rel in TEMPORAL_RELATIONS and not is_valid_candidate(s, t, rel, infos):
+            row_errs.append(f"invalid direction: {s} ({infos[s].year}) cannot {rel} {t} (first public {infos[t].first_public_year}). Directed relations go from the newer / using paper to the older / used paper.")
         if row_errs:
             out.errors.append(f"line {i}: " + "; ".join(row_errs))
             continue
@@ -188,10 +185,10 @@ class GraphScorer:
         return ScoreResult(counts, metrics, per_edge, len(submitted))
 
 
-def score_csv(data, accepted_additions=None) -> tuple[ParsedSubmission, ScoreResult | None]:
+def score_csv(data, accepted_additions=None, allow_any_pair: bool = False) -> tuple[ParsedSubmission, ScoreResult | None]:
     """Convenience: parse + score a CSV with the live answer key (organiser / CLI use)."""
     scorer = GraphScorer.from_answer_key(accepted_additions)
-    parsed = parse_submission(data, scorer.infos, scorer.config["graph_submission"]["max_rows"])
+    parsed = parse_submission(data, scorer.infos, scorer.config["graph_submission"]["max_rows"], allow_any_pair=allow_any_pair)
     if not parsed.ok:
         return parsed, None
     return parsed, scorer.score(parsed.edges)

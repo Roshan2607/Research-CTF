@@ -85,3 +85,30 @@ Working end to end: corpus → graph → participant package → iterative scori
 * Kaggle competition creation is manual (the API cannot do it). The local scorer is the source of truth and the fallback.
 * Single-process JSON storage: fine for one workshop on one laptop, not for multi-server deployment.
 * No live LLM or web-search integration. Stage 4 uses organiser-researched application records behind an interface stub.
+
+
+## Four-level multi-cluster event workflow (new)
+
+The new staged event workflow is available separately from the original
+participant/organiser apps. It reuses the current Start Here, Corpus and
+Vocabulary sections and adds team-password login, four retryable flags, a
+CSV graph builder with automatic preview, per-level immutable submissions and
+a separate admin portal.
+
+See [EVENT_PILOT_GUIDE.md](EVENT_PILOT_GUIDE.md) for setup, credentials,
+participant flow and the scoring model.
+
+```bash
+streamlit run event_admin.py --server.address 127.0.0.1 --server.port 8502
+streamlit run event_portal.py --server.address 0.0.0.0 --server.port 8501
+```
+
+
+## Multi-cluster event pilot
+
+For the staged multi-cluster participant/admin workflow, see [`EVENT_PILOT_GUIDE.md`](EVENT_PILOT_GUIDE.md).
+Run `event_admin.py` for organiser controls and `event_portal.py` for participants.
+The participant Graph Builder uses paper-ID and relationship dropdowns to avoid invalid
+free-typed labels; the horizontal navigation is below the page title. The Streamlit
+configuration retains disconnected sessions for up to eight hours, subject to the
+browser reconnecting to the same running server. Drafts are saved independently.

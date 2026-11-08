@@ -103,9 +103,9 @@ Your team starts from **{info['starting_paper']}**. Your job:
 
 1. **Read** the papers (start with the abstracts, then the methods sections).
 2. **Reconstruct** the relationships between papers as a small knowledge graph, with evidence for each one.
-   *(Submission 1: repeatable, scored.)*
-3. **Discover** which paper from a *different discipline* shares a deep idea with your starting paper, what that idea
-   is, and a **real-world technology** that relies on it every day. *(Submission 2: one attempt only.)*
+   *(Your graph is the evidence-backed working record for each level.)*
+3. **Solve four levels**. Each level asks for the shared mechanism in a set of excerpts. Your flag is the concise answer;
+   your knowledge graph is the evidence-backed working and proof.
 """
     )
     st.subheader("Rules")
@@ -117,10 +117,11 @@ Your team starts from **{info['starting_paper']}**. Your job:
             st.markdown(a)
     st.subheader("Schedule (minutes)")
     st.table(pd.DataFrame(
-        [("85-105", "Read papers, start your graph"), ("105-115", "First graph submission"),
-         ("115-135", "Correct the graph, explore alternative routes, check evidence"),
-         ("135-150", "Find the hidden connection and an application"), ("150-165", "Final one-shot submission"),
-         ("165-180", "Solution walkthrough")],
+        [("Before each level", "Read the relevant excerpts and vocabulary"),
+         ("Each level", "Extend the knowledge graph and attach evidence"),
+         ("Each level", "Solve the shared-mechanism flag; use hints if needed"),
+         ("After each level", "Review the graph and confirm the locked submission"),
+         ("Final level", "Complete the graph and flag scoring")],
         columns=["Time", "Activity"]))
 
 
