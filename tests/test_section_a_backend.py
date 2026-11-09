@@ -61,6 +61,7 @@ def _mp_flag_attempt_worker(args):
     import event_core as c
     c.STATE = Path(state_path)
     c.COOLDOWN_SECONDS = 0
+    c.PENALTY_PER_WRONG, c.MAX_PENALTY_PER_LEVEL, c.COOLDOWN_SCHEDULE = 1.0, 10.0, None
     try:
         return c.attempt_flag(team_id, level, answer)
     except Exception as e:
@@ -107,6 +108,11 @@ def _engine_content(monkeypatch):
     (the live content and its calibration are tested in tests/test_event_content.py)."""
     monkeypatch.setattr(core, "CONTENT", ENGINE_CONTENT)
     monkeypatch.setenv("UL_EVENT_CONTENT", str(ENGINE_CONTENT))  # inherited by multiprocessing workers
+    # engine tests pin the original mechanism (1 pt per wrong attempt after 5, flat cooldown); the calibrated
+    # defaults from config are covered in tests/test_event_calibration.py
+    monkeypatch.setattr(core, "PENALTY_PER_WRONG", 1.0)
+    monkeypatch.setattr(core, "MAX_PENALTY_PER_LEVEL", 10.0)
+    monkeypatch.setattr(core, "COOLDOWN_SCHEDULE", None)
 
 @pytest.fixture
 def isolated_env(tmp_path, monkeypatch):
@@ -278,7 +284,7 @@ def test_sixth_and_subsequent_incorrect_attempts_penalty(isolated_env, monkeypat
 
     r6 = core.attempt_flag("TEAM_PENALTY", 1, "wrong guess 6")
     assert r6["correct"] is False
-    assert "Penalty: -1 flag point(s)" in r6["message"]
+    assert "Penalty so far: -1 flag point(s)" in r6["message"]
     st6 = core.flag_status("TEAM_PENALTY", 1)
     assert st6["penalty_points"] == 1
 
@@ -849,155 +855,82 @@ def test_security_client_cannot_tamper_scores_or_cluster(isolated_env, monkeypat
     core.attempt_flag("TEAM_TAMPER", 1, "wrong answer")
 
     graph_csv = "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Sec. 1\n"
-    rec = core.finalise(
-        team="TEAM_TAMPER",
-        level=1,
-        csv_text=graph_csv,
-        flag_correct=True,
-        graph_score={"points": 10.0},
-        explanation="Explanation",
-    )
-    assert rec["flag_correct"] is False
-    assert rec["flag_points"] == 0
+    # A client claiming flag_correct=True cannot lock a level whose flag was never solved
+    with pytest.raises(ValueError, match="Solve this level's flag"):
+        core.finalise(team="TEAM_TAMPER", level=1, csv_text=graph_csv, flag_correct=True,
+                      graph_score={"points": 10.0}, explanation="Explanation")
+    assert not core.load()["submissions"].get("TEAM_TAMPER:1")
+
+    # After solving, client-supplied graph points are ignored: the server scores the graph itself
+    core.attempt_flag("TEAM_TAMPER", 1, "tree reconstruction")
+    rec = core.finalise(team="TEAM_TAMPER", level=1, csv_text=graph_csv, flag_correct=False,
+                        graph_score={"points": 999.0}, explanation="Explanation")
+    assert rec["flag_correct"] is True
+    assert rec["graph_score"]["points"] != 999.0
+    assert rec["graph_score"]["points"] <= core.GRAPH_POINTS_PER_LEVEL
 
 
 # ==============================================================================
-# 11. FINAL SECTION A HARDENING REGRESSION TESTS
+# 11. GRAPH EDITING AFTER LOCK (calibration review: live graph editable, snapshots immutable)
 # ==============================================================================
 
-def test_locked_edge_deletion_prevention(isolated_env, monkeypatch):
-    """Regression test 1: Prevent deletion or modification of locked graph edges."""
+def _lock_level_1(tid: str, csv_text: str) -> None:
+    core.save_draft(tid, 1, csv_text)
+    core.attempt_flag(tid, 1, "tree reconstruction")
+    core.finalise(tid, 1, csv_text, explanation="Initial proof-of-thought graph reconstruction")
+
+
+def test_live_graph_editable_after_lock_but_snapshot_immutable(isolated_env, monkeypatch):
     monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
-    core.create_team("TEAM_LOCKED_EDGE", "Locked Edge Team", "Password123!")
-
-    # 2. Add an edge and attempt flag
+    core.create_team("TEAM_EDIT", "Edit Team", "Password123!")
     edge_csv = "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 3.1 Page 4\n"
-    core.save_draft("TEAM_LOCKED_EDGE", 1, edge_csv)
-    core.attempt_flag("TEAM_LOCKED_EDGE", 1, "tree reconstruction")
+    _lock_level_1("TEAM_EDIT", edge_csv)
 
-    # 3. Finalize Level 1
-    core.finalise(
-        "TEAM_LOCKED_EDGE",
-        1,
-        edge_csv,
-        explanation="Initial proof-of-thought graph reconstruction",
-    )
-
-    # 4. Retrieve active graph
-    graph = core.get_team_graph("TEAM_LOCKED_EDGE")
-    assert len(graph.edges) == 1
-    orig_edge = graph.edges[0]
-    assert orig_edge.source_id == "P01"
-    assert orig_edge.target_id == "P02"
-    assert orig_edge.relationship_type == "EXTENDS"
-    assert orig_edge.evidence_reference == "Section 3.1 Page 4"
-    assert orig_edge.added_at_level == 1
-
-    # Verify snapshot was created and contains the edge
+    graph = core.get_team_graph("TEAM_EDIT")
+    assert len(graph.edges) == 1 and graph.edges[0].added_at_level == 1
     snap1 = graph.get_snapshot(1)
-    assert snap1 is not None
-    assert len(snap1.edges) == 1
+    assert snap1 is not None and len(snap1.edges) == 1
 
-    # 5. Remove the previously submitted edge from the active graph
+    # Removing an earlier edge from the LIVE graph is now allowed (teams may fix mistakes) ...
     graph.edges.clear()
-    assert len(graph.edges) == 0
-
-    # 6. Call save_team_graph() -> Verify PermissionError is raised
-    with pytest.raises(PermissionError, match="cannot be removed, altered, or reassigned"):
-        core.save_team_graph("TEAM_LOCKED_EDGE", graph)
-
-    # 7. Verify that both active graph and historical snapshot remain unchanged
-    reloaded_graph = core.get_team_graph("TEAM_LOCKED_EDGE")
-    assert len(reloaded_graph.edges) == 1
-    assert reloaded_graph.edges[0].source_id == "P01"
-    assert reloaded_graph.edges[0].target_id == "P02"
-    assert reloaded_graph.edges[0].relationship_type == "EXTENDS"
-    assert reloaded_graph.edges[0].evidence_reference == "Section 3.1 Page 4"
-    assert reloaded_graph.edges[0].added_at_level == 1
-
-    reloaded_snap = reloaded_graph.get_snapshot(1)
-    assert reloaded_snap is not None
-    assert len(reloaded_snap.edges) == 1
-    assert reloaded_snap.edges[0]["source_id"] == "P01"
-    assert reloaded_snap.edges[0]["evidence_reference"] == "Section 3.1 Page 4"
-    assert reloaded_snap.edges[0]["added_at_level"] == 1
-
-
-def test_locked_edge_level_reassignment(isolated_env, monkeypatch):
-    """Regression test: Changing locked edge added_at_level to 2 is rejected; state unchanged."""
-    monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
-    core.create_team("TEAM_REASSIGN", "Reassign Team", "Password123!")
-    edge_csv = "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1\n"
-    core.attempt_flag("TEAM_REASSIGN", 1, "tree reconstruction")
-    core.finalise("TEAM_REASSIGN", 1, edge_csv, explanation="L1 done")
-
-    graph = core.get_team_graph("TEAM_REASSIGN")
-    assert graph.edges[0].added_at_level == 1
-
-    # Tamper: change added_at_level to 2
-    graph.edges = [
-        GraphEdge(
-            source_id="P01",
-            target_id="P02",
-            relationship_type="EXTENDS",
-            evidence_reference="Section 1",
-            added_at_level=2,
-        )
-    ]
-    with pytest.raises(PermissionError, match="cannot be removed, altered, or reassigned"):
-        core.save_team_graph("TEAM_REASSIGN", graph)
-
-    # Verify persisted state remains strictly unchanged
-    reloaded = core.get_team_graph("TEAM_REASSIGN")
-    assert reloaded.edges[0].added_at_level == 1
+    core.save_team_graph("TEAM_EDIT", graph)
+    reloaded = core.get_team_graph("TEAM_EDIT")
+    assert reloaded.edges == []
+    # ... but the level-1 snapshot it was scored on is untouched
     snap = reloaded.get_snapshot(1)
-    assert snap.edges[0]["added_at_level"] == 1
+    assert snap is not None and snap.edges[0]["source_id"] == "P01"
+    assert snap.edges[0]["evidence_reference"] == "Section 3.1 Page 4"
 
 
-def test_locked_edge_evidence_alteration(isolated_env, monkeypatch):
-    """Regression test: Altering locked edge evidence_reference is rejected; state unchanged."""
+def test_level_2_draft_may_drop_or_fix_level_1_edges(isolated_env, monkeypatch):
     monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
-    core.create_team("TEAM_ALT_EV", "Evidence Alt Team", "Password123!")
-    edge_csv = "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Original Evidence\n"
-    core.attempt_flag("TEAM_ALT_EV", 1, "tree reconstruction")
-    core.finalise("TEAM_ALT_EV", 1, edge_csv, explanation="L1 done")
+    core.create_team("TEAM_FIX", "Fix Team", "Password123!")
+    _lock_level_1("TEAM_FIX", "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,p.4\n")
 
-    graph = core.get_team_graph("TEAM_ALT_EV")
-
-    # Tamper: alter evidence
-    graph.edges = [
-        GraphEdge(
-            source_id="P01",
-            target_id="P02",
-            relationship_type="EXTENDS",
-            evidence_reference="Tampered Evidence",
-            added_at_level=1,
-        )
-    ]
-    with pytest.raises(PermissionError, match="cannot be removed, altered, or reassigned"):
-        core.save_team_graph("TEAM_ALT_EV", graph)
-
-    # Verify persisted state remains unchanged
-    reloaded = core.get_team_graph("TEAM_ALT_EV")
-    assert reloaded.edges[0].evidence_reference == "Original Evidence"
+    fixed = "source_id,target_id,relationship_type,evidence_reference\nP02,P01,CITES,ref [3]\nP03,P04,CITES,ref [7]\n"
+    core.save_draft("TEAM_FIX", 2, fixed)
+    core.attempt_flag("TEAM_FIX", 2, "leaf-only observations")
+    rec = core.finalise("TEAM_FIX", 2, fixed, explanation="corrected the level 1 edge type")
+    assert rec["edge_count"] == 2
+    g = core.get_team_graph("TEAM_FIX")
+    assert {(e.source_id, e.target_id, e.relationship_type) for e in g.edges} == {("P02", "P01", "CITES"), ("P03", "P04", "CITES")}
+    assert g.get_snapshot(1).edges[0]["relationship_type"] == "EXTENDS"
 
 
-def test_locked_edge_deletion_direct(isolated_env, monkeypatch):
-    """Regression test: Deleting a locked edge is rejected; state unchanged."""
+def test_snapshot_cannot_be_deleted_or_rewritten(isolated_env, monkeypatch):
     monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
-    core.create_team("TEAM_DEL_EDGE", "Del Edge Team", "Password123!")
-    edge_csv = "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1\n"
-    core.attempt_flag("TEAM_DEL_EDGE", 1, "tree reconstruction")
-    core.finalise("TEAM_DEL_EDGE", 1, edge_csv, explanation="L1 done")
-
-    graph = core.get_team_graph("TEAM_DEL_EDGE")
-    graph.edges = []
-    with pytest.raises(PermissionError, match="cannot be removed, altered, or reassigned"):
-        core.save_team_graph("TEAM_DEL_EDGE", graph)
-
-    reloaded = core.get_team_graph("TEAM_DEL_EDGE")
-    assert len(reloaded.edges) == 1
-    assert reloaded.edges[0].source_id == "P01"
+    core.create_team("TEAM_SNAP", "Snap Team", "Password123!")
+    _lock_level_1("TEAM_SNAP", "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,p.4\n")
+    raw = core.load()["graphs"]["TEAM_SNAP"]
+    tampered = copy.deepcopy(raw)
+    tampered["snapshots"] = {}
+    with pytest.raises(PermissionError, match="cannot be deleted"):
+        core.save_team_graph("TEAM_SNAP", TeamKnowledgeGraph("TEAM_SNAP", tampered))
+    tampered = copy.deepcopy(raw)
+    lvl1 = next(k for k, v in tampered["snapshots"].items() if v["edges"])  # the level-1 snapshot
+    tampered["snapshots"][lvl1]["edges"][0]["relationship_type"] = "CITES"
+    with pytest.raises(PermissionError, match="cannot be modified"):
+        core.save_team_graph("TEAM_SNAP", TeamKnowledgeGraph("TEAM_SNAP", tampered))
 
 
 def test_evidence_validation_server_side(isolated_env, monkeypatch):

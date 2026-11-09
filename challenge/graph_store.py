@@ -168,27 +168,31 @@ class TeamKnowledgeGraph:
         current_level: int,
         locked_levels: Iterable[int] = (),
     ) -> None:
-        """Replace active edges while preserving edges locked in earlier submitted levels."""
-        locked_set = set(locked_levels)
-        preserved_locked: list[GraphEdge] = [e for e in self.edges if e.added_at_level in locked_set]
-        locked_keys = {(e.source_id, e.target_id, e.relationship_type) for e in preserved_locked}
+        """Replace the live edges with ``edge_dicts``.
 
-        new_edges: list[GraphEdge] = list(preserved_locked)
+        The live graph stays editable until the final lock (earlier levels are preserved as immutable
+        snapshots instead). An edge that survives keeps the level it was first added at; new edges are
+        tagged with ``current_level``. ``locked_levels`` is accepted for backward compatibility.
+        """
+        existing = {(e.source_id, e.target_id, e.relationship_type): e for e in self.edges}
+        new_edges: list[GraphEdge] = []
+        seen: set[tuple[str, str, str]] = set()
         for d in edge_dicts:
             edge = GraphEdge.from_dict(d)
             key = (edge.source_id, edge.target_id, edge.relationship_type)
-            if key not in locked_keys:
-                added_lvl = edge.added_at_level if edge.added_at_level not in locked_set else current_level
-                new_edges.append(
-                    GraphEdge(
-                        source_id=edge.source_id,
-                        target_id=edge.target_id,
-                        relationship_type=edge.relationship_type,
-                        evidence_reference=edge.evidence_reference,
-                        added_at_level=added_lvl,
-                    )
+            if key in seen:
+                continue
+            seen.add(key)
+            prev = existing.get(key)
+            new_edges.append(
+                GraphEdge(
+                    source_id=edge.source_id,
+                    target_id=edge.target_id,
+                    relationship_type=edge.relationship_type,
+                    evidence_reference=edge.evidence_reference,
+                    added_at_level=prev.added_at_level if prev else current_level,
                 )
-                locked_keys.add(key)
+            )
         self.edges = new_edges
 
     def snapshot_level(self, level: int, submitted_at: str | None = None, csv_text: str | None = None) -> LevelGraphSnapshot:

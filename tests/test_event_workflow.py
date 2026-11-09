@@ -11,6 +11,11 @@ def _engine_content(monkeypatch):
     """Engine tests use a fixed content fixture; live content is tested in tests/test_event_content.py."""
     monkeypatch.setattr(core, "CONTENT", ENGINE_CONTENT)
     monkeypatch.setenv("UL_EVENT_CONTENT", str(ENGINE_CONTENT))  # inherited by multiprocessing workers
+    # engine tests pin the original mechanism (1 pt per wrong attempt after 5, flat cooldown); the calibrated
+    # defaults from config are covered in tests/test_event_calibration.py
+    monkeypatch.setattr(core, "PENALTY_PER_WRONG", 1.0)
+    monkeypatch.setattr(core, "MAX_PENALTY_PER_LEVEL", 10.0)
+    monkeypatch.setattr(core, "COOLDOWN_SCHEDULE", None)
 
 
 def test_four_level_pipeline_and_locking(tmp_path, monkeypatch):
@@ -83,7 +88,7 @@ def test_flag_attempts_do_not_unlock_next_level(tmp_path, monkeypatch):
     assert core.team_progress("TEAM02") == ([], 0)
 
 
-def test_finalise_requires_a_flag_attempt_but_not_a_correct_flag(tmp_path, monkeypatch):
+def test_finalise_requires_a_correct_flag_or_organiser_override(tmp_path, monkeypatch):
     monkeypatch.setattr(core, "STATE", tmp_path / "event_state.json")
     monkeypatch.setattr(core, "LOG", tmp_path / "events.jsonl")
     monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
@@ -98,9 +103,22 @@ def test_finalise_requires_a_flag_attempt_but_not_a_correct_flag(tmp_path, monke
 
     result = core.attempt_flag("TEAM03", 0, "wrong answer")
     assert result["correct"] is False
+    try:
+        core.finalise("TEAM03", 0, graph, True, {}, explanation="test")
+        assert False, "a wrong flag must not unlock the next level"
+    except ValueError as e:
+        assert "Solve this level's flag" in str(e)
+
+    # an organiser can accept an unexpected but correct phrasing
+    try:
+        core.override_flag("TEAM03", 0, reviewer="")
+        assert False, "override needs a named reviewer"
+    except ValueError:
+        pass
+    core.override_flag("TEAM03", 0, reviewer="Organiser A", note="accepted 'prefix-sharing tree'")
     rec = core.finalise("TEAM03", 0, graph, False, {}, explanation="test explanation")
-    assert rec["flag_correct"] is False
-    assert rec["flag_points"] == 0
+    assert rec["flag_correct"] is True
+    assert rec["flag_points"] == 10
     assert rec["explanation"] == "test explanation"
     assert core.team_progress("TEAM03") == ([0], 1)
 
@@ -302,33 +320,26 @@ def test_edge_case_prevent_out_of_order_flags_and_skipping(tmp_path, monkeypatch
         pass
 
 
-def test_edge_case_locked_edges_cannot_be_deleted_or_altered(tmp_path, monkeypatch):
+def test_edge_case_earlier_edges_can_be_corrected_until_final_lock(tmp_path, monkeypatch):
     monkeypatch.setattr(core, "STATE", tmp_path / "event_state.json")
     monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
     core.create_team("TEAM_LOCK", "Lock Team", "StrongPass123")
 
-    # Solve and finalise level 0
     core.attempt_flag("TEAM_LOCK", 0, "FLAG{TRIE}")
     core.finalise("TEAM_LOCK", 0, "source_id,target_id,relationship_type\nL0A,L0B,SHARES_PRINCIPLE\n", True, {"points": 15.0}, explanation="L0")
 
-    # Solve and finalise level 1 with 2 edges
     core.attempt_flag("TEAM_LOCK", 1, "tree reconstruction")
     l1_csv = "source_id,target_id,relationship_type\nP01,P02,CITES\nP02,P01,EXTENDS\n"
     core.finalise("TEAM_LOCK", 1, l1_csv, True, {"points": 10.0}, explanation="L1 explanation")
 
-    # In level 2, try to submit a graph that dropped P02->P01
+    # In level 2 the team drops the wrong P02->P01 EXTENDS edge: allowed (design change), level 1 snapshot unchanged
     core.attempt_flag("TEAM_LOCK", 2, "leaf-only observations")
-    tampered_l2_csv = "source_id,target_id,relationship_type\nP01,P02,CITES\nP03,P04,CITES\n"  # dropped P02->P01 EXTENDS!
-    try:
-        core.finalise("TEAM_LOCK", 2, tampered_l2_csv, True, {"points": 10.0}, explanation="L2 explanation")
-        assert False, "Dropping prior locked edges must be rejected"
-    except ValueError as e:
-        assert "Prior locked edges" in str(e)
-
-    # Valid cumulative graph including all L1 edges plus new L2 edge succeeds
-    valid_l2_csv = "source_id,target_id,relationship_type\nP01,P02,CITES\nP02,P01,EXTENDS\nP03,P04,CITES\n"
-    rec = core.finalise("TEAM_LOCK", 2, valid_l2_csv, True, {"points": 10.0}, explanation="L2 explanation")
-    assert rec["edge_count"] == 3
+    corrected_l2_csv = "source_id,target_id,relationship_type\nP01,P02,CITES\nP03,P04,CITES\n"
+    rec = core.finalise("TEAM_LOCK", 2, corrected_l2_csv, True, {"points": 10.0}, explanation="L2 explanation")
+    assert rec["edge_count"] == 2
+    snap1 = core.get_graph_snapshot("TEAM_LOCK", 1)
+    assert {(e["source_id"], e["target_id"], e["relationship_type"]) for e in snap1["edges"]} == {
+        ("P01", "P02", "CITES"), ("P02", "P01", "EXTENDS")}
 
 
 def test_edge_case_deduplication_and_max_rows(tmp_path, monkeypatch):

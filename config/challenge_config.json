@@ -11,11 +11,23 @@
   ],
   "rules": {
     "free_wrong_attempts": 5,
-    "penalty_after_free": 1.0,
+    "penalty_after_free": 0.5,
     "cooldown_seconds": 30,
     "graph_points_per_level": 15.0,
     "flag_points_per_level": 10.0,
-    "submission_limit_per_level": 1
+    "submission_limit_per_level": 1,
+    "max_penalty_per_level": 5.0,
+    "cooldown_schedule": [
+      10,
+      10,
+      30
+    ],
+    "hint_unlock_after_wrong": [
+      2,
+      4,
+      6
+    ],
+    "hint_rung3_cost": 1.0
   },
   "demo_team": {
     "team_id": "DEMO00",
@@ -42,5 +54,18 @@
     "deadline": "2026-12-31T23:59:00+00:00",
     "reveal_results_after_deadline": true
   },
-  "team_size": 2
+  "team_size": 2,
+  "final_discovery_points": {
+    "_comment": "Level 4 flag points: auto-scored from HMAC tokens (target paper, application) plus organiser review of principle/evidence/limitations.",
+    "target_paper": 3.0,
+    "application": 2.0,
+    "organiser_review_max": 5.0
+  },
+  "calibration_alerts": {
+    "_comment": "Organiser dashboard warnings (see EVENT_PILOT_GUIDE).",
+    "share_teams_6plus_wrong": 0.3,
+    "median_wrong_attempts": 4,
+    "share_low_graph_f1": 0.4,
+    "low_graph_f1": 0.2
+  }
 }

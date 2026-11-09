@@ -142,6 +142,28 @@ COOLDOWN_SECONDS = int(os.environ.get("UL_COOLDOWN_SECONDS", _RULES.get("cooldow
 FREE_WRONG_ATTEMPTS = int(_RULES.get("free_wrong_attempts", 5))
 FLAG_POINTS_PER_LEVEL = int(_RULES.get("flag_points_per_level", 10))
 GRAPH_POINTS_PER_LEVEL = float(_RULES.get("graph_points_per_level", 15.0))
+PENALTY_PER_WRONG = float(_RULES.get("penalty_after_free", 1.0))
+MAX_PENALTY_PER_LEVEL = float(_RULES.get("max_penalty_per_level", FLAG_POINTS_PER_LEVEL))
+COOLDOWN_SCHEDULE = list(_RULES.get("cooldown_schedule") or []) or None
+HINT_UNLOCK_AFTER_WRONG = [int(x) for x in _RULES.get("hint_unlock_after_wrong", [2, 4, 6])]
+HINT_RUNG3_COST = float(_RULES.get("hint_rung3_cost", 1.0))
+_DISCOVERY = _CFG.get("final_discovery_points", {}) if isinstance(_CFG, dict) else {}
+DISCOVERY_TARGET_POINTS = float(_DISCOVERY.get("target_paper", 3.0))
+DISCOVERY_APPLICATION_POINTS = float(_DISCOVERY.get("application", 2.0))
+DISCOVERY_REVIEW_MAX_POINTS = float(_DISCOVERY.get("organiser_review_max", 5.0))
+
+
+def _validator():
+    from scoring.flag_validator import LevelFlagValidator
+
+    return LevelFlagValidator(
+        cooldown_seconds=COOLDOWN_SECONDS,
+        free_wrong_attempts=FREE_WRONG_ATTEMPTS,
+        flag_points_per_level=FLAG_POINTS_PER_LEVEL,
+        penalty_per_attempt=PENALTY_PER_WRONG,
+        cooldown_schedule=COOLDOWN_SCHEDULE,
+        max_penalty=MAX_PENALTY_PER_LEVEL,
+    )
 
 
 # ---------------------------------------------------------------------- File Concurrency
@@ -275,9 +297,15 @@ def levels_for_cluster(cluster: str = CLUSTER) -> list[dict]:
             "question": first.get("flag_question", ""),
             "hints": [x for x in first.get("hints", "").split("|") if x],
             "answers": [x.strip() for x in first.get("flag_answers", "").split("|") if x.strip()],
+            "decoy_answers": [x.strip() for x in (first.get("decoy_answers") or "").split("|") if x.strip()],
+            "flag_mode": (first.get("flag_mode") or "keyword").strip() or "keyword",
             "paper_ids": [r["paper_id"] for r in group],
         })
     return out
+
+
+def level_spec(cluster: str, level: int) -> dict | None:
+    return next((x for x in levels_for_cluster(cluster) if x["id"] == level), None)
 
 
 def create_cluster_from_template(name: str, template_cluster: str = CLUSTER) -> str:
@@ -317,6 +345,9 @@ def _empty() -> dict:
         "audit": [],
         "session_tokens": {},
         "admin_tokens": {},
+        "finals": {},
+        "hints": {},
+        "settings": {},
     }
 
 
@@ -341,6 +372,9 @@ def load(recover_corrupted: bool = False) -> dict:
                 d.setdefault("audit", [])
                 d.setdefault("session_tokens", {})
                 d.setdefault("admin_tokens", {})
+                d.setdefault("finals", {})
+                d.setdefault("hints", {})
+                d.setdefault("settings", {})
                 return d
             except (ValueError, json.JSONDecodeError, OSError) as exc:
                 ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
@@ -605,56 +639,9 @@ def save_team_graph(team_id: str, graph: TeamKnowledgeGraph) -> None:
                 if incoming_snap.to_dict() != stored_snap:
                     raise PermissionError(f"Historical snapshot for level {lvl_int} cannot be modified.")
 
-            # Reject unauthorized modification, deletion, or reassignment of edges belonging to locked levels
-            if completed:
-                locked_levels = set(completed)
-                active_edge_keys = {
-                    (
-                        e.source_id.strip().upper(),
-                        e.target_id.strip().upper(),
-                        e.relationship_type.strip().upper().replace(" ", "_"),
-                        e.evidence_reference.strip(),
-                        int(e.added_at_level),
-                    )
-                    for e in graph.edges
-                }
-                for lvl in locked_levels:
-                    snap = graph.get_snapshot(lvl)
-                    if snap is not None:
-                        for se in snap.edges:
-                            s = str(se.get("source_id", "")).strip().upper()
-                            t = str(se.get("target_id", "")).strip().upper()
-                            rel = str(se.get("relationship_type", "")).strip().upper().replace(" ", "_")
-                            ev = str(se.get("evidence_reference", "")).strip()
-                            added_lvl = int(se.get("added_at_level", lvl))
-                            if (s, t, rel, ev, added_lvl) not in active_edge_keys:
-                                raise PermissionError(
-                                    f"Locked edge ({s} {rel} {t} [evidence: {ev}, added_at_level: {added_lvl}]) from level {lvl} "
-                                    "cannot be removed, altered, or reassigned."
-                                )
-                for e in graph.edges:
-                    if e.added_at_level in locked_levels:
-                        snap = graph.get_snapshot(e.added_at_level)
-                        if snap is not None:
-                            snap_edge_keys = {
-                                (
-                                    str(se.get("source_id", "")).strip().upper(),
-                                    str(se.get("target_id", "")).strip().upper(),
-                                    str(se.get("relationship_type", "")).strip().upper().replace(" ", "_"),
-                                    str(se.get("evidence_reference", "")).strip(),
-                                    int(se.get("added_at_level", e.added_at_level)),
-                                )
-                                for se in snap.edges
-                            }
-                            k = (
-                                e.source_id.strip().upper(),
-                                e.target_id.strip().upper(),
-                                e.relationship_type.strip().upper().replace(" ", "_"),
-                                e.evidence_reference.strip(),
-                                int(e.added_at_level),
-                            )
-                            if k not in snap_edge_keys:
-                                raise PermissionError(f"Cannot add or reassign edges to locked level {e.added_at_level}.")
+            # Design change (calibration review): the live graph stays editable until the final lock so teams can
+            # correct earlier mistakes. Locked levels are preserved as immutable SNAPSHOTS (checked above), which is
+            # what each level was scored on.
 
             d.setdefault("graphs", {})[tid] = graph.to_dict()
             save(d)
@@ -720,9 +707,115 @@ def normalise(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", s).strip()
 
 
-def attempt_flag(team: str, level: int, answer: str) -> dict:
-    from scoring.flag_validator import LevelFlagValidator
+# ---------------------------------------------------------------------- Organiser level gate
+def open_level(d: dict | None = None) -> int | None:
+    """Highest competition level the organisers have opened (None = all levels open)."""
+    d = d if d is not None else load()
+    val = d.get("settings", {}).get("open_level")
+    return int(val) if val is not None else None
 
+
+def set_open_level(level: int | None) -> None:
+    with LOCK:
+        with _file_lock():
+            d = load()
+            d.setdefault("settings", {})["open_level"] = None if level is None else int(level)
+            d["audit"].append({"at": now(), "action": "open_level_set", "open_level": level})
+            save(d)
+            log_event({"at": now(), "event": "open_level_set", "open_level": level})
+
+
+def _level_gate_error(level: int, d: dict) -> str | None:
+    ol = open_level(d)
+    if level >= 1 and ol is not None and level > ol:
+        return f"Level {level} has not been opened yet. Wait for the organisers to release it."
+    return None
+
+
+# ---------------------------------------------------------------------- Hints (3-rung ladder per level)
+def _hint_key(team: str, level: int) -> str:
+    return f"{str(team or '').strip().upper()}:{level}"
+
+
+def hint_cost(team: str, level: int, d: dict | None = None) -> float:
+    d = d if d is not None else load()
+    rec = d.get("hints", {}).get(_hint_key(team, level), {})
+    return float(rec.get("cost", 0.0))
+
+
+def release_hint_for_all(level: int, rung: int) -> None:
+    """Organiser releases a hint rung for every team at a level (free)."""
+    with LOCK:
+        with _file_lock():
+            d = load()
+            rel = d.setdefault("settings", {}).setdefault("released_hints", {}).setdefault(str(level), [])
+            if rung not in rel:
+                rel.append(int(rung))
+            d["audit"].append({"at": now(), "action": "hint_released", "level": level, "rung": rung})
+            save(d)
+            log_event({"at": now(), "event": "hint_released", "level": level, "rung": rung})
+
+
+def hint_status(team: str, level: int) -> list[dict]:
+    """For each rung: unlocked / revealed / cost. Rung N unlocks after HINT_UNLOCK_AFTER_WRONG[N-1] wrong
+    attempts or when organisers release it. Only the last rung costs points, and only if the team opens it
+    before the organisers release it."""
+    tid = str(team or "").strip().upper()
+    d = load()
+    team_rec = d.get("teams", {}).get(tid)
+    if not team_rec:
+        return []
+    spec = level_spec(team_rec.get("cluster", CLUSTER), level)
+    if not spec:
+        return []
+    wrong = len([a for a in d.get("attempts", {}).get(_hint_key(tid, level), []) if not a.get("correct")])
+    released = set(d.get("settings", {}).get("released_hints", {}).get(str(level), []))
+    revealed = set(d.get("hints", {}).get(_hint_key(tid, level), {}).get("revealed", []))
+    out = []
+    n = len(spec["hints"])
+    for i, text in enumerate(spec["hints"], 1):
+        threshold = HINT_UNLOCK_AFTER_WRONG[min(i, len(HINT_UNLOCK_AFTER_WRONG)) - 1] if HINT_UNLOCK_AFTER_WRONG else 0
+        by_attempts = spec["flag_mode"] != "final_discovery" and wrong >= threshold
+        unlocked = i in released or by_attempts
+        costly = i == n and n >= 3 and i not in released
+        out.append({
+            "rung": i,
+            "unlocked": unlocked,
+            "revealed": i in revealed or i in released,
+            "cost": HINT_RUNG3_COST if costly else 0.0,
+            "unlock_after_wrong": threshold,
+            "text": text if (i in revealed or i in released) else None,
+        })
+    return out
+
+
+def reveal_hint(team: str, level: int, rung: int) -> dict:
+    tid = str(team or "").strip().upper()
+    with LOCK:
+        with _file_lock():
+            d = load()
+            if f"{tid}:{level}" in d.get("submissions", {}):
+                raise PermissionError("This level is already locked.")
+            status = {h["rung"]: h for h in hint_status(tid, level)}
+            h = status.get(int(rung))
+            if not h:
+                raise ValueError("No such hint.")
+            if not h["unlocked"]:
+                raise PermissionError(f"Hint {rung} unlocks after {h['unlock_after_wrong']} wrong attempts.")
+            rec = d.setdefault("hints", {}).setdefault(_hint_key(tid, level), {"revealed": [], "cost": 0.0})
+            if int(rung) not in rec["revealed"]:
+                rec["revealed"].append(int(rung))
+                rec["cost"] = float(rec.get("cost", 0.0)) + float(h["cost"])
+                d["audit"].append({"at": now(), "action": "hint_revealed", "team_id": tid, "level": level,
+                                   "rung": int(rung), "cost": h["cost"]})
+                save(d)
+                log_event({"at": now(), "event": "hint_revealed", "team_id": tid, "level": level, "rung": int(rung)})
+            return {"rung": int(rung), "text": level_spec(d["teams"][tid].get("cluster", CLUSTER), level)["hints"][int(rung) - 1],
+                    "cost": h["cost"]}
+
+
+# ---------------------------------------------------------------------- Flags
+def attempt_flag(team: str, level: int, answer: str) -> dict:
     tid = (team or "").strip().upper()
     key = f"{tid}:{level}"
 
@@ -738,32 +831,35 @@ def attempt_flag(team: str, level: int, answer: str) -> dict:
             if level not in valid_ids:
                 return {"correct": False, "message": "This level is not configured for your cluster.", "cooldown_remaining": 0}
 
-            # Sequential progression check
             completed, current = team_progress(tid)
             if level in completed or key in d.get("submissions", {}):
                 return {"correct": False, "message": "This level is already locked.", "cooldown_remaining": 0}
             if current is None or level != current:
                 return {"correct": False, "message": f"Level {level} is locked. You must complete Level {current} first.", "cooldown_remaining": 0}
+            gate = _level_gate_error(level, d)
+            if gate:
+                return {"correct": False, "message": gate, "cooldown_remaining": 0}
 
             spec = next((x for x in specs if x["id"] == level), None)
+            if spec and spec.get("flag_mode") == "final_discovery":
+                return {"correct": False, "message": "This level is the one-shot final discovery. Use the final discovery form.",
+                        "cooldown_remaining": 0}
             clean_ans = str(answer or "").strip()
             if not clean_ans:
                 return {"correct": False, "message": "Enter a flag answer before submitting an attempt.", "cooldown_remaining": 0}
 
-            validator = LevelFlagValidator(
-                cooldown_seconds=COOLDOWN_SECONDS,
-                free_wrong_attempts=FREE_WRONG_ATTEMPTS,
-                flag_points_per_level=FLAG_POINTS_PER_LEVEL,
-                penalty_per_attempt=1.0,
-            )
             history = d.get("attempts", {}).get(key, [])
-            res = validator.evaluate_attempt(
+            if any(a.get("correct") for a in history):
+                return {"correct": True, "message": "Flag already solved for this level.", "cooldown_remaining": 0,
+                        "already_solved": True}
+            res = _validator().evaluate_attempt(
                 team_id=tid,
                 level=level,
                 answer=clean_ans,
                 expected_answers=spec["answers"] if spec else [],
                 attempt_history=history,
                 is_locked=False,
+                decoy_answers=spec.get("decoy_answers") if spec else None,
             )
 
             if res.get("record_attempt") and res.get("attempt_record"):
@@ -775,6 +871,7 @@ def attempt_flag(team: str, level: int, answer: str) -> dict:
                     "team_id": tid,
                     "level": level,
                     "correct": res["correct"],
+                    "decoy_signal": bool(res["attempt_record"].get("decoy_signal")),
                     "answer": clean_ans,
                 })
 
@@ -785,21 +882,213 @@ def attempt_flag(team: str, level: int, answer: str) -> dict:
 
 
 def flag_status(team: str, level: int) -> dict:
-    from scoring.flag_validator import LevelFlagValidator
-
     tid = (team or "").strip().upper()
     key = f"{tid}:{level}"
     d = load()
     history = d.get("attempts", {}).get(key, [])
-    validator = LevelFlagValidator(
-        cooldown_seconds=COOLDOWN_SECONDS,
-        free_wrong_attempts=FREE_WRONG_ATTEMPTS,
-        flag_points_per_level=FLAG_POINTS_PER_LEVEL,
-        penalty_per_attempt=1.0,
-    )
-    return validator.compute_status(history)
+    return _validator().compute_status(history, hint_cost=hint_cost(tid, level, d))
 
 
+def override_flag(team: str, level: int, reviewer: str, note: str = "") -> dict:
+    """Organiser accepts a team's answer for a level (e.g. a correct answer phrased unexpectedly)."""
+    tid = (team or "").strip().upper()
+    reviewer = str(reviewer or "").strip()
+    if not reviewer:
+        raise ValueError("A reviewer name is required for an override.")
+    with LOCK:
+        with _file_lock():
+            d = load()
+            if tid not in d.get("teams", {}):
+                raise ValueError(f"Team {tid!r} does not exist.")
+            key = f"{tid}:{level}"
+            if key in d.get("submissions", {}):
+                raise PermissionError("This level is already locked.")
+            rec = {"at": now(), "answer": f"[organiser override by {reviewer}] {note}".strip(), "correct": True,
+                   "counted": True, "override": True, "reviewer": reviewer}
+            d.setdefault("attempts", {}).setdefault(key, []).append(rec)
+            d["audit"].append({"at": rec["at"], "action": "flag_override", "team_id": tid, "level": level, "reviewer": reviewer})
+            save(d)
+            log_event({"at": rec["at"], "event": "flag_override", "team_id": tid, "level": level, "reviewer": reviewer})
+            return rec
+
+
+# ---------------------------------------------------------------------- Server-side graph scoring
+_SCORER = None
+
+
+def _main_scorer():
+    global _SCORER
+    if _SCORER is None:
+        from scoring.graph_scorer import GraphScorer
+
+        _SCORER = GraphScorer.from_answer_key()
+    return _SCORER
+
+
+def _injection_hosts() -> dict[tuple, str]:
+    try:
+        from challenge import paths
+
+        ann = paths.read_json(paths.INJECTIONS)["annotations"]
+    except Exception:
+        return {}
+    from graph.schema import edge_key
+
+    return {edge_key(*a["induced_edge"]): a["host_card_participant_id"] for a in ann}
+
+
+def score_level_graph(cluster: str, level: int, csv_text: str) -> dict:
+    """Score a cumulative graph on the server, scoped to the papers released up to ``level``.
+
+    Only the main (verified) cluster has a reference set. Levels below 1 and other clusters are unscored
+    (organisers may still adjust manually). An injection-induced edge only carries the injection weight once
+    the card hosting that injection has been released; before that it is scored as an ordinary/decoy error.
+    """
+    empty = {"scored": False, "points": 0.0, "weighted_f1": 0.0, "weighted_precision": 0.0, "recall": 0.0,
+             "edges": 0, "scope_reference_edges": 0}
+    if cluster != CLUSTER or level < 1:
+        return empty
+    from graph.schema import edge_key
+    from scoring.graph_scorer import parse_submission
+    from scoring.weighted_metrics import Counts, compute
+
+    scorer = _main_scorer()
+    released = set(released_papers(level, cluster))
+    parsed = parse_submission(csv_text, scorer.infos, max_rows=300, allow_any_pair=True)
+    edges = {edge_key(*e) for e in parsed.edges if e[0] in released and e[1] in released}
+    reference = {t for t in scorer.reference if t[0] in released and t[1] in released}
+    hosts = _injection_hosts()
+    decoys = set()
+    try:
+        from challenge import paths
+
+        decoys = {x["participant_id"] for x in paths.read_json(paths.DECOYS)["decoys"]}
+    except Exception:
+        pass
+    c = {"reference": 0, "ordinary": 0, "decoy_induced": 0, "injection_induced": 0, "neutral": 0}
+    for e in edges:
+        cls = scorer.classify(e)
+        if cls == "injection_induced" and hosts.get(e) not in released:
+            cls = "decoy_induced" if (e[0] in decoys or e[1] in decoys) else "ordinary"
+        c[cls] += 1
+    counts = Counts(tp=c["reference"], fn=len(reference) - c["reference"], fp_ordinary=c["ordinary"],
+                    fp_decoy=c["decoy_induced"], fp_injection=c["injection_induced"], neutral=c["neutral"])
+    m = compute(counts, scorer.weights)
+    return {
+        "scored": True,
+        "points": round(m.weighted_f1 * GRAPH_POINTS_PER_LEVEL, 2),
+        "weighted_f1": round(m.weighted_f1, 4),
+        "weighted_precision": round(m.weighted_precision, 4),
+        "recall": round(m.recall, 4),
+        "edges": len(edges),
+        "scope_reference_edges": len(reference),
+        "injection_edges": c["injection_induced"],
+        "decoy_edges": c["decoy_induced"],
+    }
+
+
+# ---------------------------------------------------------------------- One-shot final discovery (HMAC)
+def _flag_registry() -> dict:
+    from challenge import paths
+
+    if not paths.FLAG_REGISTRY.exists():
+        raise FileNotFoundError("flag_registry.json missing - set FLAG_HMAC_SECRET and run scripts/build_challenge.py")
+    return paths.read_json(paths.FLAG_REGISTRY)
+
+
+def final_deadline() -> datetime | None:
+    raw = os.environ.get("FINAL_DEADLINE") or (_CFG.get("final_submission", {}) or {}).get("deadline")
+    try:
+        return datetime.fromisoformat(raw) if raw else None
+    except ValueError:
+        return None
+
+
+def final_results_visible(at: datetime | None = None) -> bool:
+    dl = final_deadline()
+    return bool(dl and (at or datetime.now(timezone.utc)) > dl)
+
+
+def submit_final_discovery(team: str, form: dict, registry: dict | None = None, secret: str | None = None) -> dict:
+    """Validate and lock a team's ONE final-discovery submission (target paper, principle, application,
+    evidence, limitations). Correctness is evaluated against HMAC tokens and NOT revealed before the deadline."""
+    from scoring.flag_validator import FIELDS, check_key, evaluate, get_secret, normalise_pid, team_flag, validate_form
+
+    tid = (team or "").strip().upper()
+    with LOCK:
+        with _file_lock():
+            d = load()
+            team_rec = d.get("teams", {}).get(tid)
+            if not team_rec:
+                raise ValueError(f"Team {tid!r} does not exist.")
+            completed, current = team_progress(tid)
+            spec = level_spec(team_rec.get("cluster", CLUSTER), current) if current is not None else None
+            if not spec or spec.get("flag_mode") != "final_discovery":
+                raise PermissionError("The final discovery is only available at the final level.")
+            gate = _level_gate_error(current, d)
+            if gate:
+                raise PermissionError(gate)
+            if tid in d.get("finals", {}):
+                raise PermissionError("Your team has already made its final discovery submission. It is locked.")
+            dl = final_deadline()
+            if dl and datetime.now(timezone.utc) > dl:
+                raise PermissionError("The final submission deadline has passed.")
+            errs = validate_form(form)
+            if errs:
+                return {"accepted": False, "errors": errs}
+            clean = {f: str(form[f]).strip() for f in FIELDS}
+            clean["base_id"], clean["target_id"] = normalise_pid(clean["base_id"]), normalise_pid(clean["target_id"])
+            reg = registry if registry is not None else _flag_registry()
+            sec = secret or get_secret()
+            check_key(reg, sec)
+            ev = evaluate(clean, reg, sec)
+            auto = (DISCOVERY_TARGET_POINTS if ev["target_correct"] and ev["base_correct"] else 0.0) + (
+                DISCOVERY_APPLICATION_POINTS if ev["application_status"] in ("CANONICAL", "ACCEPTED_ALTERNATIVE") else 0.0)
+            at = now()
+            rec = {"team_id": tid, "level": current, "submitted_at": at, "submission": clean, "evaluation": ev,
+                   "auto_points": auto, "review_points": 0.0, "review_notes": "", "locked": True,
+                   "flag": team_flag(sec, tid, clean["target_id"], ev["application_normalised"]) if ev["result"] == "CORRECT" else None,
+                   "receipt_id": hashlib.sha256(f"{tid}|{at}|{sorted(clean.items())}".encode()).hexdigest()[:12]}
+            d.setdefault("finals", {})[tid] = rec
+            d["audit"].append({"at": at, "action": "final_discovery_submitted", "team_id": tid})
+            save(d)
+            log_event({"at": at, "event": "final_discovery_submitted", "team_id": tid})
+            return {"accepted": True, "locked": True, "submitted_at": at, "receipt_id": rec["receipt_id"],
+                    "message": "Final discovery received and locked. Results are released after the deadline."}
+
+
+def final_discovery_status(team: str) -> dict:
+    """Participant-safe view: correctness and points only after the deadline."""
+    tid = (team or "").strip().upper()
+    rec = load().get("finals", {}).get(tid)
+    if not rec:
+        return {"submitted": False}
+    out = {"submitted": True, "submitted_at": rec["submitted_at"], "receipt_id": rec["receipt_id"]}
+    if final_results_visible():
+        out.update(result=rec["evaluation"]["result"], points=rec["auto_points"] + rec.get("review_points", 0.0), flag=rec.get("flag"))
+    else:
+        out["result"] = "hidden until the deadline"
+    return out
+
+
+def review_final_discovery(team: str, review_points: float, notes: str = "", reviewer: str = "") -> dict:
+    tid = (team or "").strip().upper()
+    pts = max(0.0, min(float(review_points), DISCOVERY_REVIEW_MAX_POINTS))
+    with LOCK:
+        with _file_lock():
+            d = load()
+            if tid not in d.get("finals", {}):
+                raise KeyError("No final discovery submission for this team.")
+            d["finals"][tid].update(review_points=pts, review_notes=str(notes or "").strip(), reviewer=str(reviewer or "").strip())
+            for k, s in d.get("submissions", {}).items():
+                if k.startswith(f"{tid}:") and s.get("final_discovery"):
+                    s["flag_points"] = round(d["finals"][tid]["auto_points"] + pts, 2)
+            save(d)
+            log_event({"at": now(), "event": "final_discovery_reviewed", "team_id": tid, "review_points": pts})
+            return d["finals"][tid]
+
+
+# ---------------------------------------------------------------------- Level lock
 def finalise(
     team: str,
     level: int,
@@ -809,6 +1098,8 @@ def finalise(
     submitted_flag: str = "",
     explanation: str = "",
 ) -> dict:
+    """Lock a level. ``flag_correct`` and ``graph_score`` are accepted for backward compatibility but IGNORED:
+    flag correctness comes from the server-side attempt log and the graph is scored on the server."""
     tid = (team or "").strip().upper()
     key = f"{tid}:{level}"
     clean_csv = str(csv_text or "").strip()
@@ -826,15 +1117,17 @@ def finalise(
             valid_ids = [x["id"] for x in specs]
             if level not in valid_ids:
                 raise ValueError(f"Level {level} is not configured for your cluster.")
+            spec = next(x for x in specs if x["id"] == level)
 
-            # Sequential progression check
             completed, current = team_progress(tid)
             if level in completed or key in d.get("submissions", {}):
                 raise PermissionError("This level has already been submitted and locked.")
             if current is None or level != current:
                 raise PermissionError(f"Cannot finalize Level {level}. You must complete Level {current} first.")
+            gate = _level_gate_error(level, d)
+            if gate:
+                raise PermissionError(gate)
 
-            # Non-empty cumulative graph check for competition levels
             clean_rows = []
             if level > 0:
                 if not clean_csv:
@@ -842,75 +1135,53 @@ def finalise(
                 lines = [l.strip() for l in clean_csv.splitlines() if l.strip() and not l.startswith("#")]
                 if len(lines) <= 1:
                     raise ValueError("A final submission must contain a cumulative knowledge graph with at least one relationship edge.")
-
                 allowed = released_papers(level, cluster)
                 clean_rows, errs = parse_and_validate_csv(clean_csv, allowed_papers=allowed, allow_empty=True, require_evidence=False)
                 if errs:
                     raise ValueError("Graph validation failed: " + "; ".join(errs))
-
                 if not clean_rows:
                     raise ValueError("A final submission must contain a cumulative knowledge graph with at least one relationship edge.")
+            elif clean_csv:
+                allowed = released_papers(level, cluster)
+                clean_rows, _ = parse_and_validate_csv(clean_csv, allowed_papers=allowed, allow_empty=True, require_evidence=False)
+
+            is_final = spec.get("flag_mode") == "final_discovery"
+            if is_final:
+                final = d.get("finals", {}).get(tid)
+                if not final:
+                    raise ValueError("Submit your one-shot final discovery before locking the final level.")
+                actual_flag_correct = final["evaluation"]["result"] == "CORRECT"
+                actual_flag_points = round(final["auto_points"] + final.get("review_points", 0.0), 2)
+                flag_recorded = f"[final discovery] {final['submission']['target_id']} / {final['submission']['application']}"
             else:
-                if clean_csv:
-                    allowed = released_papers(level, cluster)
-                    clean_rows, _ = parse_and_validate_csv(clean_csv, allowed_papers=allowed, allow_empty=True, require_evidence=False)
-
-            # Validate retention of prior locked edges from earlier competition levels
-            competition_completed = [l for l in completed if l > 0]
-            if level > 1 and competition_completed:
-                prev_lvl = max(competition_completed)
-                prev_sub = d.get("submissions", {}).get(f"{tid}:{prev_lvl}")
-                if prev_sub and prev_sub.get("csv"):
-                    import io, pandas as pd
-                    try:
-                        prev_df = pd.read_csv(io.StringIO(prev_sub["csv"]), dtype=str).fillna("")
-                        req_cols = {"source_id", "target_id", "relationship_type"}
-                        if req_cols.issubset(prev_df.columns) and not prev_df.empty:
-                            prev_edges = {
-                                (r["source_id"].strip().upper(), r["target_id"].strip().upper(), r["relationship_type"].strip().upper().replace(" ", "_"))
-                                for _, r in prev_df.iterrows()
-                                if r["source_id"].strip() and r["target_id"].strip()
-                            }
-                            curr_edges = {
-                                (r["source_id"].strip().upper(), r["target_id"].strip().upper(), r["relationship_type"].strip().upper().replace(" ", "_"))
-                                for r in clean_rows
-                            }
-                            if not prev_edges.issubset(curr_edges):
-                                raise ValueError("Prior locked edges from earlier levels cannot be deleted or altered.")
-                    except ValueError:
-                        raise
-                    except Exception:
-                        pass
-
-            attempts = d.get("attempts", {}).get(key, [])
-            if not attempts:
-                raise ValueError("Submit at least one flag attempt before advancing to the next level.")
+                attempts = d.get("attempts", {}).get(key, [])
+                if not attempts:
+                    raise ValueError("Submit at least one flag attempt before advancing to the next level.")
+                fs = flag_status(tid, level)
+                if not fs["correct"]:
+                    raise ValueError("Solve this level's flag (or ask an organiser to review your answer) before locking it.")
+                actual_flag_correct = True
+                actual_flag_points = fs["flag_points"]
+                flag_recorded = submitted_flag or next((a["answer"] for a in fs["history"] if a.get("correct")), "")
 
             if not clean_expl:
                 raise ValueError("An explanation is required to finalize this level.")
 
-            fs = flag_status(tid, level)
-            actual_flag_correct = fs["correct"]
-            actual_flag_points = fs["flag_points"]
-
+            server_score = score_level_graph(cluster, level, clean_csv)
             edge_count = len(clean_rows)
             sub_time = now()
 
-            # Snapshot team knowledge graph at this level
             g = get_team_graph(tid)
             g.set_edges_from_list(clean_rows, current_level=level, locked_levels=completed)
             g.snapshot_level(level=level, submitted_at=sub_time, csv_text=clean_csv)
             d.setdefault("graphs", {})[tid] = g.to_dict()
-
-            last_answer = fs["last"]["answer"] if fs["last"] else ""
-            flag_recorded = submitted_flag or last_answer
 
             rec = {
                 "team_id": tid,
                 "level": level,
                 "submitted_at": sub_time,
                 "csv": clean_csv,
-                "graph_score": graph_score or {},
+                "graph_score": server_score,
                 "flag_correct": actual_flag_correct,
                 "flag_points": actual_flag_points,
                 "submitted_flag": flag_recorded,
@@ -919,25 +1190,19 @@ def finalise(
                 "organiser_notes": "",
                 "locked": True,
                 "edge_count": edge_count,
+                "final_discovery": is_final,
             }
             d.setdefault("submissions", {})[key] = rec
             d.setdefault("audit", []).append({
-                "at": sub_time,
-                "action": "level_submitted",
-                "team_id": tid,
-                "level": level,
-                "flag_correct": actual_flag_correct,
-                "flag_points": actual_flag_points,
+                "at": sub_time, "action": "level_submitted", "team_id": tid, "level": level,
+                "flag_correct": actual_flag_correct, "flag_points": actual_flag_points,
+                "graph_points": server_score["points"],
             })
             save(d)
             log_event({
-                "at": sub_time,
-                "event": "level_submitted",
-                "team_id": tid,
-                "level": level,
-                "flag_correct": actual_flag_correct,
-                "flag_points": actual_flag_points,
-                "edge_count": edge_count,
+                "at": sub_time, "event": "level_submitted", "team_id": tid, "level": level,
+                "flag_correct": actual_flag_correct, "flag_points": actual_flag_points,
+                "graph_points": server_score["points"], "edge_count": edge_count,
             })
             return rec
 
@@ -992,7 +1257,88 @@ def admin_snapshot() -> dict:
         "attempts": d.get("attempts", {}),
         "submissions": d.get("submissions", {}),
         "audit": d.get("audit", []),
+        "finals": d.get("finals", {}),
+        "hints": d.get("hints", {}),
+        "settings": d.get("settings", {}),
     }
+
+
+def reset_team(team: str) -> None:
+    """Organiser action: clear a team's attempts, drafts, hints, submissions, final discovery and graph
+    (the team account and password are kept)."""
+    tid = (team or "").strip().upper()
+    with LOCK:
+        with _file_lock():
+            d = load()
+            if tid not in d.get("teams", {}):
+                raise ValueError(f"Team {tid!r} does not exist.")
+            for bucket in ("attempts", "drafts", "submissions", "hints"):
+                for k in [k for k in d.get(bucket, {}) if k.startswith(f"{tid}:")]:
+                    del d[bucket][k]
+            d.get("finals", {}).pop(tid, None)
+            d.setdefault("graphs", {})[tid] = TeamKnowledgeGraph(tid).to_dict()
+            d["audit"].append({"at": now(), "action": "team_reset", "team_id": tid})
+            save(d)
+            log_event({"at": now(), "event": "team_reset", "team_id": tid})
+
+
+def team_scores(include_demo: bool = False) -> list[dict]:
+    """Leaderboard rows: flag + graph (+ organiser adjustment) points over competition levels (L1+).
+    Final-discovery points are included only for organisers (participants see them after the deadline)."""
+    d = load()
+    rows = []
+    for tid, t in d.get("teams", {}).items():
+        if t.get("is_demo") and not include_demo:
+            continue
+        subs = [s for k, s in d.get("submissions", {}).items() if s["team_id"] == tid and s.get("level", 0) >= 1]
+        flags = round(sum(float(s.get("flag_points", 0)) for s in subs), 2)
+        graph = round(sum(float(s.get("graph_score", {}).get("points", 0)) + float(s.get("manual_adjustment", 0.0)) for s in subs), 2)
+        rows.append({"team_id": tid, "name": t["name"], "cluster": t["cluster"], "levels_locked": len(subs),
+                     "flag_points": flags, "graph_points": graph, "total": round(flags + graph, 2)})
+    return sorted(rows, key=lambda r: -r["total"])
+
+
+def calibration_alerts() -> dict:
+    """Difficulty signals for organisers, per competition level, plus decoy and injection tallies for the debrief."""
+    import statistics
+
+    d = load()
+    cfg = (_CFG.get("calibration_alerts", {}) if isinstance(_CFG, dict) else {}) or {}
+    share6 = float(cfg.get("share_teams_6plus_wrong", 0.3))
+    med_lim = float(cfg.get("median_wrong_attempts", 4))
+    low_share = float(cfg.get("share_low_graph_f1", 0.4))
+    low_f1 = float(cfg.get("low_graph_f1", 0.2))
+    teams = [tid for tid, t in d.get("teams", {}).items() if not t.get("is_demo") and t.get("cluster") == CLUSTER]
+    out = {"levels": [], "alerts": []}
+    for lv in levels_for_cluster(CLUSTER):
+        if lv["id"] < 1:
+            continue
+        wrongs, decoys, solved = [], 0, 0
+        for tid in teams:
+            hist = d.get("attempts", {}).get(f"{tid}:{lv['id']}", [])
+            if not hist:
+                continue
+            wrongs.append(sum(1 for a in hist if not a.get("correct")))
+            decoys += sum(1 for a in hist if a.get("decoy_signal"))
+            solved += any(a.get("correct") for a in hist)
+        subs = [d["submissions"][f"{tid}:{lv['id']}"] for tid in teams if f"{tid}:{lv['id']}" in d.get("submissions", {})]
+        low = sum(1 for s in subs if s.get("graph_score", {}).get("scored") and s["graph_score"].get("weighted_f1", 0) < low_f1)
+        inj = sum(int(s.get("graph_score", {}).get("injection_edges", 0) > 0) for s in subs)
+        row = {
+            "level": lv["id"], "teams_attempting": len(wrongs), "teams_solved": solved, "teams_locked": len(subs),
+            "median_wrong_attempts": statistics.median(wrongs) if wrongs else 0,
+            "share_6plus_wrong": round(sum(w >= 6 for w in wrongs) / len(wrongs), 2) if wrongs else 0.0,
+            "decoy_lure_answers": decoys, "locked_graphs_with_injected_edge": inj,
+            "share_low_graph_f1": round(low / len(subs), 2) if subs else 0.0,
+        }
+        out["levels"].append(row)
+        if wrongs and row["share_6plus_wrong"] > share6:
+            out["alerts"].append(f"Level {lv['id']}: {row['share_6plus_wrong']:.0%} of teams have 6+ wrong attempts - consider releasing a hint.")
+        if wrongs and row["median_wrong_attempts"] > med_lim:
+            out["alerts"].append(f"Level {lv['id']}: median wrong attempts is {row['median_wrong_attempts']} - the flag may be too hard or too strict.")
+        if subs and row["share_low_graph_f1"] > low_share:
+            out["alerts"].append(f"Level {lv['id']}: {row['share_low_graph_f1']:.0%} of locked graphs score F1 < {low_f1} - consider a graph-building hint.")
+    return out
 
 
 def ensure_demo_team(team_id: str | None = None, name: str | None = None, password: str | None = None) -> str:

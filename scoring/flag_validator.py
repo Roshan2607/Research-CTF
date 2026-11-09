@@ -204,33 +204,105 @@ def normalise_flag(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", s).strip()
 
 
+MAX_ANSWER_WORDS = 8
+
+
+def _tokens(s: str) -> list[str]:
+    out = []
+    for tok in normalise_flag(s).split():
+        m = re.fullmatch(r"p0*(\d{1,2})", tok)
+        if m:  # paper IDs: p8, p08, P008 -> p08
+            tok = f"p{int(m.group(1)):02d}"
+        elif len(tok) > 3 and tok.endswith("s") and not tok.endswith("ss"):
+            tok = tok[:-1]  # crude plural folding: receivers -> receiver
+        out.append(tok)
+    return out
+
+
+def _alias_hit(tokens: list[str], alias: str) -> bool:
+    a = _tokens(alias)
+    if not a:
+        return False
+    if len(a) == 1:
+        return a[0] in tokens
+    # multi-word alias: its words must appear as a contiguous phrase
+    return any(tokens[i:i + len(a)] == a for i in range(len(tokens) - len(a) + 1))
+
+
+def answer_matches(answer: str, aliases: list[str], max_words: int = MAX_ANSWER_WORDS) -> bool:
+    """Keyword-group match: accept a short answer that contains one accepted alias as a word or phrase.
+
+    Tolerates plurals, surrounding words and paper-ID formatting (p8 / P08); rejects keyword stuffing
+    (answers longer than ``max_words`` words).
+    """
+    tokens = _tokens(answer)
+    if not tokens or len(tokens) > max_words:
+        return False
+    return any(_alias_hit(tokens, a) for a in aliases if a)
+
+
+def matches_any(answer: str, aliases: list[str]) -> bool:
+    tokens = _tokens(answer)
+    return bool(tokens) and any(_alias_hit(tokens, a) for a in aliases if a)
+
+
+def cooldown_for(n_wrong: int, cooldown_seconds: int, schedule: list[int] | None) -> int:
+    """Cooldown after the n-th wrong attempt. cooldown_seconds == 0 disables cooldowns entirely."""
+    if cooldown_seconds <= 0 or n_wrong <= 0:
+        return 0
+    if schedule:
+        return int(schedule[min(n_wrong, len(schedule)) - 1])
+    return int(cooldown_seconds)
+
+
 class LevelFlagValidator:
     """Server-side flag validator enforcing cooldowns, attempt counting, and penalty logic.
 
-    Rules:
-    1. Unlimited flag attempts are permitted before final submission.
-    2. Correct and incorrect attempts return immediate feedback.
-    3. The first five incorrect attempts per team per level are free.
-    4. Starting from the 6th incorrect attempt, each incorrect attempt deducts 1 flag point.
-    5. A 30-second cooldown applies after EVERY incorrect attempt, including the first five.
-    6. Attempts are logged separately for each team and level.
-    7. Correct attempts never incur penalties.
-    8. Cooldowns and attempt counts are strictly enforced on the backend.
-    9. Attempts during an active cooldown are rejected without incrementing wrong counts or applying penalties.
-    10. A correct flag never reveals server-side answer keys or alternative answer lists.
+    Rules (configurable in config/challenge_config.json -> rules):
+    1. Unlimited flag attempts before the level is locked; feedback is immediate.
+    2. Answers are matched by keyword groups (accepted aliases), not exact strings. A hedged answer that
+       also contains a decoy lure is rejected and recorded as a decoy signal for the debrief.
+    3. The first ``free_wrong_attempts`` wrong attempts are free; each further wrong attempt costs
+       ``penalty_per_attempt`` flag points, capped at ``max_penalty`` per level.
+    4. A cooldown applies after EVERY wrong attempt, following ``cooldown_schedule`` (e.g. 10 s, 10 s, then 30 s).
+    5. Attempts during an active cooldown are rejected without counting or penalty.
+    6. Correct attempts never incur penalties and never reveal the accepted answer list.
     """
 
     def __init__(
         self,
         cooldown_seconds: int = 30,
         free_wrong_attempts: int = 5,
-        flag_points_per_level: int = 10,
+        flag_points_per_level: float = 10,
         penalty_per_attempt: float = 1.0,
+        cooldown_schedule: list[int] | None = None,
+        max_penalty: float | None = None,
     ):
         self.cooldown_seconds = int(cooldown_seconds)
         self.free_wrong_attempts = int(free_wrong_attempts)
-        self.flag_points_per_level = int(flag_points_per_level)
+        self.flag_points_per_level = float(flag_points_per_level)
         self.penalty_per_attempt = float(penalty_per_attempt)
+        self.cooldown_schedule = list(cooldown_schedule) if cooldown_schedule else None
+        self.max_penalty = float(max_penalty) if max_penalty is not None else float(flag_points_per_level)
+
+    def _penalty(self, n_wrong: int) -> float:
+        raw = max(0, n_wrong - self.free_wrong_attempts) * self.penalty_per_attempt
+        return round(min(raw, self.max_penalty), 2)
+
+    def _remaining_cooldown(self, wrong: list[dict], server_now: dt.datetime) -> int:
+        if not wrong:
+            return 0
+        cd = cooldown_for(len(wrong), self.cooldown_seconds, self.cooldown_schedule)
+        if cd <= 0:
+            return 0
+        try:
+            last_time = dt.datetime.fromisoformat(wrong[-1]["at"])
+            if last_time.tzinfo is None:
+                last_time = last_time.replace(tzinfo=dt.timezone.utc)
+        except (ValueError, TypeError, KeyError):
+            return 0
+        elapsed = (server_now - last_time).total_seconds()
+        return int(cd - elapsed) + 1 if elapsed < cd else 0
 
     def evaluate_attempt(
         self,
@@ -241,130 +313,76 @@ class LevelFlagValidator:
         attempt_history: list[dict],
         is_locked: bool = False,
         now: dt.datetime | None = None,
+        decoy_answers: list[str] | None = None,
     ) -> dict:
         """Evaluate a participant's flag attempt with cooldown and penalty enforcement."""
         if is_locked:
-            return {
-                "correct": False,
-                "locked": True,
-                "message": "This level is already locked.",
-                "cooldown_remaining": 0,
-                "record_attempt": False,
-            }
+            return {"correct": False, "locked": True, "message": "This level is already locked.",
+                    "cooldown_remaining": 0, "record_attempt": False}
 
         clean_answer = str(answer or "").strip()
         if not clean_answer:
-            return {
-                "correct": False,
-                "message": "Enter a flag answer before submitting an attempt.",
-                "cooldown_remaining": 0,
-                "record_attempt": False,
-            }
+            return {"correct": False, "message": "Enter a flag answer before submitting an attempt.",
+                    "cooldown_remaining": 0, "record_attempt": False}
 
         server_now = now or dt.datetime.now(dt.timezone.utc)
         wrong_attempts = [a for a in attempt_history if not a.get("correct") and a.get("counted", True)]
+        remaining = self._remaining_cooldown(wrong_attempts, server_now)
+        if remaining > 0:
+            return {"correct": False, "cooldown": True, "cooldown_remaining": remaining,
+                    "message": f"Cooldown active. Please wait {remaining}s before trying again.",
+                    "record_attempt": False}
 
-        # Check cooldown from last valid wrong attempt
-        if wrong_attempts and self.cooldown_seconds > 0:
-            last_wrong = wrong_attempts[-1]
-            try:
-                last_time = dt.datetime.fromisoformat(last_wrong["at"])
-                if last_time.tzinfo is None:
-                    last_time = last_time.replace(tzinfo=dt.timezone.utc)
-                elapsed = (server_now - last_time).total_seconds()
-                if elapsed < self.cooldown_seconds:
-                    remaining = int(self.cooldown_seconds - elapsed) + 1
-                    # Rule 9: Reject attempt without incrementing count or penalty
-                    return {
-                        "correct": False,
-                        "cooldown": True,
-                        "cooldown_remaining": remaining,
-                        "message": f"Cooldown active. Please wait {remaining}s before trying again.",
-                        "record_attempt": False,
-                    }
-            except (ValueError, TypeError, KeyError):
-                pass
+        decoy_signal = bool(decoy_answers) and matches_any(clean_answer, decoy_answers)
+        correct = answer_matches(clean_answer, expected_answers) and not decoy_signal
+        record = {"at": server_now.isoformat(timespec="seconds"), "answer": clean_answer,
+                  "correct": correct, "counted": True}
+        if decoy_signal:
+            record["decoy_signal"] = True
 
-        # Check correctness against normalized server answers
-        norm_input = normalise_flag(clean_answer)
-        norm_expected = {normalise_flag(x) for x in expected_answers if x}
-        correct = norm_input in norm_expected
-
-        iso_time = server_now.isoformat(timespec="seconds")
         if correct:
             n_wrong = len(wrong_attempts)
-            penalty = max(0, n_wrong - self.free_wrong_attempts) * self.penalty_per_attempt
-            earned = max(0, int(self.flag_points_per_level - penalty))
-            msg = f"Correct flag! Earned {earned}/{self.flag_points_per_level} flag points."
+            penalty = self._penalty(n_wrong)
+            earned = round(max(0.0, self.flag_points_per_level - penalty), 2)
+            msg = f"Correct flag! Earned {earned:g}/{self.flag_points_per_level:g} flag points."
             if penalty > 0:
-                msg += f" (-{int(penalty)} pt penalty from {n_wrong} wrong attempts)."
-            return {
-                "correct": True,
-                "cooldown": False,
-                "message": msg,
-                "earned_points": earned,
-                "penalty_points": int(penalty),
-                "cooldown_remaining": 0,
-                "record_attempt": True,
-                "attempt_record": {
-                    "at": iso_time,
-                    "answer": clean_answer,
-                    "correct": True,
-                    "counted": True,
-                },
-            }
-        else:
-            n_wrong = len(wrong_attempts) + 1
-            if n_wrong <= self.free_wrong_attempts:
-                free_left = self.free_wrong_attempts - n_wrong
-                msg = f"Incorrect flag. 30s cooldown applies. ({free_left} free wrong attempts remaining)."
-            else:
-                penalty = int((n_wrong - self.free_wrong_attempts) * self.penalty_per_attempt)
-                msg = f"Incorrect flag. 30s cooldown applies. (Penalty: -{penalty} flag point(s) from 6th wrong attempt)."
-            return {
-                "correct": False,
-                "cooldown": False,
-                "message": msg,
-                "cooldown_remaining": self.cooldown_seconds,
-                "wrong_count": n_wrong,
-                "record_attempt": True,
-                "attempt_record": {
-                    "at": iso_time,
-                    "answer": clean_answer,
-                    "correct": False,
-                    "counted": True,
-                },
-            }
+                msg += f" (-{penalty:g} pt penalty from {n_wrong} wrong attempts)."
+            return {"correct": True, "cooldown": False, "message": msg, "earned_points": earned,
+                    "penalty_points": penalty, "cooldown_remaining": 0, "record_attempt": True,
+                    "attempt_record": record}
 
-    def compute_status(self, attempt_history: list[dict], now: dt.datetime | None = None) -> dict:
-        """Compute status, penalty points, points, and remaining cooldown for a team/level."""
+        n_wrong = len(wrong_attempts) + 1
+        cd = cooldown_for(n_wrong, self.cooldown_seconds, self.cooldown_schedule)
+        cd_text = f"{cd}s cooldown applies. " if cd else ""
+        if n_wrong <= self.free_wrong_attempts:
+            msg = f"Incorrect flag. {cd_text}({self.free_wrong_attempts - n_wrong} free wrong attempts remaining)."
+        else:
+            msg = (f"Incorrect flag. {cd_text}(Penalty so far: -{self._penalty(n_wrong):g} flag point(s), "
+                   f"capped at {self.max_penalty:g}).")
+        return {"correct": False, "cooldown": False, "message": msg, "cooldown_remaining": cd,
+                "wrong_count": n_wrong, "record_attempt": True, "attempt_record": record}
+
+    def compute_status(self, attempt_history: list[dict], now: dt.datetime | None = None,
+                       hint_cost: float = 0.0) -> dict:
+        """Status, penalty, points (after any hint cost) and remaining cooldown for a team/level."""
         server_now = now or dt.datetime.now(dt.timezone.utc)
         counted = [a for a in attempt_history if a.get("counted", True)]
         correct = any(x.get("correct") for x in counted)
-        wrong = [x for x in counted if not x.get("correct")]
-        wrong_count = len(wrong)
-        penalty = int(max(0, wrong_count - self.free_wrong_attempts) * self.penalty_per_attempt)
-        earned = max(0, int(self.flag_points_per_level - penalty)) if correct else 0
-
-        cooldown_remaining = 0
-        if wrong and self.cooldown_seconds > 0:
-            try:
-                last_time = dt.datetime.fromisoformat(wrong[-1]["at"])
-                if last_time.tzinfo is None:
-                    last_time = last_time.replace(tzinfo=dt.timezone.utc)
-                elapsed = (server_now - last_time).total_seconds()
-                if elapsed < self.cooldown_seconds:
-                    cooldown_remaining = int(self.cooldown_seconds - elapsed) + 1
-            except (ValueError, TypeError, KeyError):
-                pass
-
+        first_correct = next((i for i, x in enumerate(counted) if x.get("correct")), None)
+        before_correct = counted if first_correct is None else counted[:first_correct]
+        wrong_before = [x for x in before_correct if not x.get("correct")]
+        all_wrong = [x for x in counted if not x.get("correct")]
+        penalty = self._penalty(len(wrong_before))
+        earned = round(max(0.0, self.flag_points_per_level - penalty - float(hint_cost)), 2) if correct else 0
         return {
             "correct": correct,
             "attempts": len(counted),
-            "wrong_attempts": wrong_count,
+            "wrong_attempts": len(all_wrong),
             "penalty_points": penalty,
+            "hint_cost": float(hint_cost),
             "flag_points": earned,
-            "cooldown_remaining": cooldown_remaining,
+            "cooldown_remaining": 0 if correct else self._remaining_cooldown(all_wrong, server_now),
+            "decoy_signals": sum(1 for x in counted if x.get("decoy_signal")),
             "history": counted,
             "last": counted[-1] if counted else None,
         }
