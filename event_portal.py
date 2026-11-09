@@ -382,56 +382,51 @@ elif section == "Knowledge Graph":
 # TAB 4: SUBMIT
 # ==============================================================================
 elif section == "Submit":
-    st.header(f"Submit & Lock Level {current}")
+    st.header(f"Submit Level {current}")
     d = load()
     rec = d["submissions"].get(key)
     if rec:
-        st.success("This level has already been submitted and locked.")
-        st.write(f"**Submitted at:** {rec.get('submitted_at')}")
-        st.write(f"**Submitted flag:** {rec.get('submitted_flag')}")
-        st.write(f"**Flag score:** {rec.get('flag_points', 0)} / 10 pts")
-        st.write(f"**Graph score:** {rec.get('graph_score', {}).get('points', 0)} / 15 pts")
+        st.success(f"Level {current} is locked and submitted.")
+        st.write(f"**Submitted flag:** {rec.get('submitted_flag')} ({rec.get('flag_points', 0)}/10 pts)")
+        st.write(f"**Graph score:** {rec.get('graph_score', {}).get('points', 0)}/15 pts ({rec.get('edge_count', 0)} edges)")
         if rec.get("manual_adjustment"):
             st.write(f"**Organiser adjustment:** {rec.get('manual_adjustment')} pts ({rec.get('organiser_notes', '')})")
         st.write(f"**Explanation:** {rec.get('explanation')}")
         st.stop()
 
     # --- 1. Flag Section ---
-    st.subheader(f"1. Flag Check · Level {current}")
+    st.subheader(f"1. Flag Check")
     st.write(spec["question"])
     fs = flag_status(team["team_id"], current)
 
     if fs["cooldown_remaining"] > 0:
-        st.warning(f"⏳ Cooldown active: please wait {fs['cooldown_remaining']}s before checking another flag.")
+        st.warning(f"⏳ Cooldown active: wait {fs['cooldown_remaining']}s")
     elif fs["correct"]:
-        st.success(f"✅ Correct flag solved! ({fs['flag_points']}/10 flag points earned)")
+        st.success(f"✅ Correct ({fs['flag_points']}/10 pts)")
     elif fs["last"]:
-        st.error(f"❌ Most recent flag was incorrect. (Total attempts: {fs['attempts']}; {fs['wrong_attempts']} wrong)")
+        st.error(f"❌ Incorrect")
 
     with st.form(f"flag_{current}"):
-        answer = st.text_input("Enter flag answer", placeholder="Type your answer here")
-        check = st.form_submit_button("Check flag", disabled=bool(fs["cooldown_remaining"] > 0))
+        col_inp, col_btn = st.columns([4, 1])
+        answer = col_inp.text_input("Flag answer", placeholder="Type your answer here", label_visibility="collapsed")
+        check = col_btn.form_submit_button("Check flag", use_container_width=True, disabled=bool(fs["cooldown_remaining"] > 0))
 
     if check:
-        result = attempt_flag(team["team_id"], current, answer)
-        if result["correct"]:
-            st.success(result["message"])
-        else:
-            st.error(result["message"])
-        st.rerun()
+        if answer.strip():
+            result = attempt_flag(team["team_id"], current, answer)
+            if result["correct"]:
+                st.success(result["message"])
+            else:
+                st.error(result["message"])
+            st.rerun()
 
-    st.caption(
-        f"Attempts logged: {fs['attempts']} (First 5 wrong attempts are free; 6th onwards costs 1 pt. 30s cooldown applies after wrong attempts)."
-    )
+    st.caption(f"Attempts: {fs['attempts']}")
 
     st.divider()
 
-    # --- 2. Graph Verification ---
-    st.subheader("2. Cumulative Graph Verification")
+    # --- 2. Graph & Explanation ---
+    st.subheader("2. Cumulative Graph & Explanation")
     draft = get_draft(team["team_id"], current)
-    if not draft.strip():
-        st.warning("Your cumulative graph is empty. Add at least one edge in the Knowledge Graph tab before submitting.")
-        st.stop()
 
     if team["cluster"] == CLUSTER:
         parsed, result = score_csv(draft, allow_any_pair=True)
@@ -441,46 +436,37 @@ elif section == "Submit":
         parsed = type("ParsedSubmissionCompat", (), {"errors": errs, "edges": valid_rows, "evidence": {}})()
         result = None
 
-    if parsed.errors:
-        st.error("Please fix these graph validation errors in the Knowledge Graph tab before submitting:\n" + "\n".join(parsed.errors))
-        st.stop()
+    if not draft.strip() or len(parsed.edges) == 0:
+        st.warning("Cumulative graph is empty. Add at least one edge in the Knowledge Graph tab before submitting.")
+    elif parsed.errors:
+        st.error("Graph validation issues:\n" + "\n".join(parsed.errors))
+    else:
+        with st.expander(f"Review Cumulative Graph ({len(parsed.edges)} edges)", expanded=False):
+            df_preview = pd.read_csv(io.StringIO(draft), dtype=str, keep_default_na=False)
+            df_preview["Source paper"] = df_preview.source_id.map(labels).fillna(df_preview.source_id)
+            df_preview["Target paper"] = df_preview.target_id.map(labels).fillna(df_preview.target_id)
+            st.dataframe(df_preview[["Source paper", "relationship_type", "Target paper", "evidence_reference"]], hide_index=True, use_container_width=True)
 
-    st.write(f"**Edges to submit:** {len(parsed.edges)}")
-    df_preview = pd.read_csv(io.StringIO(draft), dtype=str, keep_default_na=False)
-    df_preview["Source paper"] = df_preview.source_id.map(labels).fillna(df_preview.source_id)
-    df_preview["Target paper"] = df_preview.target_id.map(labels).fillna(df_preview.target_id)
-    st.dataframe(df_preview[["Source paper", "relationship_type", "Target paper", "evidence_reference"]], hide_index=True, use_container_width=True)
-
-    st.divider()
-
-    # --- 3. Explanation Form ---
-    st.subheader("3. Graph Explanation & Reasoning")
-    st.caption("Explain the core connections discovered, your reasoning, and key paper evidence (required for organiser review).")
     explanation_key = f"expl_input_{team['team_id']}_{current}"
     explanation = st.text_area(
-        "Explanation text",
+        "Explanation & Reasoning",
         value=st.session_state.get(explanation_key, ""),
-        placeholder="Describe how the papers connect across domains, the evidence supporting these edges, and any limitations observed...",
+        placeholder="Briefly describe your key cross-paper connections, reasoning, and evidence...",
         key=explanation_key,
+        height=100,
     )
 
     st.divider()
 
-    # --- 4. Final Confirmation & Lock ---
-    st.subheader("4. Review & Finalize")
-    if fs["attempts"] == 0:
-        st.warning("⚠️ You must submit at least one flag attempt in Section 1 before you can finalize this level.")
-        st.stop()
+    # --- 3. Final Submit Button ---
+    can_submit = bool(draft.strip() and len(parsed.edges) > 0 and not parsed.errors and fs["attempts"] > 0)
+    if not can_submit:
+        if fs["attempts"] == 0:
+            st.caption("ℹ️ Submit at least one flag attempt above to enable level locking.")
 
-    flag_submitted = fs["last"]["answer"] if fs["last"] else ""
-    st.write(f"**Flag status:** {'✅ Solved' if fs['correct'] else '❌ Not solved'} (Points: {fs['flag_points']}/10)")
-    st.write(f"**Cumulative graph edges:** {len(parsed.edges)}")
-
-    confirm = st.checkbox("We have reviewed our cumulative graph, flag, and explanation and wish to lock this level.", key=f"confirm_{team['team_id']}_{current}")
-
-    if st.button("Submit and unlock next level", type="primary", disabled=not confirm):
+    if st.button(f"Lock & Submit Level {current}", type="primary", disabled=not can_submit):
         if not explanation.strip():
-            st.error("Please provide an explanation in Section 3 before submitting.")
+            st.error("Please provide an explanation before submitting.")
             st.stop()
 
         if result:
@@ -509,7 +495,7 @@ elif section == "Submit":
                 csv_text=draft,
                 flag_correct=fs["correct"],
                 graph_score=score_dict,
-                submitted_flag=flag_submitted,
+                submitted_flag=fs["last"]["answer"] if fs["last"] else "",
                 explanation=explanation.strip(),
             )
             st.session_state.pop(f'graph_df_{team["team_id"]}_{current}', None)
