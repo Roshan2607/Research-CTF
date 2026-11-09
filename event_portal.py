@@ -189,9 +189,14 @@ key = f"{team['team_id']}:{current}"
 if section == "Start":
     st.header("How the Challenge Works")
     col1, col2, col3 = st.columns([1.6, 1.0, 1.2])
-    col1.metric("Current Level", f"Level {current}", delta=spec["title"], delta_color="off")
-    col2.metric("Papers Available", f"{len(available)} of {sum(len(x['paper_ids']) for x in team_levels)}")
-    col3.metric("Level Points", "25 pts max", delta="15 Graph + 10 Flag", delta_color="off")
+    lvl_label = "Level 0 (Demo)" if current == 0 else f"Level {current}"
+    col1.metric("Current Level", lvl_label, delta=spec["title"], delta_color="off")
+    tot_papers = 2 if current == 0 else sum(len(x['paper_ids']) for x in team_levels if x['id'] >= 1)
+    col2.metric("Papers Available", f"{len(available)} of {tot_papers}")
+    if current == 0:
+        col3.metric("Level Type", "Onboarding Demo", delta="Practice · FLAG{TRIE}", delta_color="off")
+    else:
+        col3.metric("Level Points", "25 pts max", delta="15 Graph + 10 Flag", delta_color="off")
 
     st.markdown("""
 ### Guidelines
@@ -390,7 +395,12 @@ elif section == "Knowledge Graph":
         st.info("Add the first relationship to see the graph diagram.")
 
     csv_text = df.to_csv(index=False)
-    parsed, _ = score_csv(csv_text, allow_any_pair=True)
+    if team["cluster"] == CLUSTER and current > 0:
+        parsed, _ = score_csv(csv_text, allow_any_pair=True)
+    else:
+        allowed_rels = [r.get("relationship_type") or r.get("name") for r in vocab.get("relationship_types", [])]
+        valid_rows, errs = parse_uploaded_graph_csv(csv_text, available, allowed_rels)
+        parsed = type("ParsedSubmissionCompat", (), {"errors": errs, "edges": valid_rows, "evidence": {}})()
     if parsed.errors:
         st.error("Graph validation issues:\n" + "\n".join(parsed.errors))
     else:
@@ -452,10 +462,10 @@ elif section == "Submit":
     st.subheader("2. Cumulative Graph & Explanation")
     draft = get_draft(team["team_id"], current)
 
-    if team["cluster"] == CLUSTER:
+    if team["cluster"] == CLUSTER and current > 0:
         parsed, result = score_csv(draft, allow_any_pair=True)
     else:
-        allowed_rels = [r["name"] for r in vocab.get("relationship_types", [])]
+        allowed_rels = [r.get("relationship_type") or r.get("name") for r in vocab.get("relationship_types", [])]
         valid_rows, errs = parse_uploaded_graph_csv(draft, available, allowed_rels)
         parsed = type("ParsedSubmissionCompat", (), {"errors": errs, "edges": valid_rows, "evidence": {}})()
         result = None
@@ -504,11 +514,12 @@ elif section == "Submit":
                 "edges": len(parsed.edges),
             }
         else:
+            graph_points = 15.0 if (current == 0 and len(parsed.edges) > 0) else 0.0
             score_dict = {
                 "weighted_f1": 0.0,
                 "weighted_precision": 0.0,
                 "recall": 0.0,
-                "points": 0.0,
+                "points": graph_points,
                 "edges": len(parsed.edges),
             }
 

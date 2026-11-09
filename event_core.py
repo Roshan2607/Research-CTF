@@ -284,7 +284,9 @@ def revoke_admin_session(token: str) -> None:
 
 
 def released_papers(level: int, cluster: str = CLUSTER) -> list[str]:
-    return [p for l in levels_for_cluster(cluster) if l["id"] <= level for p in l["paper_ids"]]
+    if level == 0:
+        return [p for l in levels_for_cluster(cluster) if l["id"] == 0 for p in l["paper_ids"]]
+    return [p for l in levels_for_cluster(cluster) if 1 <= l["id"] <= level for p in l["paper_ids"]]
 
 
 def get_draft(team: str, level: int) -> str:
@@ -554,6 +556,16 @@ def ensure_demo_team(team_id: str = "DEMO00", name: str = "Level 0 Demo Team", p
         "password_hash": digest,
         "created_at": now(),
     }
+    # Clear any previous submissions, attempts and drafts when resetting demo team
+    for k in list(d["submissions"].keys()):
+        if k.startswith(f"{tid}:"):
+            del d["submissions"][k]
+    for k in list(d["attempts"].keys()):
+        if k.startswith(f"{tid}:"):
+            del d["attempts"][k]
+    for k in list(d["drafts"].keys()):
+        if k.startswith(f"{tid}:"):
+            del d["drafts"][k]
     save(d)
     log_event({"at": now(), "event": "demo_team_initialized", "team_id": tid})
     return tid
