@@ -267,8 +267,13 @@ def submissions_view():
                     'node [shape=box, style="rounded,filled", fillcolor="#EAF2FF", color="#315A8A", fontcolor="#142B45", fontname="Arial", fontsize=10, penwidth=1.5];',
                     'edge [color="#2563EB", fontcolor="#173F7A", fontname="Arial", fontsize=9, penwidth=2, arrowsize=0.8];',
                 ]
+                import re
                 for r in df.itertuples():
-                    dot.append(f'"{r.source_id}" -> "{r.target_id}" [label="{r.relationship_type}"];')
+                    clean_s = re.sub(r'[^A-Za-z0-9_]', '', str(r.source_id))
+                    clean_t = re.sub(r'[^A-Za-z0-9_]', '', str(r.target_id))
+                    clean_rel = re.sub(r'[^A-Za-z0-9_]', '', str(r.relationship_type))
+                    if clean_s and clean_t:
+                        dot.append(f'"{clean_s}" -> "{clean_t}" [label="{clean_rel}"];')
                 dot.append("}")
                 st.graphviz_chart("\n".join(dot), use_container_width=True)
             except Exception as e:

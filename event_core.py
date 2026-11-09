@@ -320,6 +320,13 @@ def attempt_flag(team: str, level: int, answer: str) -> dict:
     team_rec = d["teams"].get(team)
     if not team_rec:
         return {"correct": False, "message": "Team not found.", "cooldown_remaining": 0}
+
+    completed, current = team_progress(team)
+    if current is None:
+        return {"correct": False, "message": "All levels have already been completed.", "cooldown_remaining": 0}
+    if level != current:
+        return {"correct": False, "message": f"Cannot attempt flags for Level {level}; your active level is Level {current}.", "cooldown_remaining": 0}
+
     specs = levels_for_cluster(team_rec.get("cluster", CLUSTER))
     spec = next((x for x in specs if x["id"] == level), None)
     if spec is None:
@@ -414,11 +421,44 @@ def finalise(
 ) -> dict:
     d = load()
     key = f"{team}:{level}"
-    if key in d["submissions"]:
+    completed, current = team_progress(team)
+    if key in d["submissions"] or level in completed:
         raise PermissionError("This level has already been submitted and locked.")
+    if level != current:
+        raise PermissionError(f"Cannot submit level {level}; your active level is Level {current}.")
+
     attempts = d["attempts"].get(key, [])
     if not attempts:
         raise ValueError("Submit at least one flag attempt before advancing to the next level.")
+    if not str(explanation or "").strip():
+        raise ValueError("Please provide an explanation of your reasoning.")
+
+    # Validate retention of prior locked edges from earlier levels
+    if level > 1:
+        prev_sub = d["submissions"].get(f"{team}:{level-1}")
+        if prev_sub and prev_sub.get("csv"):
+            import io, pandas as pd
+            try:
+                prev_df = pd.read_csv(io.StringIO(prev_sub["csv"]), dtype=str).fillna("")
+                curr_df = pd.read_csv(io.StringIO(csv_text), dtype=str).fillna("")
+                req_cols = {"source_id", "target_id", "relationship_type"}
+                if req_cols.issubset(prev_df.columns) and not prev_df.empty:
+                    prev_edges = {
+                        (r["source_id"].strip().upper(), r["target_id"].strip().upper(), r["relationship_type"].strip().upper())
+                        for _, r in prev_df.iterrows()
+                        if r["source_id"].strip() and r["target_id"].strip()
+                    }
+                    curr_edges = {
+                        (r["source_id"].strip().upper(), r["target_id"].strip().upper(), r["relationship_type"].strip().upper())
+                        for _, r in curr_df.iterrows()
+                        if r["source_id"].strip() and r["target_id"].strip()
+                    } if req_cols.issubset(curr_df.columns) else set()
+                    if not prev_edges.issubset(curr_edges):
+                        raise ValueError("Prior locked edges from earlier levels cannot be deleted or altered.")
+            except ValueError:
+                raise
+            except Exception:
+                pass
 
     fs = flag_status(team, level)
     flag_correct = fs["correct"]
@@ -580,6 +620,9 @@ def parse_uploaded_graph_csv(
     if "evidence_reference" not in raw_df.columns:
         raw_df["evidence_reference"] = ""
 
+    if len(raw_df) > 300:
+        return [], [f"Too many rows ({len(raw_df)}). The limit is 300 rows."]
+
     clean_rows = []
     allowed_set = {r.strip().upper() for r in allowed_relations}
     available_set = {p.strip().upper() for p in available_papers}
@@ -604,4 +647,12 @@ def parse_uploaded_graph_csv(
             continue
         clean_rows.append({"source_id": s, "target_id": t, "relationship_type": rel, "evidence_reference": ev})
 
-    return clean_rows, errors
+    seen = set()
+    deduped = []
+    for r in clean_rows:
+        pair_key = (r["source_id"], r["target_id"], r["relationship_type"])
+        if pair_key not in seen:
+            seen.add(pair_key)
+            deduped.append(r)
+
+    return deduped, errors

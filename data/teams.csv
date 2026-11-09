@@ -1,2 +1,2 @@
 cluster,team_id,team_name,is_demo,password_salt,password_hash,created_at
-Cluster 1: Insect Behaviour × Swarm Robotics × Computer Networks,TEAM_C1,Swarm Team,False,b9b4d3b5eaa1b3d71f25f13ec5549c47,6d73a06dbc146aab52dddd4f16c44727f8fd66f6f1b693d4a9e172851f828130,2026-11-09T06:04:25+00:00
+Hidden Structures: Networking × Evolutionary Biology,TEAM_LOCK,Lock Team,False,78cc9781d791f65c52e0b2b3ae409fe7,4eb935f12e3ad416b51b8a7512bfede701482582a53e7527fe80f171079ee890,2026-11-09T06:29:42+00:00

@@ -375,11 +375,15 @@ elif section == "Knowledge Graph":
             'digraph G { graph [rankdir=LR, bgcolor="#ffffff", pad="0.25"]; node [shape=box, style="rounded,filled", fillcolor="#EAF2FF", color="#315A8A", fontcolor="#142B45", fontname="Arial", fontsize=10, penwidth=1.5]; edge [color="#2563EB", fontcolor="#173F7A", fontname="Arial", fontsize=9, penwidth=2, arrowsize=0.8];'
         ]
         for pid in available:
-            dot.append(f'"{pid}" [label="{pid}\\n{html.escape(byid[pid]["title"][:52])}"];')
+            clean_title = re.sub(r'["\\]', '', str(byid[pid]["title"][:50]))
+            dot.append(f'"{pid}" [label="{pid}\\n{clean_title}"];')
         for _, r in df.iterrows():
-            typ = r["relationship_type"]
-            style = "dir=none" if typ in ("SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM") else "dir=forward"
-            dot.append(f'"{r["source_id"]}" -> "{r["target_id"]}" [label="{typ}", {style}];')
+            clean_s = re.sub(r'[^A-Za-z0-9_]', '', str(r["source_id"]))
+            clean_t = re.sub(r'[^A-Za-z0-9_]', '', str(r["target_id"]))
+            clean_rel = re.sub(r'[^A-Za-z0-9_]', '', str(r["relationship_type"]))
+            style = "dir=none" if clean_rel in ("SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM") else "dir=forward"
+            if clean_s and clean_t:
+                dot.append(f'"{clean_s}" -> "{clean_t}" [label="{clean_rel}", {style}];')
         dot.append("}")
         st.graphviz_chart("\n".join(dot), use_container_width=True)
     else:

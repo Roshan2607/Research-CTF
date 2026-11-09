@@ -281,3 +281,64 @@ def test_four_competition_clusters_are_configured_and_playable(tmp_path, monkeyp
     assert progress[0] == [1, 2, 3, 4]
     assert progress[1] is None
 
+
+def test_edge_case_prevent_out_of_order_flags_and_skipping(tmp_path, monkeypatch):
+    monkeypatch.setattr(core, "STATE", tmp_path / "event_state.json")
+    monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
+    core.create_team("TEAM_EDGE", "Edge Team", "StrongPass123")
+
+    # Team is on level 1; attempting level 2 flag must be refused
+    att2 = core.attempt_flag("TEAM_EDGE", 2, "leaf-only observations")
+    assert att2["correct"] is False
+    assert "Level 2" in att2["message"]
+
+    # Attempting to finalise level 2 before level 1 is locked must raise PermissionError
+    try:
+        core.finalise("TEAM_EDGE", 2, "source_id,target_id,relationship_type\nP01,P02,CITES\n", True, {}, explanation="test")
+        assert False, "Finalising level out of order should raise PermissionError"
+    except PermissionError:
+        pass
+
+
+def test_edge_case_locked_edges_cannot_be_deleted_or_altered(tmp_path, monkeypatch):
+    monkeypatch.setattr(core, "STATE", tmp_path / "event_state.json")
+    monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
+    core.create_team("TEAM_LOCK", "Lock Team", "StrongPass123")
+
+    # Solve and finalise level 1 with 2 edges
+    core.attempt_flag("TEAM_LOCK", 1, "tree reconstruction")
+    l1_csv = "source_id,target_id,relationship_type\nP01,P02,CITES\nP02,P01,EXTENDS\n"
+    core.finalise("TEAM_LOCK", 1, l1_csv, True, {"points": 10.0}, explanation="L1 explanation")
+
+    # In level 2, try to submit a graph that dropped P02->P01
+    core.attempt_flag("TEAM_LOCK", 2, "leaf-only observations")
+    tampered_l2_csv = "source_id,target_id,relationship_type\nP01,P02,CITES\nP03,P04,CITES\n"  # dropped P02->P01 EXTENDS!
+    try:
+        core.finalise("TEAM_LOCK", 2, tampered_l2_csv, True, {"points": 10.0}, explanation="L2 explanation")
+        assert False, "Dropping prior locked edges must be rejected"
+    except ValueError as e:
+        assert "Prior locked edges" in str(e)
+
+    # Valid cumulative graph including all L1 edges plus new L2 edge succeeds
+    valid_l2_csv = "source_id,target_id,relationship_type\nP01,P02,CITES\nP02,P01,EXTENDS\nP03,P04,CITES\n"
+    rec = core.finalise("TEAM_LOCK", 2, valid_l2_csv, True, {"points": 10.0}, explanation="L2 explanation")
+    assert rec["edge_count"] == 3
+
+
+def test_edge_case_deduplication_and_max_rows(tmp_path, monkeypatch):
+    available = ["P01", "P02"]
+    allowed = ["CITES", "EXTENDS"]
+
+    # 1. Duplicates are deduplicated
+    dupe_csv = "source_id,target_id,relationship_type\nP01,P02,CITES\nP01,P02,CITES\nP01,P02,CITES\n"
+    rows, errs = core.parse_uploaded_graph_csv(dupe_csv, available, allowed)
+    assert not errs
+    assert len(rows) == 1
+
+    # 2. Exceeding 300 rows is rejected
+    large_csv = "source_id,target_id,relationship_type\n" + ("P01,P02,CITES\n" * 350)
+    rows, errs = core.parse_uploaded_graph_csv(large_csv, available, allowed)
+    assert len(errs) == 1
+    assert "Too many rows" in errs[0]
+
+
