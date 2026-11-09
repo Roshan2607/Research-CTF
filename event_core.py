@@ -510,6 +510,26 @@ def revoke_session(token: str) -> None:
             save(d)
 
 
+# SHA-256 digests of organiser passwords known to have been exposed (e.g. committed to git history).
+# Only digests are stored, never the passwords themselves.
+COMPROMISED_ADMIN_PASSWORD_SHA256 = frozenset({
+    "95f7572a966f0491ed855daef51a57f276e195e7fc0a22030b2b35383190c997",
+})
+MIN_ADMIN_PASSWORD_LENGTH = 12
+
+
+def admin_password_is_compromised(password: str) -> bool:
+    return hashlib.sha256(str(password or "").encode()).hexdigest() in COMPROMISED_ADMIN_PASSWORD_SHA256
+
+
+def check_admin_password(candidate: str, expected: str) -> bool:
+    """Constant-time organiser password check; refuses weak or known-compromised configured passwords."""
+    expected = str(expected or "")
+    if len(expected) < MIN_ADMIN_PASSWORD_LENGTH or admin_password_is_compromised(expected):
+        return False
+    return hmac.compare_digest(str(candidate or "").encode(), expected.encode())
+
+
 def create_admin_session() -> str:
     with LOCK:
         with _file_lock():
@@ -979,7 +999,9 @@ def ensure_demo_team(team_id: str | None = None, name: str | None = None, passwo
     cfg_demo = _CFG.get("demo_team", {}) if isinstance(_CFG, dict) else {}
     tid = (team_id or cfg_demo.get("team_id") or "DEMO00").strip().upper()
     team_name = (name or cfg_demo.get("name") or "Level 0 Demo Team").strip()
-    team_pwd = password or cfg_demo.get("default_password") or "DemoPass123!"
+    # No hard-coded default: without an explicit password the demo team gets a random one nobody knows
+    # (the admin console generates one and shows it once).
+    team_pwd = password or secrets.token_urlsafe(12)
     cluster = cfg_demo.get("cluster", "Level 0 Demo")
     with LOCK:
         with _file_lock():

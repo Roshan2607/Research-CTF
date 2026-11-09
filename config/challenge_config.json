@@ -22,7 +22,6 @@
     "name": "Level 0 Demo Team",
     "cluster": "Level 0 Demo",
     "is_demo": true,
-    "default_password": "DemoPass123!",
     "flag": "FLAG{TRIE}"
   },
   "fp_weights": {
