@@ -18,9 +18,30 @@ Edit `data/event_content.csv` to change release levels, challenge-card paths, le
 - The participant app displays only papers whose `paper_id` exists in `data/participant/participant_papers.json`, and challenge-card downloads require a matching PDF in `data/participant/cards/`. Therefore a new cluster can immediately reuse the starter corpus; to introduce genuinely new papers, also add their participant-safe metadata and PDFs to the participant package (then ensure their IDs match the CSV).
 - A team's cluster is fixed when the team is created. Create a new team if it must belong to a different cluster.
 
-## Graph behaviour
+## Graph & Submission Rules
 
-Each team has one cumulative graph. At a level, they can connect any two distinct papers released so far. The five allowed relationship types remain enforced; paper-pair selection is unrestricted, and temporal direction checks are disabled for this event workflow. Earlier-level edges are included in later cumulative snapshots and cannot be deleted through the participant UI. Current-level edges can be deleted before that level is submitted. A level submission locks the cumulative graph and advances the team if at least one non-empty flag attempt has been submitted. The attempt may be incorrect; a correct answer is not required. On later levels, the cumulative graph may be submitted unchanged.
+Each team has one cumulative graph across four levels. At each level, they can connect any two distinct papers released so far:
+
+- **Four Tabs Only**: The participant portal is structured into four tabs:
+  1. **Start**: Briefing, current level progress, and accepted relationship vocabulary.
+  2. **Papers**: Released papers, abstracts, links, PDF challenge cards, instructions, and hints.
+  3. **Knowledge Graph**: Interactive edge builder, CSV import (with Codex format support), cumulative edge table, live Graphviz visualization, and CSV download.
+  4. **Submit**: Flag verification, cumulative graph preview, explanation text area, and level lock.
+- **Flag Attempts & Penalties**:
+  - Flag attempts are unlimited and provide instant feedback.
+  - The first **5 wrong attempts per level are free**.
+  - Starting from the **6th wrong attempt, each costs 1 flag point** (out of 10 max flag points for that level).
+  - A **30-second cooldown** applies after every wrong attempt. Attempts during cooldown are blocked.
+- **Level Submissions**:
+  - Each level requires at least one flag attempt, the cumulative graph, and a written **explanation** of the graph and reasoning.
+  - Submitting locks the graph, flag, and explanation on the backend.
+  - Once locked, no further edits to that level's graph, flag, or explanation are permitted.
+- **Scoring (100 Points Total)**:
+  - Each level awards up to **25 points**: **15 graph points** (evaluated against reference connections) and **10 flag points** (minus wrong-attempt penalties).
+  - Across 4 levels: 60 graph points + 40 flag points = 100 points total.
+  - Organisers can review explanations and manually adjust graph scores (+/- points) in the admin console.
+- **Level 0 Demo Team**:
+  - A team can be registered as a demo team; demo teams are excluded from the official leaderboard by default.
 
 ## Run on Windows PowerShell
 

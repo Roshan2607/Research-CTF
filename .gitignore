@@ -12,6 +12,10 @@ venv/
 # Runtime submission data (team codes, submissions, final flags, review queue)
 data/submissions/*
 !data/submissions/.gitkeep
+data/realtime_events.jsonl
+data/submissions.csv
+data/teams.csv
+data/event_state.json
 
 # Downloaded full-text PDFs used only for organiser evidence checks (copyrighted; do not commit)
 .cache/
