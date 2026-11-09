@@ -1,5 +1,16 @@
+from pathlib import Path
+
 import pytest
 import event_core as core
+
+ENGINE_CONTENT = Path(__file__).parent / "fixtures" / "event_content_engine.csv"
+
+
+@pytest.fixture(autouse=True)
+def _engine_content(monkeypatch):
+    """Engine tests use a fixed content fixture; live content is tested in tests/test_event_content.py."""
+    monkeypatch.setattr(core, "CONTENT", ENGINE_CONTENT)
+    monkeypatch.setenv("UL_EVENT_CONTENT", str(ENGINE_CONTENT))  # inherited by multiprocessing workers
 
 
 def test_four_level_pipeline_and_locking(tmp_path, monkeypatch):
@@ -271,30 +282,6 @@ def test_level_0_demo_workflow(tmp_path, monkeypatch):
     comp2, curr2 = core.team_progress("DEMO00")
     assert comp2 == [0]
     assert curr2 is None
-
-
-def test_only_verified_content_is_configured():
-    """Every competition paper must come from the provenance-checked corpus; Level 0 must be labelled synthetic."""
-    import json
-
-    assert core.clusters() == [core.CLUSTER]
-    corpus = json.loads((core.ROOT / "data/participant/participant_papers.json").read_text(encoding="utf-8"))["papers"]
-    verified = {p["participant_id"]: p for p in corpus}
-    demo = core.load_demo_level0()
-    assert demo.get("synthetic") is True
-    demo_ids = {p["id"] for p in demo["papers"]}
-    for r in core._content():
-        pid = r["paper_id"]
-        card = core.ROOT / r["challenge_card_path"]
-        assert card.exists(), f"Card not found at {card}"
-        if r["level"] == "0":
-            assert pid in demo_ids and r["paper_title"].startswith("[Synthetic demo]")
-        else:
-            assert pid in verified, f"{pid} is not in the verified corpus"
-            assert r["paper_title"] == verified[pid]["title"]
-    # no card may claim to quote a publication unless its abstract is the verified one
-    for p in demo["papers"]:
-        assert p["excerpt"].startswith("SYNTHETIC DEMO TEXT")
 
 
 def test_edge_case_prevent_out_of_order_flags_and_skipping(tmp_path, monkeypatch):

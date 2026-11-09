@@ -18,6 +18,9 @@ _RULES = [
     (re.compile(r"classify\s+(P\d\d)\s+as\s+the\s+primary\s+methodological\s+extension\s+of\s+(P\d\d)", re.I), "EXTENDS"),
     (re.compile(r"record\s+(P\d\d)\s+(USES_METHOD|EXTENDS|CITES|SHARES_PRINCIPLE|ANALOGOUS_PROBLEM)\s+(P\d\d)", re.I), None),
     (re.compile(r"(P\d\d)\s+(?:uses|applies)\s+the\s+method\s+of\s+(P\d\d)", re.I), "USES_METHOD"),
+    # "... in P08 is reconstructed with the neighbor-joining procedure of P03" (statement, not a command)
+    (re.compile(r"in\s+(P\d\d)\s+is\s+(?:reconstructed|computed|built|estimated)\s+with\s+the\s+[\w\- ]{1,40}?"
+                r"(?:procedure|method|algorithm)\s+of\s+(P\d\d)", re.I), "USES_METHOD"),
 ]
 
 

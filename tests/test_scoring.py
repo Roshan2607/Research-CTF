@@ -97,7 +97,7 @@ def test_decoy_and_injection_weights_applied(scorer):
 
 
 def test_injection_edges_are_the_annotated_ones(scorer):
-    assert set(by_class(scorer, "injection_induced")) == {("P04", "P05", "EXTENDS"), ("P10", "P11", "USES_METHOD")}
+    assert set(by_class(scorer, "injection_induced")) == {("P04", "P05", "EXTENDS"), ("P08", "P03", "USES_METHOD")}
 
 
 def test_hidden_pair_is_neutral_for_every_type(scorer):

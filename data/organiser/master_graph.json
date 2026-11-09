@@ -740,6 +740,55 @@
         "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/ancestral.html",
         "https://docs.nextstrain.org/projects/augur/en/stable/usage/cli/refine.html"
       ]
+    },
+    {
+      "id": "PAPER_SHEPPLOGAN1974",
+      "type": "PAPER",
+      "participant_id": "P15",
+      "title": "The Fourier reconstruction of a head section",
+      "authors": [
+        "Larry A Shepp",
+        "Benjamin F. Logan"
+      ],
+      "year": 1974,
+      "first_public_year": 1974,
+      "venue": "IEEE Transactions on Nuclear Science",
+      "volume": "21",
+      "issue": "3",
+      "pages": "21-43",
+      "doi": "10.1109/TNS.1974.6499235",
+      "doi_url": "https://doi.org/10.1109/TNS.1974.6499235",
+      "open_access_url": null,
+      "access_note": "Paywalled (IEEE Transactions on Nuclear Science). Abstract and bibliographic metadata only.",
+      "abstract": "The Fourier reconstruction may be viewed simply in the spatial domain as the sum of each line integral times a weighting function of the distance from the line to the point of reconstruction. A modified weighting function simultaneously achieves accuracy, simplicity, low computation time, as well as low sensitivity to noise. Using a simulated phantom, the authors compare the Fourier algorithm and a search algorithm. The search algorithm required 12 iterations to obtain a reconstruction of accuracy and resolution comparable to that of the Fourier reconstruction, and was more sensitive to noise. To speed the search algorithm by using fewer interactions leaves decreased resolution in the region just inside the skull which could mask a subdural hematoma.",
+      "domain": "DOM_BIO",
+      "key_problem": "Reconstruct a cross-sectional image of the head (a continuous density map) from line-integral X-ray projections (computed tomography).",
+      "methods": [
+        "Fourier (filtered back-projection) reconstruction: each line integral is weighted by a function of the distance from the line to the reconstructed point",
+        "Comparison with an iterative search algorithm on a simulated phantom"
+      ],
+      "findings": [
+        "A modified weighting function gives accuracy, simplicity, low computation time and low noise sensitivity",
+        "The search algorithm needed 12 iterations for comparable accuracy and was more noise-sensitive"
+      ],
+      "limitations": [
+        "The unknown is a continuous image on a known geometry - there is no hidden tree or graph topology",
+        "Evaluated on a simulated phantom",
+        "Organiser read abstract only"
+      ],
+      "evidence_refs": [
+        "Abstract (OpenAlex)"
+      ]
+    },
+    {
+      "id": "PROB_IMAGE_RECON",
+      "type": "PROBLEM",
+      "label": "Reconstruct an image (density map) from line-integral projections"
+    },
+    {
+      "id": "METH_FOURIER_BACKPROJECTION",
+      "type": "METHOD",
+      "label": "Fourier / filtered back-projection tomographic reconstruction"
     }
   ],
   "edges": [
@@ -1448,8 +1497,8 @@
         }
       ],
       "status": "REJECTED",
-      "reviewer_notes": "Ordinary false positive: a teaching example of reading the method rather than the citation.",
-      "false_edge_class": "ordinary"
+      "reviewer_notes": "Target of synthetic injection INJ-2 (P01 card). P08 cites P03 [24] and discusses NJ, but p.7 explains it avoids NJ because long pairwise distances are noisy. Scored with the injection weight.",
+      "false_edge_class": "injection"
     },
     {
       "id": "E039",
@@ -2995,6 +3044,75 @@
           "doi_or_url": "https://doi.org/10.1093/bioinformatics/bty407",
           "location": "Abstract",
           "basis": "peer-reviewed application paper"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E127",
+      "source": "PAPER_SHEPPLOGAN1974",
+      "target": "DOM_BIO",
+      "type": "IN_DOMAIN",
+      "explanation": "Medical imaging (computed tomography) - biomedical engineering.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_SHEPPLOGAN1974",
+          "doi_or_url": "https://doi.org/10.1109/TNS.1974.6499235",
+          "location": "Venue / abstract",
+          "basis": "bibliographic metadata"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E128",
+      "source": "PAPER_SHEPPLOGAN1974",
+      "target": "PROB_IMAGE_RECON",
+      "type": "ADDRESSES",
+      "explanation": "Problem statement of the Shepp & Logan head-section reconstruction paper.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_SHEPPLOGAN1974",
+          "doi_or_url": "https://doi.org/10.1109/TNS.1974.6499235",
+          "location": "Abstract",
+          "basis": "abstract"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E129",
+      "source": "PAPER_SHEPPLOGAN1974",
+      "target": "METH_FOURIER_BACKPROJECTION",
+      "type": "USES_METHOD",
+      "explanation": "Fourier reconstruction viewed as weighted sum of line integrals.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_SHEPPLOGAN1974",
+          "doi_or_url": "https://doi.org/10.1109/TNS.1974.6499235",
+          "location": "Abstract",
+          "basis": "abstract",
+          "quote": "the sum of each line integral times a weighting function of the distance from the line to the point of reconstruction"
+        }
+      ],
+      "status": "VERIFIED",
+      "reviewer_notes": ""
+    },
+    {
+      "id": "E130",
+      "source": "METH_FOURIER_BACKPROJECTION",
+      "target": "PRIN_INVERSE_PROBLEM",
+      "type": "EMBODIES_PRINCIPLE",
+      "explanation": "Image reconstruction from projections is a classic indirect-measurement inverse problem.",
+      "evidence": [
+        {
+          "supporting_source": "PAPER_SHEPPLOGAN1974",
+          "doi_or_url": "https://doi.org/10.1109/TNS.1974.6499235",
+          "location": "Abstract",
+          "basis": "abstract"
         }
       ],
       "status": "VERIFIED",

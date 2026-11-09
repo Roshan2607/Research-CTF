@@ -98,6 +98,16 @@ def _mp_graph_draft_worker(args):
 # FIXTURES
 # ==============================================================================
 
+ENGINE_CONTENT = Path(__file__).parent / "fixtures" / "event_content_engine.csv"
+
+
+@pytest.fixture(autouse=True)
+def _engine_content(monkeypatch):
+    """Engine tests run against a fixed content fixture so they do not depend on the live event content
+    (the live content and its calibration are tested in tests/test_event_content.py)."""
+    monkeypatch.setattr(core, "CONTENT", ENGINE_CONTENT)
+    monkeypatch.setenv("UL_EVENT_CONTENT", str(ENGINE_CONTENT))  # inherited by multiprocessing workers
+
 @pytest.fixture
 def isolated_env(tmp_path, monkeypatch):
     """Isolate backend state, logs, and CSV exports to tmp_path."""

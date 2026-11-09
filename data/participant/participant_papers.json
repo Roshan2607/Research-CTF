@@ -441,6 +441,36 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ]
+    },
+    {
+      "participant_id": "P15",
+      "title": "The Fourier reconstruction of a head section",
+      "authors": [
+        "Larry A Shepp",
+        "Benjamin F. Logan"
+      ],
+      "year": 1974,
+      "first_public_year": 1974,
+      "venue": "IEEE Transactions on Nuclear Science",
+      "volume": "21",
+      "issue": "3",
+      "pages": "21-43",
+      "doi": "10.1109/TNS.1974.6499235",
+      "doi_url": "https://doi.org/10.1109/TNS.1974.6499235",
+      "open_access_url": null,
+      "abstract": "The Fourier reconstruction may be viewed simply in the spatial domain as the sum of each line integral times a weighting function of the distance from the line to the point of reconstruction. A modified weighting function simultaneously achieves accuracy, simplicity, low computation time, as well as low sensitivity to noise. Using a simulated phantom, the authors compare the Fourier algorithm and a search algorithm. The search algorithm required 12 iterations to obtain a reconstruction of accuracy and resolution comparable to that of the Fourier reconstruction, and was more sensitive to noise. To speed the search algorithm by using fewer interactions leaves decreased resolution in the region just inside the skull which could mask a subdural hematoma.",
+      "domain": "Biology & biomedical science",
+      "access": "Subscription access: abstract and DOI provided; use your library login or ask the organisers",
+      "citation": "Larry A Shepp, Benjamin F. Logan (1974). The Fourier reconstruction of a head section. IEEE Transactions on Nuclear Science, 21(3), 21-43. https://doi.org/10.1109/TNS.1974.6499235",
+      "abstract_attribution": "Abstract reproduced from the published record for teaching purposes; (c) the authors / publisher. Source: https://doi.org/10.1109/TNS.1974.6499235",
+      "reading_prompts": [
+        "What problem does the paper try to solve? Write it in one sentence, in your own words.",
+        "What is unknown or hidden, and what can actually be observed or measured?",
+        "What method do the authors use? Is it new, borrowed from another paper, or a modification of one?",
+        "What evidence do they give (proofs, simulations, experiments, real data)?",
+        "What assumptions or limitations can you find?",
+        "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
+      ]
     }
   ]
 }

@@ -263,29 +263,29 @@
     },
     {
       "id": "E0026",
-      "source_id": "P02",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "source_id": "P01",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0027",
-      "source_id": "P02",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P01",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0028",
       "source_id": "P02",
       "target_id": "P01",
-      "relationship_type": "USES_METHOD",
+      "relationship_type": "CITES",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -294,6 +294,26 @@
     {
       "id": "E0029",
       "source_id": "P02",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0030",
+      "source_id": "P02",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0031",
+      "source_id": "P02",
       "target_id": "P03",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
@@ -302,7 +322,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0030",
+      "id": "E0032",
       "source_id": "P02",
       "target_id": "P03",
       "relationship_type": "CITES",
@@ -312,7 +332,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0031",
+      "id": "E0033",
       "source_id": "P02",
       "target_id": "P03",
       "relationship_type": "EXTENDS",
@@ -322,7 +342,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0032",
+      "id": "E0034",
       "source_id": "P02",
       "target_id": "P03",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -332,7 +352,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0033",
+      "id": "E0035",
       "source_id": "P02",
       "target_id": "P03",
       "relationship_type": "USES_METHOD",
@@ -342,7 +362,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0034",
+      "id": "E0036",
       "source_id": "P02",
       "target_id": "P04",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -352,7 +372,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0035",
+      "id": "E0037",
       "source_id": "P02",
       "target_id": "P04",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -362,7 +382,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0036",
+      "id": "E0038",
       "source_id": "P02",
       "target_id": "P05",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -372,32 +392,12 @@
       "Usage": "Public"
     },
     {
-      "id": "E0037",
+      "id": "E0039",
       "source_id": "P02",
       "target_id": "P05",
       "relationship_type": "CITES",
       "edge_class": "reference",
       "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0038",
-      "source_id": "P02",
-      "target_id": "P05",
-      "relationship_type": "EXTENDS",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0039",
-      "source_id": "P02",
-      "target_id": "P05",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
       "fp_weight": 0.0,
       "Usage": "Private"
     },
@@ -405,6 +405,26 @@
       "id": "E0040",
       "source_id": "P02",
       "target_id": "P05",
+      "relationship_type": "EXTENDS",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0041",
+      "source_id": "P02",
+      "target_id": "P05",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0042",
+      "source_id": "P02",
+      "target_id": "P05",
       "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
@@ -412,7 +432,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0041",
+      "id": "E0043",
       "source_id": "P02",
       "target_id": "P06",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -422,7 +442,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0042",
+      "id": "E0044",
       "source_id": "P02",
       "target_id": "P06",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -432,30 +452,10 @@
       "Usage": "Private"
     },
     {
-      "id": "E0043",
-      "source_id": "P02",
-      "target_id": "P07",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0044",
-      "source_id": "P02",
-      "target_id": "P07",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
       "id": "E0045",
       "source_id": "P02",
       "target_id": "P07",
-      "relationship_type": "EXTENDS",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -465,6 +465,26 @@
       "id": "E0046",
       "source_id": "P02",
       "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0047",
+      "source_id": "P02",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0048",
+      "source_id": "P02",
+      "target_id": "P07",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -472,7 +492,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0047",
+      "id": "E0049",
       "source_id": "P02",
       "target_id": "P07",
       "relationship_type": "USES_METHOD",
@@ -482,7 +502,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0048",
+      "id": "E0050",
       "source_id": "P02",
       "target_id": "P08",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -492,7 +512,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0049",
+      "id": "E0051",
       "source_id": "P02",
       "target_id": "P08",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -502,7 +522,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0050",
+      "id": "E0052",
       "source_id": "P02",
       "target_id": "P09",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -512,7 +532,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0051",
+      "id": "E0053",
       "source_id": "P02",
       "target_id": "P09",
       "relationship_type": "CITES",
@@ -522,7 +542,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0052",
+      "id": "E0054",
       "source_id": "P02",
       "target_id": "P09",
       "relationship_type": "EXTENDS",
@@ -532,7 +552,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0053",
+      "id": "E0055",
       "source_id": "P02",
       "target_id": "P09",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -542,7 +562,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0054",
+      "id": "E0056",
       "source_id": "P02",
       "target_id": "P09",
       "relationship_type": "USES_METHOD",
@@ -552,7 +572,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0055",
+      "id": "E0057",
       "source_id": "P02",
       "target_id": "P10",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -562,7 +582,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0056",
+      "id": "E0058",
       "source_id": "P02",
       "target_id": "P10",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -572,7 +592,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0057",
+      "id": "E0059",
       "source_id": "P02",
       "target_id": "P11",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -582,7 +602,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0058",
+      "id": "E0060",
       "source_id": "P02",
       "target_id": "P11",
       "relationship_type": "CITES",
@@ -592,7 +612,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0059",
+      "id": "E0061",
       "source_id": "P02",
       "target_id": "P11",
       "relationship_type": "EXTENDS",
@@ -602,30 +622,10 @@
       "Usage": "Private"
     },
     {
-      "id": "E0060",
+      "id": "E0062",
       "source_id": "P02",
       "target_id": "P11",
       "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0061",
-      "source_id": "P02",
-      "target_id": "P11",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0062",
-      "source_id": "P02",
-      "target_id": "P12",
-      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
       "label": 0,
       "fp_weight": 0.0,
@@ -634,6 +634,26 @@
     {
       "id": "E0063",
       "source_id": "P02",
+      "target_id": "P11",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0064",
+      "source_id": "P02",
+      "target_id": "P12",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0065",
+      "source_id": "P02",
       "target_id": "P12",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "neutral",
@@ -642,7 +662,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0064",
+      "id": "E0066",
       "source_id": "P02",
       "target_id": "P13",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -652,7 +672,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0065",
+      "id": "E0067",
       "source_id": "P02",
       "target_id": "P13",
       "relationship_type": "CITES",
@@ -662,30 +682,10 @@
       "Usage": "Public"
     },
     {
-      "id": "E0066",
-      "source_id": "P02",
-      "target_id": "P13",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0067",
-      "source_id": "P02",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
       "id": "E0068",
       "source_id": "P02",
       "target_id": "P13",
-      "relationship_type": "USES_METHOD",
+      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -694,6 +694,26 @@
     {
       "id": "E0069",
       "source_id": "P02",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0070",
+      "source_id": "P02",
+      "target_id": "P13",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0071",
+      "source_id": "P02",
       "target_id": "P14",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
@@ -702,7 +722,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0070",
+      "id": "E0072",
       "source_id": "P02",
       "target_id": "P14",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -712,40 +732,20 @@
       "Usage": "Public"
     },
     {
-      "id": "E0071",
-      "source_id": "P03",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0072",
-      "source_id": "P03",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
       "id": "E0073",
-      "source_id": "P03",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P02",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0074",
-      "source_id": "P03",
-      "target_id": "P04",
-      "relationship_type": "ANALOGOUS_PROBLEM",
+      "source_id": "P02",
+      "target_id": "P15",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -753,6 +753,76 @@
     },
     {
       "id": "E0075",
+      "source_id": "P02",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0076",
+      "source_id": "P02",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0077",
+      "source_id": "P02",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0078",
+      "source_id": "P03",
+      "target_id": "P01",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0079",
+      "source_id": "P03",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0080",
+      "source_id": "P03",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0081",
+      "source_id": "P03",
+      "target_id": "P04",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0082",
       "source_id": "P03",
       "target_id": "P04",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -762,99 +832,29 @@
       "Usage": "Private"
     },
     {
-      "id": "E0076",
-      "source_id": "P03",
-      "target_id": "P05",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0077",
-      "source_id": "P03",
-      "target_id": "P05",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0078",
-      "source_id": "P03",
-      "target_id": "P06",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0079",
-      "source_id": "P03",
-      "target_id": "P06",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0080",
-      "source_id": "P03",
-      "target_id": "P07",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0081",
-      "source_id": "P03",
-      "target_id": "P07",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0082",
-      "source_id": "P03",
-      "target_id": "P07",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
       "id": "E0083",
       "source_id": "P03",
-      "target_id": "P07",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
+      "target_id": "P05",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
+      "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0084",
       "source_id": "P03",
-      "target_id": "P07",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
+      "target_id": "P05",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
+      "fp_weight": 0.0,
       "Usage": "Private"
     },
     {
       "id": "E0085",
       "source_id": "P03",
-      "target_id": "P08",
+      "target_id": "P06",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "reference",
       "label": 1,
@@ -864,7 +864,7 @@
     {
       "id": "E0086",
       "source_id": "P03",
-      "target_id": "P08",
+      "target_id": "P06",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "neutral",
       "label": 0,
@@ -874,37 +874,37 @@
     {
       "id": "E0087",
       "source_id": "P03",
-      "target_id": "P09",
+      "target_id": "P07",
       "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "ordinary",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0088",
       "source_id": "P03",
-      "target_id": "P09",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0089",
-      "source_id": "P03",
-      "target_id": "P10",
-      "relationship_type": "ANALOGOUS_PROBLEM",
+      "target_id": "P07",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
+      "id": "E0089",
+      "source_id": "P03",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
       "id": "E0090",
       "source_id": "P03",
-      "target_id": "P10",
+      "target_id": "P07",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -914,26 +914,96 @@
     {
       "id": "E0091",
       "source_id": "P03",
-      "target_id": "P11",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0092",
       "source_id": "P03",
-      "target_id": "P11",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
+      "target_id": "P08",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "reference",
+      "label": 1,
       "fp_weight": 0.0,
       "Usage": "Private"
     },
     {
       "id": "E0093",
       "source_id": "P03",
+      "target_id": "P08",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0094",
+      "source_id": "P03",
+      "target_id": "P09",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0095",
+      "source_id": "P03",
+      "target_id": "P09",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0096",
+      "source_id": "P03",
+      "target_id": "P10",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0097",
+      "source_id": "P03",
+      "target_id": "P10",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0098",
+      "source_id": "P03",
+      "target_id": "P11",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0099",
+      "source_id": "P03",
+      "target_id": "P11",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0100",
+      "source_id": "P03",
       "target_id": "P12",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "reference",
@@ -942,7 +1012,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0094",
+      "id": "E0101",
       "source_id": "P03",
       "target_id": "P12",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -952,140 +1022,70 @@
       "Usage": "Private"
     },
     {
-      "id": "E0095",
-      "source_id": "P03",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0096",
-      "source_id": "P03",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0097",
-      "source_id": "P03",
-      "target_id": "P14",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0098",
-      "source_id": "P03",
-      "target_id": "P14",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0099",
-      "source_id": "P04",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0100",
-      "source_id": "P04",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0101",
-      "source_id": "P04",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
       "id": "E0102",
-      "source_id": "P04",
-      "target_id": "P02",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
+      "source_id": "P03",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
+      "fp_weight": 0.0,
+      "Usage": "Public"
     },
     {
       "id": "E0103",
-      "source_id": "P04",
-      "target_id": "P02",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
+      "source_id": "P03",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
+      "fp_weight": 0.0,
       "Usage": "Private"
     },
     {
       "id": "E0104",
-      "source_id": "P04",
-      "target_id": "P02",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P03",
+      "target_id": "P14",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0105",
+      "source_id": "P03",
+      "target_id": "P14",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0106",
+      "source_id": "P03",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
-      "id": "E0105",
-      "source_id": "P04",
-      "target_id": "P03",
+      "id": "E0107",
+      "source_id": "P03",
+      "target_id": "P15",
       "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0106",
-      "source_id": "P04",
-      "target_id": "P03",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0107",
-      "source_id": "P04",
-      "target_id": "P03",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
+      "Usage": "Public"
     },
     {
       "id": "E0108",
-      "source_id": "P04",
-      "target_id": "P05",
-      "relationship_type": "ANALOGOUS_PROBLEM",
+      "source_id": "P03",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1093,9 +1093,9 @@
     },
     {
       "id": "E0109",
-      "source_id": "P04",
-      "target_id": "P05",
-      "relationship_type": "CITES",
+      "source_id": "P03",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1103,19 +1103,19 @@
     },
     {
       "id": "E0110",
-      "source_id": "P04",
-      "target_id": "P05",
-      "relationship_type": "EXTENDS",
-      "edge_class": "injection_induced",
+      "source_id": "P03",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 3.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0111",
       "source_id": "P04",
-      "target_id": "P05",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "target_id": "P01",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1124,8 +1124,8 @@
     {
       "id": "E0112",
       "source_id": "P04",
-      "target_id": "P05",
-      "relationship_type": "USES_METHOD",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1134,8 +1134,8 @@
     {
       "id": "E0113",
       "source_id": "P04",
-      "target_id": "P06",
-      "relationship_type": "ANALOGOUS_PROBLEM",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1144,8 +1144,8 @@
     {
       "id": "E0114",
       "source_id": "P04",
-      "target_id": "P06",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "target_id": "P02",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1154,28 +1154,28 @@
     {
       "id": "E0115",
       "source_id": "P04",
-      "target_id": "P07",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0116",
-      "source_id": "P04",
-      "target_id": "P07",
-      "relationship_type": "CITES",
+      "target_id": "P02",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
+      "id": "E0116",
+      "source_id": "P04",
+      "target_id": "P02",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
       "id": "E0117",
       "source_id": "P04",
-      "target_id": "P07",
-      "relationship_type": "EXTENDS",
+      "target_id": "P03",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1184,8 +1184,8 @@
     {
       "id": "E0118",
       "source_id": "P04",
-      "target_id": "P07",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1194,7 +1194,7 @@
     {
       "id": "E0119",
       "source_id": "P04",
-      "target_id": "P07",
+      "target_id": "P03",
       "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -1204,38 +1204,38 @@
     {
       "id": "E0120",
       "source_id": "P04",
-      "target_id": "P08",
+      "target_id": "P05",
       "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0121",
       "source_id": "P04",
-      "target_id": "P08",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "target_id": "P05",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0122",
       "source_id": "P04",
-      "target_id": "P09",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "target_id": "P05",
+      "relationship_type": "EXTENDS",
+      "edge_class": "injection_induced",
       "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
+      "fp_weight": 3.0,
+      "Usage": "Private"
     },
     {
       "id": "E0123",
       "source_id": "P04",
-      "target_id": "P09",
-      "relationship_type": "CITES",
+      "target_id": "P05",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1244,18 +1244,18 @@
     {
       "id": "E0124",
       "source_id": "P04",
-      "target_id": "P09",
-      "relationship_type": "EXTENDS",
+      "target_id": "P05",
+      "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0125",
       "source_id": "P04",
-      "target_id": "P09",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "target_id": "P06",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1264,8 +1264,8 @@
     {
       "id": "E0126",
       "source_id": "P04",
-      "target_id": "P09",
-      "relationship_type": "USES_METHOD",
+      "target_id": "P06",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1274,7 +1274,7 @@
     {
       "id": "E0127",
       "source_id": "P04",
-      "target_id": "P10",
+      "target_id": "P07",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -1284,7 +1284,7 @@
     {
       "id": "E0128",
       "source_id": "P04",
-      "target_id": "P10",
+      "target_id": "P07",
       "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -1294,7 +1294,7 @@
     {
       "id": "E0129",
       "source_id": "P04",
-      "target_id": "P10",
+      "target_id": "P07",
       "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -1304,68 +1304,68 @@
     {
       "id": "E0130",
       "source_id": "P04",
-      "target_id": "P10",
+      "target_id": "P07",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0131",
       "source_id": "P04",
-      "target_id": "P10",
+      "target_id": "P07",
       "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0132",
       "source_id": "P04",
-      "target_id": "P11",
+      "target_id": "P08",
       "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
+      "fp_weight": 0.0,
       "Usage": "Private"
     },
     {
       "id": "E0133",
       "source_id": "P04",
-      "target_id": "P11",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0134",
-      "source_id": "P04",
-      "target_id": "P11",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0135",
-      "source_id": "P04",
-      "target_id": "P11",
+      "target_id": "P08",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Private"
+      "Usage": "Public"
+    },
+    {
+      "id": "E0134",
+      "source_id": "P04",
+      "target_id": "P09",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0135",
+      "source_id": "P04",
+      "target_id": "P09",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0136",
       "source_id": "P04",
-      "target_id": "P11",
-      "relationship_type": "USES_METHOD",
+      "target_id": "P09",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1374,57 +1374,57 @@
     {
       "id": "E0137",
       "source_id": "P04",
-      "target_id": "P12",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0138",
-      "source_id": "P04",
-      "target_id": "P12",
+      "target_id": "P09",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
+    },
+    {
+      "id": "E0138",
+      "source_id": "P04",
+      "target_id": "P09",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
     },
     {
       "id": "E0139",
       "source_id": "P04",
-      "target_id": "P13",
+      "target_id": "P10",
       "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0140",
       "source_id": "P04",
-      "target_id": "P13",
+      "target_id": "P10",
       "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0141",
       "source_id": "P04",
-      "target_id": "P13",
+      "target_id": "P10",
       "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0142",
       "source_id": "P04",
-      "target_id": "P13",
+      "target_id": "P10",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -1434,27 +1434,27 @@
     {
       "id": "E0143",
       "source_id": "P04",
-      "target_id": "P13",
+      "target_id": "P10",
       "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0144",
+      "source_id": "P04",
+      "target_id": "P11",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
-      "id": "E0144",
-      "source_id": "P04",
-      "target_id": "P14",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
       "id": "E0145",
       "source_id": "P04",
-      "target_id": "P14",
+      "target_id": "P11",
       "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -1464,27 +1464,27 @@
     {
       "id": "E0146",
       "source_id": "P04",
-      "target_id": "P14",
+      "target_id": "P11",
       "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0147",
       "source_id": "P04",
-      "target_id": "P14",
+      "target_id": "P11",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0148",
       "source_id": "P04",
-      "target_id": "P14",
+      "target_id": "P11",
       "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -1493,68 +1493,8 @@
     },
     {
       "id": "E0149",
-      "source_id": "P05",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0150",
-      "source_id": "P05",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0151",
-      "source_id": "P05",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0152",
-      "source_id": "P05",
-      "target_id": "P03",
-      "relationship_type": "CITES",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0153",
-      "source_id": "P05",
-      "target_id": "P03",
-      "relationship_type": "EXTENDS",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0154",
-      "source_id": "P05",
-      "target_id": "P03",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0155",
-      "source_id": "P05",
-      "target_id": "P06",
+      "source_id": "P04",
+      "target_id": "P12",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
       "label": 0,
@@ -1562,10 +1502,70 @@
       "Usage": "Public"
     },
     {
-      "id": "E0156",
-      "source_id": "P05",
-      "target_id": "P06",
+      "id": "E0150",
+      "source_id": "P04",
+      "target_id": "P12",
       "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0151",
+      "source_id": "P04",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0152",
+      "source_id": "P04",
+      "target_id": "P13",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0153",
+      "source_id": "P04",
+      "target_id": "P13",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0154",
+      "source_id": "P04",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0155",
+      "source_id": "P04",
+      "target_id": "P13",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0156",
+      "source_id": "P04",
+      "target_id": "P14",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
       "label": 0,
       "fp_weight": 0.0,
@@ -1573,9 +1573,9 @@
     },
     {
       "id": "E0157",
-      "source_id": "P05",
-      "target_id": "P07",
-      "relationship_type": "ANALOGOUS_PROBLEM",
+      "source_id": "P04",
+      "target_id": "P14",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1583,9 +1583,9 @@
     },
     {
       "id": "E0158",
-      "source_id": "P05",
-      "target_id": "P07",
-      "relationship_type": "CITES",
+      "source_id": "P04",
+      "target_id": "P14",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1593,9 +1593,9 @@
     },
     {
       "id": "E0159",
-      "source_id": "P05",
-      "target_id": "P07",
-      "relationship_type": "EXTENDS",
+      "source_id": "P04",
+      "target_id": "P14",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -1603,18 +1603,8 @@
     },
     {
       "id": "E0160",
-      "source_id": "P05",
-      "target_id": "P07",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0161",
-      "source_id": "P05",
-      "target_id": "P07",
+      "source_id": "P04",
+      "target_id": "P14",
       "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -1622,50 +1612,60 @@
       "Usage": "Public"
     },
     {
-      "id": "E0162",
-      "source_id": "P05",
-      "target_id": "P08",
+      "id": "E0161",
+      "source_id": "P04",
+      "target_id": "P15",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
       "label": 0,
       "fp_weight": 0.0,
-      "Usage": "Private"
+      "Usage": "Public"
+    },
+    {
+      "id": "E0162",
+      "source_id": "P04",
+      "target_id": "P15",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0163",
-      "source_id": "P05",
-      "target_id": "P08",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
+      "source_id": "P04",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0164",
-      "source_id": "P05",
-      "target_id": "P09",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "ordinary",
+      "source_id": "P04",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0165",
-      "source_id": "P05",
-      "target_id": "P09",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "source_id": "P04",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0166",
       "source_id": "P05",
-      "target_id": "P09",
-      "relationship_type": "EXTENDS",
+      "target_id": "P01",
+      "relationship_type": "CITES",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -1674,8 +1674,8 @@
     {
       "id": "E0167",
       "source_id": "P05",
-      "target_id": "P09",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -1684,6 +1684,176 @@
     {
       "id": "E0168",
       "source_id": "P05",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0169",
+      "source_id": "P05",
+      "target_id": "P03",
+      "relationship_type": "CITES",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0170",
+      "source_id": "P05",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0171",
+      "source_id": "P05",
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0172",
+      "source_id": "P05",
+      "target_id": "P06",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0173",
+      "source_id": "P05",
+      "target_id": "P06",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0174",
+      "source_id": "P05",
+      "target_id": "P07",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0175",
+      "source_id": "P05",
+      "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0176",
+      "source_id": "P05",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0177",
+      "source_id": "P05",
+      "target_id": "P07",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0178",
+      "source_id": "P05",
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0179",
+      "source_id": "P05",
+      "target_id": "P08",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0180",
+      "source_id": "P05",
+      "target_id": "P08",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0181",
+      "source_id": "P05",
+      "target_id": "P09",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0182",
+      "source_id": "P05",
+      "target_id": "P09",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0183",
+      "source_id": "P05",
+      "target_id": "P09",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0184",
+      "source_id": "P05",
+      "target_id": "P09",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0185",
+      "source_id": "P05",
       "target_id": "P09",
       "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
@@ -1692,310 +1862,140 @@
       "Usage": "Public"
     },
     {
-      "id": "E0169",
-      "source_id": "P05",
-      "target_id": "P10",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0170",
-      "source_id": "P05",
-      "target_id": "P10",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0171",
-      "source_id": "P05",
-      "target_id": "P11",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0172",
-      "source_id": "P05",
-      "target_id": "P11",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0173",
-      "source_id": "P05",
-      "target_id": "P11",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0174",
-      "source_id": "P05",
-      "target_id": "P11",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0175",
-      "source_id": "P05",
-      "target_id": "P11",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0176",
-      "source_id": "P05",
-      "target_id": "P12",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0177",
-      "source_id": "P05",
-      "target_id": "P12",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0178",
-      "source_id": "P05",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0179",
-      "source_id": "P05",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0180",
-      "source_id": "P05",
-      "target_id": "P14",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0181",
-      "source_id": "P05",
-      "target_id": "P14",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0182",
-      "source_id": "P06",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0183",
-      "source_id": "P06",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0184",
-      "source_id": "P06",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0185",
-      "source_id": "P06",
-      "target_id": "P02",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
       "id": "E0186",
-      "source_id": "P06",
-      "target_id": "P02",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P05",
+      "target_id": "P10",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0187",
-      "source_id": "P06",
-      "target_id": "P02",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P05",
+      "target_id": "P10",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0188",
-      "source_id": "P06",
-      "target_id": "P03",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
+      "source_id": "P05",
+      "target_id": "P11",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
       "fp_weight": 0.0,
-      "Usage": "Private"
+      "Usage": "Public"
     },
     {
       "id": "E0189",
-      "source_id": "P06",
-      "target_id": "P03",
+      "source_id": "P05",
+      "target_id": "P11",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0190",
+      "source_id": "P05",
+      "target_id": "P11",
       "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0191",
+      "source_id": "P05",
+      "target_id": "P11",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0192",
+      "source_id": "P05",
+      "target_id": "P11",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0193",
+      "source_id": "P05",
+      "target_id": "P12",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0194",
+      "source_id": "P05",
+      "target_id": "P12",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "neutral",
       "label": 0,
       "fp_weight": 0.0,
       "Usage": "Private"
     },
     {
-      "id": "E0190",
-      "source_id": "P06",
-      "target_id": "P03",
-      "relationship_type": "USES_METHOD",
+      "id": "E0195",
+      "source_id": "P05",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "reference",
       "label": 1,
       "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0191",
-      "source_id": "P06",
-      "target_id": "P04",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0192",
-      "source_id": "P06",
-      "target_id": "P04",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0193",
-      "source_id": "P06",
-      "target_id": "P04",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0194",
-      "source_id": "P06",
-      "target_id": "P05",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0195",
-      "source_id": "P06",
-      "target_id": "P05",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
       "Usage": "Private"
     },
     {
       "id": "E0196",
-      "source_id": "P06",
-      "target_id": "P05",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P05",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.0,
+      "Usage": "Public"
     },
     {
       "id": "E0197",
-      "source_id": "P06",
-      "target_id": "P07",
+      "source_id": "P05",
+      "target_id": "P14",
       "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
+      "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0198",
-      "source_id": "P06",
-      "target_id": "P07",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
+      "source_id": "P05",
+      "target_id": "P14",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
+      "fp_weight": 0.0,
+      "Usage": "Private"
     },
     {
       "id": "E0199",
-      "source_id": "P06",
-      "target_id": "P07",
-      "relationship_type": "EXTENDS",
+      "source_id": "P05",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -2003,19 +2003,19 @@
     },
     {
       "id": "E0200",
-      "source_id": "P06",
-      "target_id": "P07",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "source_id": "P05",
+      "target_id": "P15",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Private"
+      "Usage": "Public"
     },
     {
       "id": "E0201",
-      "source_id": "P06",
-      "target_id": "P07",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P05",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -2023,69 +2023,69 @@
     },
     {
       "id": "E0202",
+      "source_id": "P05",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0203",
+      "source_id": "P05",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0204",
       "source_id": "P06",
-      "target_id": "P08",
-      "relationship_type": "ANALOGOUS_PROBLEM",
+      "target_id": "P01",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0205",
+      "source_id": "P06",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
       "edge_class": "neutral",
       "label": 0,
       "fp_weight": 0.0,
       "Usage": "Private"
     },
     {
-      "id": "E0203",
+      "id": "E0206",
       "source_id": "P06",
-      "target_id": "P08",
-      "relationship_type": "CITES",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
       "edge_class": "reference",
       "label": 1,
       "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
-      "id": "E0204",
-      "source_id": "P06",
-      "target_id": "P08",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0205",
-      "source_id": "P06",
-      "target_id": "P08",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0206",
-      "source_id": "P06",
-      "target_id": "P08",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
       "id": "E0207",
       "source_id": "P06",
-      "target_id": "P09",
-      "relationship_type": "ANALOGOUS_PROBLEM",
+      "target_id": "P02",
+      "relationship_type": "CITES",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0208",
       "source_id": "P06",
-      "target_id": "P09",
-      "relationship_type": "CITES",
+      "target_id": "P02",
+      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -2094,47 +2094,47 @@
     {
       "id": "E0209",
       "source_id": "P06",
-      "target_id": "P09",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0210",
-      "source_id": "P06",
-      "target_id": "P09",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "target_id": "P02",
+      "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
       "Usage": "Private"
     },
     {
+      "id": "E0210",
+      "source_id": "P06",
+      "target_id": "P03",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
       "id": "E0211",
       "source_id": "P06",
-      "target_id": "P09",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
+      "fp_weight": 0.0,
+      "Usage": "Private"
     },
     {
       "id": "E0212",
       "source_id": "P06",
-      "target_id": "P10",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0213",
       "source_id": "P06",
-      "target_id": "P10",
+      "target_id": "P04",
       "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -2144,7 +2144,7 @@
     {
       "id": "E0214",
       "source_id": "P06",
-      "target_id": "P10",
+      "target_id": "P04",
       "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -2154,17 +2154,7 @@
     {
       "id": "E0215",
       "source_id": "P06",
-      "target_id": "P10",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0216",
-      "source_id": "P06",
-      "target_id": "P10",
+      "target_id": "P04",
       "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -2172,100 +2162,110 @@
       "Usage": "Private"
     },
     {
+      "id": "E0216",
+      "source_id": "P06",
+      "target_id": "P05",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
       "id": "E0217",
       "source_id": "P06",
-      "target_id": "P11",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "target_id": "P05",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 1.0,
       "Usage": "Private"
     },
     {
       "id": "E0218",
       "source_id": "P06",
-      "target_id": "P11",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
+      "target_id": "P05",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
     },
     {
       "id": "E0219",
       "source_id": "P06",
-      "target_id": "P11",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "target_id": "P07",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0220",
       "source_id": "P06",
-      "target_id": "P11",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
+      "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0221",
       "source_id": "P06",
-      "target_id": "P11",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "neutral",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0222",
       "source_id": "P06",
-      "target_id": "P12",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "target_id": "P07",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
+      "fp_weight": 0.5,
+      "Usage": "Private"
     },
     {
       "id": "E0223",
       "source_id": "P06",
-      "target_id": "P12",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0224",
       "source_id": "P06",
-      "target_id": "P12",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "target_id": "P08",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
+      "fp_weight": 0.0,
+      "Usage": "Private"
     },
     {
       "id": "E0225",
       "source_id": "P06",
-      "target_id": "P12",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
+      "target_id": "P08",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
       "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0226",
       "source_id": "P06",
-      "target_id": "P12",
-      "relationship_type": "USES_METHOD",
+      "target_id": "P08",
+      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -2274,18 +2274,18 @@
     {
       "id": "E0227",
       "source_id": "P06",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
+      "target_id": "P08",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "neutral",
       "label": 0,
       "fp_weight": 0.0,
-      "Usage": "Private"
+      "Usage": "Public"
     },
     {
       "id": "E0228",
       "source_id": "P06",
-      "target_id": "P13",
-      "relationship_type": "CITES",
+      "target_id": "P08",
+      "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -2294,8 +2294,8 @@
     {
       "id": "E0229",
       "source_id": "P06",
-      "target_id": "P13",
-      "relationship_type": "EXTENDS",
+      "target_id": "P09",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -2304,6 +2304,226 @@
     {
       "id": "E0230",
       "source_id": "P06",
+      "target_id": "P09",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0231",
+      "source_id": "P06",
+      "target_id": "P09",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0232",
+      "source_id": "P06",
+      "target_id": "P09",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0233",
+      "source_id": "P06",
+      "target_id": "P09",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0234",
+      "source_id": "P06",
+      "target_id": "P10",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0235",
+      "source_id": "P06",
+      "target_id": "P10",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0236",
+      "source_id": "P06",
+      "target_id": "P10",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0237",
+      "source_id": "P06",
+      "target_id": "P10",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0238",
+      "source_id": "P06",
+      "target_id": "P10",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0239",
+      "source_id": "P06",
+      "target_id": "P11",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0240",
+      "source_id": "P06",
+      "target_id": "P11",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0241",
+      "source_id": "P06",
+      "target_id": "P11",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0242",
+      "source_id": "P06",
+      "target_id": "P11",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0243",
+      "source_id": "P06",
+      "target_id": "P11",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0244",
+      "source_id": "P06",
+      "target_id": "P12",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0245",
+      "source_id": "P06",
+      "target_id": "P12",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0246",
+      "source_id": "P06",
+      "target_id": "P12",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0247",
+      "source_id": "P06",
+      "target_id": "P12",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0248",
+      "source_id": "P06",
+      "target_id": "P12",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0249",
+      "source_id": "P06",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0250",
+      "source_id": "P06",
+      "target_id": "P13",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0251",
+      "source_id": "P06",
+      "target_id": "P13",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0252",
+      "source_id": "P06",
       "target_id": "P13",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "neutral",
@@ -2312,7 +2532,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0231",
+      "id": "E0253",
       "source_id": "P06",
       "target_id": "P13",
       "relationship_type": "USES_METHOD",
@@ -2322,7 +2542,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0232",
+      "id": "E0254",
       "source_id": "P06",
       "target_id": "P14",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -2332,7 +2552,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0233",
+      "id": "E0255",
       "source_id": "P06",
       "target_id": "P14",
       "relationship_type": "CITES",
@@ -2342,7 +2562,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0234",
+      "id": "E0256",
       "source_id": "P06",
       "target_id": "P14",
       "relationship_type": "EXTENDS",
@@ -2352,7 +2572,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0235",
+      "id": "E0257",
       "source_id": "P06",
       "target_id": "P14",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -2362,230 +2582,10 @@
       "Usage": "Public"
     },
     {
-      "id": "E0236",
+      "id": "E0258",
       "source_id": "P06",
       "target_id": "P14",
       "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0237",
-      "source_id": "P07",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0238",
-      "source_id": "P07",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0239",
-      "source_id": "P07",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0240",
-      "source_id": "P07",
-      "target_id": "P03",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0241",
-      "source_id": "P07",
-      "target_id": "P03",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0242",
-      "source_id": "P07",
-      "target_id": "P03",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0243",
-      "source_id": "P07",
-      "target_id": "P08",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0244",
-      "source_id": "P07",
-      "target_id": "P08",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0245",
-      "source_id": "P07",
-      "target_id": "P09",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0246",
-      "source_id": "P07",
-      "target_id": "P09",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0247",
-      "source_id": "P07",
-      "target_id": "P10",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0248",
-      "source_id": "P07",
-      "target_id": "P10",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0249",
-      "source_id": "P07",
-      "target_id": "P11",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0250",
-      "source_id": "P07",
-      "target_id": "P11",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0251",
-      "source_id": "P07",
-      "target_id": "P12",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0252",
-      "source_id": "P07",
-      "target_id": "P12",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0253",
-      "source_id": "P07",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0254",
-      "source_id": "P07",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0255",
-      "source_id": "P07",
-      "target_id": "P14",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0256",
-      "source_id": "P07",
-      "target_id": "P14",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0257",
-      "source_id": "P08",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0258",
-      "source_id": "P08",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -2593,79 +2593,79 @@
     },
     {
       "id": "E0259",
-      "source_id": "P08",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P06",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0260",
-      "source_id": "P08",
-      "target_id": "P02",
+      "source_id": "P06",
+      "target_id": "P15",
       "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0261",
-      "source_id": "P08",
-      "target_id": "P02",
+      "source_id": "P06",
+      "target_id": "P15",
       "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0262",
-      "source_id": "P08",
-      "target_id": "P02",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P06",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0263",
-      "source_id": "P08",
-      "target_id": "P03",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
+      "source_id": "P06",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0264",
-      "source_id": "P08",
-      "target_id": "P03",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P07",
+      "target_id": "P01",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0265",
-      "source_id": "P08",
-      "target_id": "P03",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P07",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0266",
-      "source_id": "P08",
-      "target_id": "P04",
-      "relationship_type": "CITES",
+      "source_id": "P07",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -2673,19 +2673,19 @@
     },
     {
       "id": "E0267",
-      "source_id": "P08",
-      "target_id": "P04",
-      "relationship_type": "EXTENDS",
+      "source_id": "P07",
+      "target_id": "P03",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Private"
+      "Usage": "Public"
     },
     {
       "id": "E0268",
-      "source_id": "P08",
-      "target_id": "P04",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P07",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -2693,39 +2693,39 @@
     },
     {
       "id": "E0269",
-      "source_id": "P08",
-      "target_id": "P05",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "source_id": "P07",
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
+      "fp_weight": 0.5,
+      "Usage": "Private"
     },
     {
       "id": "E0270",
-      "source_id": "P08",
-      "target_id": "P05",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P07",
+      "target_id": "P08",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0271",
-      "source_id": "P08",
-      "target_id": "P05",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P07",
+      "target_id": "P08",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
+      "fp_weight": 0.5,
+      "Usage": "Private"
     },
     {
       "id": "E0272",
-      "source_id": "P08",
-      "target_id": "P07",
-      "relationship_type": "CITES",
+      "source_id": "P07",
+      "target_id": "P09",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -2733,78 +2733,78 @@
     },
     {
       "id": "E0273",
-      "source_id": "P08",
-      "target_id": "P07",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0274",
-      "source_id": "P08",
-      "target_id": "P07",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P07",
+      "target_id": "P09",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
-      "id": "E0275",
-      "source_id": "P08",
-      "target_id": "P09",
+      "id": "E0274",
+      "source_id": "P07",
+      "target_id": "P10",
       "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0275",
+      "source_id": "P07",
+      "target_id": "P10",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0276",
-      "source_id": "P08",
-      "target_id": "P09",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
+      "source_id": "P07",
+      "target_id": "P11",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0277",
-      "source_id": "P08",
-      "target_id": "P09",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P07",
+      "target_id": "P11",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0278",
-      "source_id": "P08",
-      "target_id": "P09",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "ordinary",
+      "source_id": "P07",
+      "target_id": "P12",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0279",
-      "source_id": "P08",
-      "target_id": "P09",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P07",
+      "target_id": "P12",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0280",
-      "source_id": "P08",
-      "target_id": "P10",
+      "source_id": "P07",
+      "target_id": "P13",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -2813,9 +2813,9 @@
     },
     {
       "id": "E0281",
-      "source_id": "P08",
-      "target_id": "P10",
-      "relationship_type": "CITES",
+      "source_id": "P07",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -2823,9 +2823,9 @@
     },
     {
       "id": "E0282",
-      "source_id": "P08",
-      "target_id": "P10",
-      "relationship_type": "EXTENDS",
+      "source_id": "P07",
+      "target_id": "P14",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -2833,8 +2833,8 @@
     },
     {
       "id": "E0283",
-      "source_id": "P08",
-      "target_id": "P10",
+      "source_id": "P07",
+      "target_id": "P14",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -2843,9 +2843,9 @@
     },
     {
       "id": "E0284",
-      "source_id": "P08",
-      "target_id": "P10",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P07",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -2853,28 +2853,58 @@
     },
     {
       "id": "E0285",
-      "source_id": "P08",
-      "target_id": "P11",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "source_id": "P07",
+      "target_id": "P15",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0286",
-      "source_id": "P08",
-      "target_id": "P11",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
+      "source_id": "P07",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0287",
+      "source_id": "P07",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0288",
+      "source_id": "P07",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0289",
       "source_id": "P08",
-      "target_id": "P11",
+      "target_id": "P01",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0290",
+      "source_id": "P08",
+      "target_id": "P01",
       "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
@@ -2882,50 +2912,20 @@
       "Usage": "Public"
     },
     {
-      "id": "E0288",
-      "source_id": "P08",
-      "target_id": "P11",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0289",
-      "source_id": "P08",
-      "target_id": "P11",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0290",
-      "source_id": "P08",
-      "target_id": "P12",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
       "id": "E0291",
       "source_id": "P08",
-      "target_id": "P12",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
     },
     {
       "id": "E0292",
       "source_id": "P08",
-      "target_id": "P12",
-      "relationship_type": "EXTENDS",
+      "target_id": "P02",
+      "relationship_type": "CITES",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -2934,37 +2934,87 @@
     {
       "id": "E0293",
       "source_id": "P08",
-      "target_id": "P12",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0294",
-      "source_id": "P08",
-      "target_id": "P12",
-      "relationship_type": "USES_METHOD",
+      "target_id": "P02",
+      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
       "Usage": "Private"
     },
     {
+      "id": "E0294",
+      "source_id": "P08",
+      "target_id": "P02",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
       "id": "E0295",
       "source_id": "P08",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
+      "target_id": "P03",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
       "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0296",
       "source_id": "P08",
-      "target_id": "P13",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0297",
+      "source_id": "P08",
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "injection_induced",
+      "label": 0,
+      "fp_weight": 3.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0298",
+      "source_id": "P08",
+      "target_id": "P04",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0299",
+      "source_id": "P08",
+      "target_id": "P04",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0300",
+      "source_id": "P08",
+      "target_id": "P04",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0301",
+      "source_id": "P08",
+      "target_id": "P05",
       "relationship_type": "CITES",
       "edge_class": "ordinary",
       "label": 0,
@@ -2972,9 +3022,9 @@
       "Usage": "Public"
     },
     {
-      "id": "E0297",
+      "id": "E0302",
       "source_id": "P08",
-      "target_id": "P13",
+      "target_id": "P05",
       "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
@@ -2982,19 +3032,9 @@
       "Usage": "Public"
     },
     {
-      "id": "E0298",
+      "id": "E0303",
       "source_id": "P08",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0299",
-      "source_id": "P08",
-      "target_id": "P13",
+      "target_id": "P05",
       "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
@@ -3002,9 +3042,39 @@
       "Usage": "Public"
     },
     {
-      "id": "E0300",
+      "id": "E0304",
       "source_id": "P08",
-      "target_id": "P14",
+      "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0305",
+      "source_id": "P08",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0306",
+      "source_id": "P08",
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0307",
+      "source_id": "P08",
+      "target_id": "P09",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
       "label": 0,
@@ -3012,89 +3082,19 @@
       "Usage": "Public"
     },
     {
-      "id": "E0301",
+      "id": "E0308",
       "source_id": "P08",
-      "target_id": "P14",
+      "target_id": "P09",
       "relationship_type": "CITES",
       "edge_class": "reference",
       "label": 1,
       "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0302",
-      "source_id": "P08",
-      "target_id": "P14",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
       "Usage": "Private"
-    },
-    {
-      "id": "E0303",
-      "source_id": "P08",
-      "target_id": "P14",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0304",
-      "source_id": "P08",
-      "target_id": "P14",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0305",
-      "source_id": "P09",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0306",
-      "source_id": "P09",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0307",
-      "source_id": "P09",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0308",
-      "source_id": "P09",
-      "target_id": "P03",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
     },
     {
       "id": "E0309",
-      "source_id": "P09",
-      "target_id": "P03",
+      "source_id": "P08",
+      "target_id": "P09",
       "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
@@ -3103,8 +3103,18 @@
     },
     {
       "id": "E0310",
-      "source_id": "P09",
-      "target_id": "P03",
+      "source_id": "P08",
+      "target_id": "P09",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0311",
+      "source_id": "P08",
+      "target_id": "P09",
       "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
@@ -3112,38 +3122,8 @@
       "Usage": "Public"
     },
     {
-      "id": "E0311",
-      "source_id": "P09",
-      "target_id": "P07",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
       "id": "E0312",
-      "source_id": "P09",
-      "target_id": "P07",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0313",
-      "source_id": "P09",
-      "target_id": "P07",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0314",
-      "source_id": "P09",
+      "source_id": "P08",
       "target_id": "P10",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
@@ -3152,8 +3132,28 @@
       "Usage": "Private"
     },
     {
+      "id": "E0313",
+      "source_id": "P08",
+      "target_id": "P10",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0314",
+      "source_id": "P08",
+      "target_id": "P10",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
       "id": "E0315",
-      "source_id": "P09",
+      "source_id": "P08",
       "target_id": "P10",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
@@ -3163,39 +3163,39 @@
     },
     {
       "id": "E0316",
-      "source_id": "P09",
-      "target_id": "P11",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "ordinary",
+      "source_id": "P08",
+      "target_id": "P10",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
+      "fp_weight": 0.5,
+      "Usage": "Private"
     },
     {
       "id": "E0317",
-      "source_id": "P09",
+      "source_id": "P08",
       "target_id": "P11",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0318",
-      "source_id": "P09",
-      "target_id": "P12",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
       "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0318",
+      "source_id": "P08",
+      "target_id": "P11",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
       "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0319",
-      "source_id": "P09",
-      "target_id": "P12",
-      "relationship_type": "SHARES_PRINCIPLE",
+      "source_id": "P08",
+      "target_id": "P11",
+      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -3203,28 +3203,28 @@
     },
     {
       "id": "E0320",
-      "source_id": "P09",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
+      "source_id": "P08",
+      "target_id": "P11",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "reference",
+      "label": 1,
       "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0321",
-      "source_id": "P09",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "ordinary",
+      "source_id": "P08",
+      "target_id": "P11",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
+      "fp_weight": 0.0,
+      "Usage": "Private"
     },
     {
       "id": "E0322",
-      "source_id": "P09",
-      "target_id": "P14",
+      "source_id": "P08",
+      "target_id": "P12",
       "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
       "label": 0,
@@ -3233,6 +3233,376 @@
     },
     {
       "id": "E0323",
+      "source_id": "P08",
+      "target_id": "P12",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0324",
+      "source_id": "P08",
+      "target_id": "P12",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0325",
+      "source_id": "P08",
+      "target_id": "P12",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0326",
+      "source_id": "P08",
+      "target_id": "P12",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0327",
+      "source_id": "P08",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0328",
+      "source_id": "P08",
+      "target_id": "P13",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0329",
+      "source_id": "P08",
+      "target_id": "P13",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0330",
+      "source_id": "P08",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0331",
+      "source_id": "P08",
+      "target_id": "P13",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0332",
+      "source_id": "P08",
+      "target_id": "P14",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0333",
+      "source_id": "P08",
+      "target_id": "P14",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0334",
+      "source_id": "P08",
+      "target_id": "P14",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0335",
+      "source_id": "P08",
+      "target_id": "P14",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0336",
+      "source_id": "P08",
+      "target_id": "P14",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0337",
+      "source_id": "P08",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0338",
+      "source_id": "P08",
+      "target_id": "P15",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0339",
+      "source_id": "P08",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0340",
+      "source_id": "P08",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0341",
+      "source_id": "P08",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0342",
+      "source_id": "P09",
+      "target_id": "P01",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0343",
+      "source_id": "P09",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0344",
+      "source_id": "P09",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0345",
+      "source_id": "P09",
+      "target_id": "P03",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0346",
+      "source_id": "P09",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0347",
+      "source_id": "P09",
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0348",
+      "source_id": "P09",
+      "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0349",
+      "source_id": "P09",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0350",
+      "source_id": "P09",
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0351",
+      "source_id": "P09",
+      "target_id": "P10",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0352",
+      "source_id": "P09",
+      "target_id": "P10",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0353",
+      "source_id": "P09",
+      "target_id": "P11",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0354",
+      "source_id": "P09",
+      "target_id": "P11",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0355",
+      "source_id": "P09",
+      "target_id": "P12",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0356",
+      "source_id": "P09",
+      "target_id": "P12",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0357",
+      "source_id": "P09",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0358",
+      "source_id": "P09",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0359",
+      "source_id": "P09",
+      "target_id": "P14",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0360",
       "source_id": "P09",
       "target_id": "P14",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -3242,419 +3612,59 @@
       "Usage": "Public"
     },
     {
-      "id": "E0324",
-      "source_id": "P10",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0325",
-      "source_id": "P10",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0326",
-      "source_id": "P10",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0327",
-      "source_id": "P10",
-      "target_id": "P02",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0328",
-      "source_id": "P10",
-      "target_id": "P02",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0329",
-      "source_id": "P10",
-      "target_id": "P02",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0330",
-      "source_id": "P10",
-      "target_id": "P03",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0331",
-      "source_id": "P10",
-      "target_id": "P03",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0332",
-      "source_id": "P10",
-      "target_id": "P03",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0333",
-      "source_id": "P10",
-      "target_id": "P04",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0334",
-      "source_id": "P10",
-      "target_id": "P04",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0335",
-      "source_id": "P10",
-      "target_id": "P04",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0336",
-      "source_id": "P10",
-      "target_id": "P05",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0337",
-      "source_id": "P10",
-      "target_id": "P05",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0338",
-      "source_id": "P10",
-      "target_id": "P05",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0339",
-      "source_id": "P10",
-      "target_id": "P07",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0340",
-      "source_id": "P10",
-      "target_id": "P07",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0341",
-      "source_id": "P10",
-      "target_id": "P07",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0342",
-      "source_id": "P10",
-      "target_id": "P09",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0343",
-      "source_id": "P10",
-      "target_id": "P09",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0344",
-      "source_id": "P10",
-      "target_id": "P09",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0345",
-      "source_id": "P10",
-      "target_id": "P11",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0346",
-      "source_id": "P10",
-      "target_id": "P11",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0347",
-      "source_id": "P10",
-      "target_id": "P11",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0348",
-      "source_id": "P10",
-      "target_id": "P11",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0349",
-      "source_id": "P10",
-      "target_id": "P11",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "injection_induced",
-      "label": 0,
-      "fp_weight": 3.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0350",
-      "source_id": "P10",
-      "target_id": "P12",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0351",
-      "source_id": "P10",
-      "target_id": "P12",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0352",
-      "source_id": "P10",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0353",
-      "source_id": "P10",
-      "target_id": "P13",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0354",
-      "source_id": "P10",
-      "target_id": "P13",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0355",
-      "source_id": "P10",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0356",
-      "source_id": "P10",
-      "target_id": "P13",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0357",
-      "source_id": "P10",
-      "target_id": "P14",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0358",
-      "source_id": "P10",
-      "target_id": "P14",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0359",
-      "source_id": "P10",
-      "target_id": "P14",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0360",
-      "source_id": "P10",
-      "target_id": "P14",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
       "id": "E0361",
-      "source_id": "P10",
-      "target_id": "P14",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
+      "source_id": "P09",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
+      "fp_weight": 0.0,
+      "Usage": "Private"
     },
     {
       "id": "E0362",
-      "source_id": "P11",
-      "target_id": "P01",
+      "source_id": "P09",
+      "target_id": "P15",
       "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0363",
-      "source_id": "P11",
-      "target_id": "P01",
+      "source_id": "P09",
+      "target_id": "P15",
       "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0364",
-      "source_id": "P11",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P09",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0365",
-      "source_id": "P11",
-      "target_id": "P03",
+      "source_id": "P09",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0366",
+      "source_id": "P10",
+      "target_id": "P01",
       "relationship_type": "CITES",
       "edge_class": "reference",
       "label": 1,
@@ -3662,60 +3672,50 @@
       "Usage": "Private"
     },
     {
-      "id": "E0366",
-      "source_id": "P11",
-      "target_id": "P03",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
       "id": "E0367",
-      "source_id": "P11",
-      "target_id": "P03",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
+      "source_id": "P10",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0368",
-      "source_id": "P11",
-      "target_id": "P05",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0369",
-      "source_id": "P11",
-      "target_id": "P05",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P02",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0370",
-      "source_id": "P11",
-      "target_id": "P05",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P02",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0371",
-      "source_id": "P11",
-      "target_id": "P07",
-      "relationship_type": "CITES",
+      "source_id": "P10",
+      "target_id": "P02",
+      "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -3723,19 +3723,19 @@
     },
     {
       "id": "E0372",
-      "source_id": "P11",
-      "target_id": "P07",
-      "relationship_type": "EXTENDS",
+      "source_id": "P10",
+      "target_id": "P03",
+      "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Public"
+      "Usage": "Private"
     },
     {
       "id": "E0373",
-      "source_id": "P11",
-      "target_id": "P07",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P10",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -3743,188 +3743,48 @@
     },
     {
       "id": "E0374",
-      "source_id": "P11",
-      "target_id": "P09",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0375",
-      "source_id": "P11",
-      "target_id": "P09",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P04",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0376",
-      "source_id": "P11",
-      "target_id": "P09",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P04",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0377",
-      "source_id": "P11",
-      "target_id": "P12",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "source_id": "P10",
+      "target_id": "P04",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0378",
-      "source_id": "P11",
-      "target_id": "P12",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0379",
-      "source_id": "P11",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0380",
-      "source_id": "P11",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0381",
-      "source_id": "P11",
-      "target_id": "P14",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0382",
-      "source_id": "P11",
-      "target_id": "P14",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0383",
-      "source_id": "P12",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0384",
-      "source_id": "P12",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0385",
-      "source_id": "P12",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0386",
-      "source_id": "P12",
-      "target_id": "P02",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0387",
-      "source_id": "P12",
-      "target_id": "P02",
-      "relationship_type": "EXTENDS",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0388",
-      "source_id": "P12",
-      "target_id": "P02",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0389",
-      "source_id": "P12",
-      "target_id": "P03",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0390",
-      "source_id": "P12",
-      "target_id": "P03",
-      "relationship_type": "EXTENDS",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0391",
-      "source_id": "P12",
-      "target_id": "P03",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0392",
-      "source_id": "P12",
-      "target_id": "P04",
+      "source_id": "P10",
+      "target_id": "P05",
       "relationship_type": "CITES",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -3932,10 +3792,150 @@
       "Usage": "Public"
     },
     {
-      "id": "E0393",
-      "source_id": "P12",
-      "target_id": "P04",
+      "id": "E0379",
+      "source_id": "P10",
+      "target_id": "P05",
       "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0380",
+      "source_id": "P10",
+      "target_id": "P05",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0381",
+      "source_id": "P10",
+      "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0382",
+      "source_id": "P10",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0383",
+      "source_id": "P10",
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0384",
+      "source_id": "P10",
+      "target_id": "P09",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0385",
+      "source_id": "P10",
+      "target_id": "P09",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0386",
+      "source_id": "P10",
+      "target_id": "P09",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0387",
+      "source_id": "P10",
+      "target_id": "P11",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0388",
+      "source_id": "P10",
+      "target_id": "P11",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0389",
+      "source_id": "P10",
+      "target_id": "P11",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0390",
+      "source_id": "P10",
+      "target_id": "P11",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0391",
+      "source_id": "P10",
+      "target_id": "P11",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0392",
+      "source_id": "P10",
+      "target_id": "P12",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0393",
+      "source_id": "P10",
+      "target_id": "P12",
+      "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
@@ -3943,88 +3943,78 @@
     },
     {
       "id": "E0394",
-      "source_id": "P12",
-      "target_id": "P04",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P10",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Private"
+      "Usage": "Public"
     },
     {
       "id": "E0395",
-      "source_id": "P12",
-      "target_id": "P05",
+      "source_id": "P10",
+      "target_id": "P13",
       "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0396",
-      "source_id": "P12",
-      "target_id": "P05",
+      "source_id": "P10",
+      "target_id": "P13",
       "relationship_type": "EXTENDS",
-      "edge_class": "neutral",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0397",
-      "source_id": "P12",
-      "target_id": "P05",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Public"
+      "fp_weight": 0.5,
+      "Usage": "Private"
     },
     {
       "id": "E0398",
-      "source_id": "P12",
-      "target_id": "P06",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P13",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0399",
-      "source_id": "P12",
-      "target_id": "P06",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P14",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0400",
-      "source_id": "P12",
-      "target_id": "P06",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P14",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0401",
-      "source_id": "P12",
-      "target_id": "P07",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0402",
-      "source_id": "P12",
-      "target_id": "P07",
+      "source_id": "P10",
+      "target_id": "P14",
       "relationship_type": "EXTENDS",
       "edge_class": "decoy_induced",
       "label": 0,
@@ -4032,70 +4022,80 @@
       "Usage": "Private"
     },
     {
+      "id": "E0402",
+      "source_id": "P10",
+      "target_id": "P14",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
       "id": "E0403",
-      "source_id": "P12",
-      "target_id": "P07",
+      "source_id": "P10",
+      "target_id": "P14",
       "relationship_type": "USES_METHOD",
       "edge_class": "decoy_induced",
       "label": 0,
       "fp_weight": 0.5,
-      "Usage": "Private"
+      "Usage": "Public"
     },
     {
       "id": "E0404",
-      "source_id": "P12",
-      "target_id": "P08",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0405",
-      "source_id": "P12",
-      "target_id": "P08",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P15",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0406",
-      "source_id": "P12",
-      "target_id": "P08",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0407",
-      "source_id": "P12",
-      "target_id": "P09",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
+      "source_id": "P10",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0408",
-      "source_id": "P12",
-      "target_id": "P09",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P10",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0409",
-      "source_id": "P12",
-      "target_id": "P09",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P11",
+      "target_id": "P01",
+      "relationship_type": "CITES",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -4103,39 +4103,39 @@
     },
     {
       "id": "E0410",
-      "source_id": "P12",
-      "target_id": "P10",
-      "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
+      "source_id": "P11",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
       "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
+      "fp_weight": 1.0,
+      "Usage": "Private"
     },
     {
       "id": "E0411",
-      "source_id": "P12",
-      "target_id": "P10",
-      "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
+      "source_id": "P11",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
       "label": 0,
-      "fp_weight": 0.5,
+      "fp_weight": 1.0,
       "Usage": "Public"
     },
     {
       "id": "E0412",
-      "source_id": "P12",
-      "target_id": "P10",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
+      "source_id": "P11",
+      "target_id": "P03",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
     },
     {
       "id": "E0413",
-      "source_id": "P12",
-      "target_id": "P11",
-      "relationship_type": "CITES",
+      "source_id": "P11",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -4143,9 +4143,9 @@
     },
     {
       "id": "E0414",
-      "source_id": "P12",
-      "target_id": "P11",
-      "relationship_type": "EXTENDS",
+      "source_id": "P11",
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -4153,9 +4153,9 @@
     },
     {
       "id": "E0415",
-      "source_id": "P12",
-      "target_id": "P11",
-      "relationship_type": "USES_METHOD",
+      "source_id": "P11",
+      "target_id": "P05",
+      "relationship_type": "CITES",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -4163,48 +4163,18 @@
     },
     {
       "id": "E0416",
-      "source_id": "P12",
-      "target_id": "P13",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "source_id": "P11",
+      "target_id": "P05",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 1.0,
       "Usage": "Public"
     },
     {
       "id": "E0417",
-      "source_id": "P12",
-      "target_id": "P13",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0418",
-      "source_id": "P12",
-      "target_id": "P13",
-      "relationship_type": "EXTENDS",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0419",
-      "source_id": "P12",
-      "target_id": "P13",
-      "relationship_type": "SHARES_PRINCIPLE",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0420",
-      "source_id": "P12",
-      "target_id": "P13",
+      "source_id": "P11",
+      "target_id": "P05",
       "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
@@ -4212,30 +4182,60 @@
       "Usage": "Private"
     },
     {
-      "id": "E0421",
-      "source_id": "P12",
-      "target_id": "P14",
-      "relationship_type": "ANALOGOUS_PROBLEM",
-      "edge_class": "neutral",
+      "id": "E0418",
+      "source_id": "P11",
+      "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 0.0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
-      "id": "E0422",
-      "source_id": "P12",
-      "target_id": "P14",
+      "id": "E0419",
+      "source_id": "P11",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0420",
+      "source_id": "P11",
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0421",
+      "source_id": "P11",
+      "target_id": "P09",
       "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0422",
+      "source_id": "P11",
+      "target_id": "P09",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
       "Usage": "Private"
     },
     {
       "id": "E0423",
-      "source_id": "P12",
-      "target_id": "P14",
-      "relationship_type": "EXTENDS",
+      "source_id": "P11",
+      "target_id": "P09",
+      "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
@@ -4243,8 +4243,18 @@
     },
     {
       "id": "E0424",
-      "source_id": "P12",
-      "target_id": "P14",
+      "source_id": "P11",
+      "target_id": "P12",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0425",
+      "source_id": "P11",
+      "target_id": "P12",
       "relationship_type": "SHARES_PRINCIPLE",
       "edge_class": "neutral",
       "label": 0,
@@ -4252,129 +4262,119 @@
       "Usage": "Public"
     },
     {
-      "id": "E0425",
-      "source_id": "P12",
-      "target_id": "P14",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "id": "E0426",
+      "source_id": "P11",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
-      "id": "E0426",
-      "source_id": "P13",
-      "target_id": "P01",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
       "id": "E0427",
-      "source_id": "P13",
-      "target_id": "P01",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P11",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0428",
-      "source_id": "P13",
-      "target_id": "P01",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
-      "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0429",
-      "source_id": "P13",
-      "target_id": "P02",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0430",
-      "source_id": "P13",
-      "target_id": "P02",
-      "relationship_type": "EXTENDS",
+      "source_id": "P11",
+      "target_id": "P14",
+      "relationship_type": "ANALOGOUS_PROBLEM",
       "edge_class": "neutral",
       "label": 0,
       "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
-      "id": "E0431",
-      "source_id": "P13",
-      "target_id": "P02",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "ordinary",
+      "id": "E0429",
+      "source_id": "P11",
+      "target_id": "P14",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0430",
+      "source_id": "P11",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0431",
+      "source_id": "P11",
+      "target_id": "P15",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
       "Usage": "Public"
     },
     {
       "id": "E0432",
-      "source_id": "P13",
-      "target_id": "P03",
-      "relationship_type": "CITES",
-      "edge_class": "ordinary",
+      "source_id": "P11",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
-      "Usage": "Private"
+      "fp_weight": 0.5,
+      "Usage": "Public"
     },
     {
       "id": "E0433",
-      "source_id": "P13",
-      "target_id": "P03",
-      "relationship_type": "EXTENDS",
-      "edge_class": "ordinary",
+      "source_id": "P11",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
       "label": 0,
-      "fp_weight": 1.0,
+      "fp_weight": 0.5,
       "Usage": "Private"
     },
     {
       "id": "E0434",
-      "source_id": "P13",
-      "target_id": "P03",
+      "source_id": "P11",
+      "target_id": "P15",
       "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0435",
+      "source_id": "P12",
+      "target_id": "P01",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0436",
+      "source_id": "P12",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
       "Usage": "Private"
     },
     {
-      "id": "E0435",
-      "source_id": "P13",
-      "target_id": "P05",
-      "relationship_type": "CITES",
-      "edge_class": "reference",
-      "label": 1,
-      "fp_weight": 0.0,
-      "Usage": "Private"
-    },
-    {
-      "id": "E0436",
-      "source_id": "P13",
-      "target_id": "P05",
-      "relationship_type": "EXTENDS",
-      "edge_class": "neutral",
-      "label": 0,
-      "fp_weight": 0.0,
-      "Usage": "Public"
-    },
-    {
       "id": "E0437",
-      "source_id": "P13",
-      "target_id": "P05",
+      "source_id": "P12",
+      "target_id": "P01",
       "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
@@ -4383,46 +4383,616 @@
     },
     {
       "id": "E0438",
-      "source_id": "P13",
-      "target_id": "P07",
+      "source_id": "P12",
+      "target_id": "P02",
       "relationship_type": "CITES",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
       "Usage": "Private"
     },
     {
       "id": "E0439",
-      "source_id": "P13",
-      "target_id": "P07",
+      "source_id": "P12",
+      "target_id": "P02",
       "relationship_type": "EXTENDS",
-      "edge_class": "decoy_induced",
+      "edge_class": "neutral",
       "label": 0,
-      "fp_weight": 0.5,
-      "Usage": "Public"
-    },
-    {
-      "id": "E0440",
-      "source_id": "P13",
-      "target_id": "P07",
-      "relationship_type": "USES_METHOD",
-      "edge_class": "decoy_induced",
-      "label": 0,
-      "fp_weight": 0.5,
+      "fp_weight": 0.0,
       "Usage": "Private"
     },
     {
-      "id": "E0441",
-      "source_id": "P13",
-      "target_id": "P09",
-      "relationship_type": "CITES",
+      "id": "E0440",
+      "source_id": "P12",
+      "target_id": "P02",
+      "relationship_type": "USES_METHOD",
       "edge_class": "ordinary",
       "label": 0,
       "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0441",
+      "source_id": "P12",
+      "target_id": "P03",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
       "Usage": "Public"
     },
     {
       "id": "E0442",
+      "source_id": "P12",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0443",
+      "source_id": "P12",
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0444",
+      "source_id": "P12",
+      "target_id": "P04",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0445",
+      "source_id": "P12",
+      "target_id": "P04",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0446",
+      "source_id": "P12",
+      "target_id": "P04",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0447",
+      "source_id": "P12",
+      "target_id": "P05",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0448",
+      "source_id": "P12",
+      "target_id": "P05",
+      "relationship_type": "EXTENDS",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0449",
+      "source_id": "P12",
+      "target_id": "P05",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0450",
+      "source_id": "P12",
+      "target_id": "P06",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0451",
+      "source_id": "P12",
+      "target_id": "P06",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0452",
+      "source_id": "P12",
+      "target_id": "P06",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0453",
+      "source_id": "P12",
+      "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0454",
+      "source_id": "P12",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0455",
+      "source_id": "P12",
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0456",
+      "source_id": "P12",
+      "target_id": "P08",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0457",
+      "source_id": "P12",
+      "target_id": "P08",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0458",
+      "source_id": "P12",
+      "target_id": "P08",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0459",
+      "source_id": "P12",
+      "target_id": "P09",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0460",
+      "source_id": "P12",
+      "target_id": "P09",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0461",
+      "source_id": "P12",
+      "target_id": "P09",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0462",
+      "source_id": "P12",
+      "target_id": "P10",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0463",
+      "source_id": "P12",
+      "target_id": "P10",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0464",
+      "source_id": "P12",
+      "target_id": "P10",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0465",
+      "source_id": "P12",
+      "target_id": "P11",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0466",
+      "source_id": "P12",
+      "target_id": "P11",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0467",
+      "source_id": "P12",
+      "target_id": "P11",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0468",
+      "source_id": "P12",
+      "target_id": "P13",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0469",
+      "source_id": "P12",
+      "target_id": "P13",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0470",
+      "source_id": "P12",
+      "target_id": "P13",
+      "relationship_type": "EXTENDS",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0471",
+      "source_id": "P12",
+      "target_id": "P13",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0472",
+      "source_id": "P12",
+      "target_id": "P13",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0473",
+      "source_id": "P12",
+      "target_id": "P14",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0474",
+      "source_id": "P12",
+      "target_id": "P14",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0475",
+      "source_id": "P12",
+      "target_id": "P14",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0476",
+      "source_id": "P12",
+      "target_id": "P14",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0477",
+      "source_id": "P12",
+      "target_id": "P14",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0478",
+      "source_id": "P12",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0479",
+      "source_id": "P12",
+      "target_id": "P15",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0480",
+      "source_id": "P12",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0481",
+      "source_id": "P12",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0482",
+      "source_id": "P12",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0483",
+      "source_id": "P13",
+      "target_id": "P01",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0484",
+      "source_id": "P13",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0485",
+      "source_id": "P13",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0486",
+      "source_id": "P13",
+      "target_id": "P02",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0487",
+      "source_id": "P13",
+      "target_id": "P02",
+      "relationship_type": "EXTENDS",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0488",
+      "source_id": "P13",
+      "target_id": "P02",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0489",
+      "source_id": "P13",
+      "target_id": "P03",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0490",
+      "source_id": "P13",
+      "target_id": "P03",
+      "relationship_type": "EXTENDS",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0491",
+      "source_id": "P13",
+      "target_id": "P03",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0492",
+      "source_id": "P13",
+      "target_id": "P05",
+      "relationship_type": "CITES",
+      "edge_class": "reference",
+      "label": 1,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0493",
+      "source_id": "P13",
+      "target_id": "P05",
+      "relationship_type": "EXTENDS",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0494",
+      "source_id": "P13",
+      "target_id": "P05",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0495",
+      "source_id": "P13",
+      "target_id": "P07",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0496",
+      "source_id": "P13",
+      "target_id": "P07",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0497",
+      "source_id": "P13",
+      "target_id": "P07",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0498",
+      "source_id": "P13",
+      "target_id": "P09",
+      "relationship_type": "CITES",
+      "edge_class": "ordinary",
+      "label": 0,
+      "fp_weight": 1.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0499",
       "source_id": "P13",
       "target_id": "P09",
       "relationship_type": "EXTENDS",
@@ -4432,7 +5002,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0443",
+      "id": "E0500",
       "source_id": "P13",
       "target_id": "P09",
       "relationship_type": "USES_METHOD",
@@ -4442,7 +5012,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0444",
+      "id": "E0501",
       "source_id": "P13",
       "target_id": "P11",
       "relationship_type": "CITES",
@@ -4452,7 +5022,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0445",
+      "id": "E0502",
       "source_id": "P13",
       "target_id": "P11",
       "relationship_type": "EXTENDS",
@@ -4462,7 +5032,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0446",
+      "id": "E0503",
       "source_id": "P13",
       "target_id": "P11",
       "relationship_type": "USES_METHOD",
@@ -4472,7 +5042,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0447",
+      "id": "E0504",
       "source_id": "P13",
       "target_id": "P14",
       "relationship_type": "ANALOGOUS_PROBLEM",
@@ -4482,7 +5052,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0448",
+      "id": "E0505",
       "source_id": "P13",
       "target_id": "P14",
       "relationship_type": "SHARES_PRINCIPLE",
@@ -4492,7 +5062,57 @@
       "Usage": "Private"
     },
     {
-      "id": "E0449",
+      "id": "E0506",
+      "source_id": "P13",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0507",
+      "source_id": "P13",
+      "target_id": "P15",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0508",
+      "source_id": "P13",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0509",
+      "source_id": "P13",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0510",
+      "source_id": "P13",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0511",
       "source_id": "P14",
       "target_id": "P01",
       "relationship_type": "CITES",
@@ -4502,7 +5122,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0450",
+      "id": "E0512",
       "source_id": "P14",
       "target_id": "P01",
       "relationship_type": "EXTENDS",
@@ -4512,7 +5132,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0451",
+      "id": "E0513",
       "source_id": "P14",
       "target_id": "P01",
       "relationship_type": "USES_METHOD",
@@ -4522,7 +5142,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0452",
+      "id": "E0514",
       "source_id": "P14",
       "target_id": "P02",
       "relationship_type": "CITES",
@@ -4532,7 +5152,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0453",
+      "id": "E0515",
       "source_id": "P14",
       "target_id": "P02",
       "relationship_type": "EXTENDS",
@@ -4542,7 +5162,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0454",
+      "id": "E0516",
       "source_id": "P14",
       "target_id": "P02",
       "relationship_type": "USES_METHOD",
@@ -4552,7 +5172,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0455",
+      "id": "E0517",
       "source_id": "P14",
       "target_id": "P03",
       "relationship_type": "CITES",
@@ -4562,7 +5182,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0456",
+      "id": "E0518",
       "source_id": "P14",
       "target_id": "P03",
       "relationship_type": "EXTENDS",
@@ -4572,7 +5192,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0457",
+      "id": "E0519",
       "source_id": "P14",
       "target_id": "P03",
       "relationship_type": "USES_METHOD",
@@ -4582,7 +5202,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0458",
+      "id": "E0520",
       "source_id": "P14",
       "target_id": "P05",
       "relationship_type": "CITES",
@@ -4592,7 +5212,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0459",
+      "id": "E0521",
       "source_id": "P14",
       "target_id": "P05",
       "relationship_type": "EXTENDS",
@@ -4602,7 +5222,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0460",
+      "id": "E0522",
       "source_id": "P14",
       "target_id": "P05",
       "relationship_type": "USES_METHOD",
@@ -4612,7 +5232,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0461",
+      "id": "E0523",
       "source_id": "P14",
       "target_id": "P07",
       "relationship_type": "CITES",
@@ -4622,7 +5242,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0462",
+      "id": "E0524",
       "source_id": "P14",
       "target_id": "P07",
       "relationship_type": "EXTENDS",
@@ -4632,7 +5252,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0463",
+      "id": "E0525",
       "source_id": "P14",
       "target_id": "P07",
       "relationship_type": "USES_METHOD",
@@ -4642,7 +5262,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0464",
+      "id": "E0526",
       "source_id": "P14",
       "target_id": "P09",
       "relationship_type": "CITES",
@@ -4652,7 +5272,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0465",
+      "id": "E0527",
       "source_id": "P14",
       "target_id": "P09",
       "relationship_type": "EXTENDS",
@@ -4662,7 +5282,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0466",
+      "id": "E0528",
       "source_id": "P14",
       "target_id": "P09",
       "relationship_type": "USES_METHOD",
@@ -4672,7 +5292,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0467",
+      "id": "E0529",
       "source_id": "P14",
       "target_id": "P11",
       "relationship_type": "CITES",
@@ -4682,7 +5302,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0468",
+      "id": "E0530",
       "source_id": "P14",
       "target_id": "P11",
       "relationship_type": "EXTENDS",
@@ -4692,7 +5312,7 @@
       "Usage": "Private"
     },
     {
-      "id": "E0469",
+      "id": "E0531",
       "source_id": "P14",
       "target_id": "P11",
       "relationship_type": "USES_METHOD",
@@ -4702,7 +5322,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0470",
+      "id": "E0532",
       "source_id": "P14",
       "target_id": "P13",
       "relationship_type": "CITES",
@@ -4712,7 +5332,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0471",
+      "id": "E0533",
       "source_id": "P14",
       "target_id": "P13",
       "relationship_type": "EXTENDS",
@@ -4722,7 +5342,7 @@
       "Usage": "Public"
     },
     {
-      "id": "E0472",
+      "id": "E0534",
       "source_id": "P14",
       "target_id": "P13",
       "relationship_type": "USES_METHOD",
@@ -4730,6 +5350,86 @@
       "label": 0,
       "fp_weight": 1.0,
       "Usage": "Private"
+    },
+    {
+      "id": "E0535",
+      "source_id": "P14",
+      "target_id": "P15",
+      "relationship_type": "ANALOGOUS_PROBLEM",
+      "edge_class": "neutral",
+      "label": 0,
+      "fp_weight": 0.0,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0536",
+      "source_id": "P14",
+      "target_id": "P15",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0537",
+      "source_id": "P14",
+      "target_id": "P15",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0538",
+      "source_id": "P14",
+      "target_id": "P15",
+      "relationship_type": "SHARES_PRINCIPLE",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0539",
+      "source_id": "P14",
+      "target_id": "P15",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0540",
+      "source_id": "P15",
+      "target_id": "P01",
+      "relationship_type": "CITES",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
+    },
+    {
+      "id": "E0541",
+      "source_id": "P15",
+      "target_id": "P01",
+      "relationship_type": "EXTENDS",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Private"
+    },
+    {
+      "id": "E0542",
+      "source_id": "P15",
+      "target_id": "P01",
+      "relationship_type": "USES_METHOD",
+      "edge_class": "decoy_induced",
+      "label": 0,
+      "fp_weight": 0.5,
+      "Usage": "Public"
     }
   ]
 }
