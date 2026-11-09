@@ -260,12 +260,6 @@ elif section == "Knowledge Graph":
                 save_draft(team["team_id"], current, combined.to_csv(index=False))
                 st.success(f"Successfully imported {len(new_df)} edges! Draft updated.")
                 st.rerun()
-                    st.session_state[statekey] = combined
-                    save_draft(team["team_id"], current, combined.to_csv(index=False))
-                    st.success(f"Successfully imported {len(new_df)} edges! Draft updated.")
-                    st.rerun()
-            except Exception as e:
-                st.error(f"Could not parse uploaded CSV: {e}")
 
     df = st.session_state[statekey].copy()
     if not locked.empty:
