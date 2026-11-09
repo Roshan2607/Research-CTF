@@ -9,6 +9,13 @@ def test_four_level_pipeline_and_locking(tmp_path, monkeypatch):
     assert core.authenticate("team01", "StrongPass123")["name"] == "Pilot Team"
     assert core.authenticate("TEAM01", "wrong") is None
 
+    level_graphs = {
+        1: "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1 Page 2\n",
+        2: "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1 Page 2\nP02,P03,CITES,Section 2 Page 5\n",
+        3: "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1 Page 2\nP02,P03,CITES,Section 2 Page 5\nP03,P05,CITES,Section 3 Page 8\n",
+        4: "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1 Page 2\nP02,P03,CITES,Section 2 Page 5\nP03,P05,CITES,Section 3 Page 8\nP05,P07,CITES,Section 4 Page 11\n",
+    }
+
     for level, answer in enumerate([
         "tree reconstruction",
         "leaf-only observations",
@@ -18,11 +25,11 @@ def test_four_level_pipeline_and_locking(tmp_path, monkeypatch):
         assert core.team_progress("TEAM01")[1] == level
         assert core.attempt_flag("TEAM01", level, "not it")["correct"] is False
         assert core.attempt_flag("TEAM01", level, answer)["correct"] is True
-        core.save_draft("TEAM01", level, "source_id,target_id,relationship_type,evidence_reference\n")
+        core.save_draft("TEAM01", level, level_graphs[level])
         core.finalise(
             "TEAM01",
             level,
-            "source_id,target_id,relationship_type,evidence_reference\n",
+            level_graphs[level],
             True,
             {"points": 12.5},
             explanation="Detailed explanation of shared topology inference",
@@ -55,12 +62,12 @@ def test_finalise_requires_a_flag_attempt_but_not_a_correct_flag(tmp_path, monke
     monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
     core.create_team("TEAM03", "Flag Required Team", "StrongPass123")
 
-    graph = "source_id,target_id,relationship_type,evidence_reference\n"
+    graph = "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 2 Page 4\n"
     try:
         core.finalise("TEAM03", 1, graph, False, {}, explanation="test")
         assert False, "a flag attempt must be required"
-    except ValueError:
-        pass
+    except ValueError as e:
+        assert "flag attempt" in str(e).lower()
 
     result = core.attempt_flag("TEAM03", 1, "wrong answer")
     assert result["correct"] is False
@@ -119,10 +126,11 @@ def test_flag_penalty_scaling(tmp_path, monkeypatch):
     assert res_correct["earned_points"] == 8
 
     # Finalise and verify points recorded in submission
+    valid_graph = "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 3.1\n"
     rec = core.finalise(
         "TEAM_PEN",
         1,
-        "source_id,target_id,relationship_type,evidence_reference\n",
+        valid_graph,
         True,
         {"points": 14.0},
         explanation="Solves shared task via neighbor joining",
@@ -149,10 +157,11 @@ def test_organiser_score_adjustment(tmp_path, monkeypatch):
     monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
     core.create_team("TEAM_ADJ", "Adjustment Team", "StrongPass123")
     core.attempt_flag("TEAM_ADJ", 1, "tree reconstruction")
+    adj_graph = "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1.2\n"
     core.finalise(
         "TEAM_ADJ",
         1,
-        "source_id,target_id,relationship_type,evidence_reference\n",
+        adj_graph,
         True,
         {"points": 10.0},
         explanation="Initial student explanation",
@@ -225,3 +234,20 @@ def test_level_0_demo_workflow(tmp_path, monkeypatch):
     assert core.check_demo_flag("FLAG{TRIE}") is True
     assert core.check_demo_flag("trie") is True
     assert core.check_demo_flag("FLAG{WRONG}") is False
+
+
+def test_finalise_rejects_empty_graph_unconditionally(tmp_path, monkeypatch):
+    """Confirm that finalise() unconditionally rejects empty and header-only graphs with no bypass."""
+    monkeypatch.setattr(core, "STATE", tmp_path / "event_state.json")
+    monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
+    core.create_team("TEAM_NO_BYPASS", "No Bypass Team", "StrongPass123")
+    core.attempt_flag("TEAM_NO_BYPASS", 1, "tree reconstruction")
+
+    # Header-only CSV must be rejected even from test_event_workflow.py
+    header_only = "source_id,target_id,relationship_type,evidence_reference\n"
+    with pytest.raises(ValueError, match="at least one relationship edge"):
+        core.finalise("TEAM_NO_BYPASS", 1, header_only, explanation="test")
+
+    # Empty string must also be rejected
+    with pytest.raises(ValueError, match="at least one relationship edge|required to finalize"):
+        core.finalise("TEAM_NO_BYPASS", 1, "", explanation="test")
