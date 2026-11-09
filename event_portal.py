@@ -4,7 +4,26 @@ import html
 import io
 from datetime import datetime, timedelta
 
-import extra_streamlit_components as stx
+try:
+    import extra_streamlit_components as stx
+except ImportError:
+    class DummyCookieManager:
+        def __init__(self, key=None):
+            pass
+        def get_all(self):
+            return {}
+        def get(self, key):
+            return None
+        def set(self, key, value, expires_at=None):
+            pass
+        def delete(self, key):
+            pass
+
+    class _MockStx:
+        CookieManager = DummyCookieManager
+
+    stx = _MockStx()
+
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv

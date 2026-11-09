@@ -3,7 +3,25 @@ from pathlib import Path
 import os, io, html
 import pandas as pd
 import streamlit as st
-import extra_streamlit_components as stx
+try:
+    import extra_streamlit_components as stx
+except ImportError:
+    class DummyCookieManager:
+        def __init__(self, key=None):
+            pass
+        def get_all(self):
+            return {}
+        def get(self, key):
+            return None
+        def set(self, key, value, expires_at=None):
+            pass
+        def delete(self, key):
+            pass
+
+    class _MockStx:
+        CookieManager = DummyCookieManager
+
+    stx = _MockStx()
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
