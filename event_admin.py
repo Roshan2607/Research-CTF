@@ -48,6 +48,20 @@ st.set_page_config(page_title="Proof of Thought · Admin", page_icon="🔐", lay
 st.title("🔐 Proof of Thought · Admin")
 st.caption("Live organiser console and challenge supervisor")
 
+st.markdown("""
+<style>
+[data-testid="stMetricValue"] {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+}
+[data-testid="stMetricDelta"] {
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 cookie_manager = stx.CookieManager(key="ul_admin_cookie")
 cookies = cookie_manager.get_all()
 if cookies is None:

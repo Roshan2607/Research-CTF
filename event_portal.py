@@ -55,6 +55,20 @@ from scoring.graph_scorer import score_csv
 st.set_page_config(page_title="Proof of Thought · Participant", page_icon="🧭", layout="wide")
 st.title("🧭 Proof of Thought")
 
+st.markdown("""
+<style>
+[data-testid="stMetricValue"] {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+}
+[data-testid="stMetricDelta"] {
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 cookie_manager = stx.CookieManager(key="ul_participant_cookie")
 cookies = cookie_manager.get_all()
 if cookies is None:
@@ -174,10 +188,10 @@ key = f"{team['team_id']}:{current}"
 # ==============================================================================
 if section == "Start":
     st.header("How the Challenge Works")
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Current Level", f"Level {current}: {spec['title']}")
+    col1, col2, col3 = st.columns([1.6, 1.0, 1.2])
+    col1.metric("Current Level", f"Level {current}", delta=spec["title"], delta_color="off")
     col2.metric("Papers Available", f"{len(available)} of {sum(len(x['paper_ids']) for x in team_levels)}")
-    col3.metric("Level Points", "15 Graph + 10 Flag = 25 pts")
+    col3.metric("Level Points", "25 pts max", delta="15 Graph + 10 Flag", delta_color="off")
 
     st.markdown("""
 ### Guidelines
