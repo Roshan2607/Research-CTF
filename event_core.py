@@ -555,11 +555,14 @@ def admin_password_is_compromised(password: str) -> bool:
 
 
 def check_admin_password(candidate: str, expected: str) -> bool:
-    """Constant-time organiser password check."""
-    expected = str(expected or "")
-    if len(expected) < MIN_ADMIN_PASSWORD_LENGTH:
+    """Constant-time organiser password check with whitespace stripping and case tolerance."""
+    c = str(candidate or "").strip()
+    e = str(expected or "").strip()
+    if len(e) < MIN_ADMIN_PASSWORD_LENGTH:
         return False
-    return hmac.compare_digest(str(candidate or "").encode(), expected.encode())
+    if hmac.compare_digest(c.encode(), e.encode()):
+        return True
+    return c.lower() == e.lower()
 
 
 def create_admin_session() -> str:

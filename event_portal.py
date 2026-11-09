@@ -335,15 +335,29 @@ elif section == "Knowledge Graph":
     olddraft = get_draft(team["team_id"], current)
     statekey = f'graph_df_{team["team_id"]}_{current}'
     empty_df = pd.DataFrame(columns=["source_id", "target_id", "relationship_type", "evidence_reference"])
+    rels = [r["relationship_type"] for r in vocab["relationship_types"]]
+
     if statekey not in st.session_state:
-        st.session_state[statekey] = (
+        raw_loaded = (
             pd.read_csv(io.StringIO(olddraft), dtype=str, keep_default_na=False) if olddraft.strip() else empty_df.copy()
         )
+        for col in empty_df.columns:
+            if col not in raw_loaded.columns:
+                raw_loaded[col] = ""
+        # Auto-sanitize any unreleased papers or invalid relationships from previous drafts
+        if not raw_loaded.empty:
+            valid_loaded, errs_loaded = parse_uploaded_graph_csv(raw_loaded.to_csv(index=False), available, rels)
+            cleaned_df = pd.DataFrame(valid_loaded) if valid_loaded else empty_df.copy()
+            if errs_loaded:
+                try:
+                    save_draft(team["team_id"], current, cleaned_df.to_csv(index=False))
+                except Exception:
+                    pass
+            st.session_state[statekey] = cleaned_df
+        else:
+            st.session_state[statekey] = empty_df.copy()
+
     df = st.session_state[statekey]
-    for col in empty_df.columns:
-        if col not in df.columns:
-            df[col] = ""
-    rels = [r["relationship_type"] for r in vocab["relationship_types"]]
 
     with st.form(f"add_edge_{current}", clear_on_submit=True):
         st.markdown("**Add a Relationship**")
@@ -359,7 +373,9 @@ elif section == "Knowledge Graph":
             st.error("A paper cannot be connected to itself.")
         else:
             new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": evidence.strip()}])
-            candidate = pd.concat([df, new_row], ignore_index=True).drop_duplicates(
+            clean_base, _ = parse_uploaded_graph_csv(df.to_csv(index=False), available, rels) if not df.empty else ([], [])
+            base_df = pd.DataFrame(clean_base) if clean_base else empty_df.copy()
+            candidate = pd.concat([base_df, new_row], ignore_index=True).drop_duplicates(
                 subset=["source_id", "target_id", "relationship_type"], keep="first")
             try:
                 save_draft(team["team_id"], current, candidate.to_csv(index=False))
@@ -393,18 +409,25 @@ elif section == "Knowledge Graph":
                  hide_index=True, use_container_width=True)
 
     if not df.empty:
-        col_del, col_btn = st.columns([3, 1])
+        col_del, col_btn, col_clear = st.columns([2.5, 1, 1])
         chosen = col_del.selectbox(
             "Select an edge to delete",
             list(df.index),
             format_func=lambda i: f"{df.loc[i, 'source_id']} → {df.loc[i, 'target_id']} ({df.loc[i, 'relationship_type']})",
             label_visibility="collapsed",
         )
-        if col_btn.button("Delete selected edge", use_container_width=True):
+        if col_btn.button("Delete edge", use_container_width=True):
             remaining = df.drop(index=chosen).reset_index(drop=True)
             try:
                 save_draft(team["team_id"], current, remaining.to_csv(index=False))
                 st.session_state[statekey] = remaining
+            except (ValueError, PermissionError) as e:
+                st.error(str(e))
+            st.rerun()
+        if col_clear.button("Clear graph", use_container_width=True):
+            try:
+                save_draft(team["team_id"], current, empty_df.to_csv(index=False))
+                st.session_state[statekey] = empty_df.copy()
             except (ValueError, PermissionError) as e:
                 st.error(str(e))
             st.rerun()
@@ -419,6 +442,15 @@ elif section == "Knowledge Graph":
     _, errs = parse_uploaded_graph_csv(csv_text, available, rels) if not df.empty else ([], [])
     if errs:
         st.error("Graph validation issues:\n" + "\n".join(errs))
+        if st.button("🧹 Purge invalid edges", key=f"purge_errs_{team['team_id']}_{current}"):
+            valid_rows, _ = parse_uploaded_graph_csv(csv_text, available, rels)
+            clean_df = pd.DataFrame(valid_rows) if valid_rows else empty_df.copy()
+            try:
+                save_draft(team["team_id"], current, clean_df.to_csv(index=False))
+                st.session_state[statekey] = clean_df
+            except Exception as e:
+                st.error(str(e))
+            st.rerun()
     else:
         col_cnt, col_dl = st.columns([2, 1])
         col_cnt.caption(f"✓ {len(df)} edges in your cumulative graph.")
@@ -477,6 +509,14 @@ elif section == "Submit":
         st.warning("Your cumulative graph is empty. Add at least one edge in the Knowledge Graph tab before submitting.")
     elif errs:
         st.error("Graph validation issues:\n" + "\n".join(errs))
+        if st.button("🧹 Purge invalid edges from graph", key=f"purge_sub_{team['team_id']}_{current}"):
+            clean_df = pd.DataFrame(valid_rows) if valid_rows else pd.DataFrame(columns=["source_id", "target_id", "relationship_type", "evidence_reference"])
+            try:
+                save_draft(team["team_id"], current, clean_df.to_csv(index=False))
+                st.session_state[f'graph_df_{team["team_id"]}_{current}'] = clean_df
+            except Exception as e:
+                st.error(str(e))
+            st.rerun()
     else:
         with st.expander(f"Review Cumulative Graph ({len(valid_rows)} edges)", expanded=False):
             df_preview = pd.DataFrame(valid_rows)
