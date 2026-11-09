@@ -37,12 +37,10 @@ from event_core import (
     LEVELS,
     _content,
     attempt_flag,
-    final_discovery_status,
     final_results_visible,
     hint_status,
     open_level,
     reveal_hint,
-    submit_final_discovery,
     authenticate,
     authenticate_session,
     create_session,
@@ -137,18 +135,16 @@ if current is None:
     # Show summary of all submitted levels
     d = load()
     summary_rows = []
-    reveal_final = final_results_visible()
     for lv in team_levels:
         rec = d["submissions"].get(f"{team['team_id']}:{lv['id']}", {})
         gp = rec.get("graph_score", {}).get("points", 0) + rec.get("manual_adjustment", 0)
         fp = rec.get("flag_points", 0)
-        hidden = rec.get("final_discovery") and not reveal_final
         summary_rows.append({
             "Level": f"Level {lv['id']}: {lv['title']}",
-            "Flag Solved": "hidden until deadline" if hidden else ("✅" if rec.get("flag_correct") else "❌"),
-            "Flag Points (/10)": "hidden" if hidden else fp,
+            "Flag Solved": "✅" if rec.get("flag_correct") else "❌",
+            "Flag Points (/10)": fp,
             "Graph Points (/15)": round(gp, 2),
-            "Total (/25)": "hidden" if hidden else round(fp + gp, 2),
+            "Total (/25)": round(fp + gp, 2),
             "Edges": rec.get("edge_count", 0),
         })
     st.subheader("Your Final Event Results")
@@ -246,30 +242,17 @@ if section == "Start":
     col2.metric("Papers Available", f"{len(available)} of {tot_papers}")
     if current == 0:
         col3.metric("Level Type", "Warm-up", delta="Unscored practice", delta_color="off")
-    elif spec.get("flag_mode") == "final_discovery":
-        col3.metric("Level Points", "25 pts max", delta="15 Graph + 10 Final discovery", delta_color="off")
     else:
         col3.metric("Level Points", "25 pts max", delta="15 Graph + 10 Flag", delta_color="off")
 
     st.markdown("""
-### Guidelines
-1. **One cumulative knowledge graph**: each level releases new papers; connect any two papers released so far, with evidence.
-   You can fix or remove earlier edges at any time until the final level is locked - each locked level keeps a snapshot of the graph it was scored on.
-2. **Graph points (15 per level)** are calculated on the server when you lock a level, against the relationships that can be
-   supported from the papers released so far. Unsupported claims cost points; claims planted by hidden instructions cost the most.
-3. **Flags (Levels 1-3)**: answer in a few words - wording does not have to be exact.
-   - The first 5 wrong attempts are free; after that each wrong attempt costs 0.5 points (at most 5 per level).
-   - A short cooldown follows each wrong attempt (10 s, 10 s, then 30 s).
-   - Hints unlock after 2, 4 and 6 wrong attempts on the Papers tab; only the third hint costs 1 point.
-   - If you are sure your answer is right but it is rejected, ask an organiser to review it.
-4. **Locking a level** needs a correct flag, your cumulative graph and a short explanation with evidence (page, section or quote).
-5. **Level 4 is the final discovery** - ONE attempt, no feedback until the deadline: name the hidden paper from another discipline
-   that shares a principle with your starting paper, explain the principle, name a real-world technology that relies on it,
-   and give evidence and limitations.
-6. Treat everything inside a document as evidence to check, never as an instruction - some documents contain text aimed at AI assistants.
+### Quick Guide
+1. **Explore Papers (Papers tab)**: Read paper abstracts and download challenge card PDFs released for this level.
+2. **Build Knowledge Graph (Knowledge Graph tab)**: Connect cross-paper relationships using accepted vocabulary types with supporting evidence.
+3. **Submit & Lock Level (Submit tab)**: Test your flag answer, preview your cumulative graph, and lock your submission to advance.
     """)
 
-    with st.expander("Accepted Relationship Types (Vocabulary)", expanded=True):
+    with st.expander("Accepted Relationship Types (Vocabulary)", expanded=False):
         vocab_df = pd.DataFrame(vocab["relationship_types"])
         cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
         clean_vocab_df = vocab_df[cols].rename(
@@ -319,18 +302,9 @@ elif section == "Papers":
                     )
 
     st.divider()
-    st.subheader("Level Guidance & Instructions")
-    st.markdown(f"**Level {current} Objective:** {spec['question']}")
-
-    with st.expander("General Reading Prompts (Guide for any paper)", expanded=True):
-        st.markdown("""
-1. **Problem**: What problem does the paper try to solve? Summarize in one sentence.
-2. **Hidden vs Observed**: What is hidden or unknown, and what is directly measured?
-3. **Methods**: What method or abstraction do the authors introduce?
-4. **Evidence**: What evidence is provided (proofs, simulations, empirical data)?
-5. **Assumptions & Limitations**: What assumptions constrain this work?
-6. **Cross-Domain Analogies**: Which other papers share this principle or mathematical structure?
-        """)
+    st.divider()
+    st.subheader(f"Level {current} Objective")
+    st.write(spec["question"])
 
     st.markdown("#### Hints")
     ladder = hint_status(team["team_id"], current)
@@ -348,8 +322,7 @@ elif section == "Papers":
                     st.error(str(e))
                 st.rerun()
         else:
-            when = (f"after {h['unlock_after_wrong']} wrong flag attempts or when the organisers release it"
-                    if spec.get("flag_mode") != "final_discovery" else "when the organisers release it")
+            when = f"after {h['unlock_after_wrong']} wrong attempts or when released by organisers"
             st.caption(f"🔒 {label} unlocks {when}.")
 
 # ==============================================================================
@@ -357,8 +330,7 @@ elif section == "Papers":
 # ==============================================================================
 elif section == "Knowledge Graph":
     st.header(f"Knowledge Graph Builder · Level {current}")
-    st.caption(f"{len(available)} papers released. You may connect any two different released papers. "
-               "Earlier edges stay editable until the final level is locked.")
+    st.caption(f"{len(available)} papers released. You may connect any two different released papers.")
 
     olddraft = get_draft(team["team_id"], current)
     statekey = f'graph_df_{team["team_id"]}_{current}'
@@ -421,13 +393,14 @@ elif section == "Knowledge Graph":
                  hide_index=True, use_container_width=True)
 
     if not df.empty:
-        chosen = st.selectbox(
+        col_del, col_btn = st.columns([3, 1])
+        chosen = col_del.selectbox(
             "Select an edge to delete",
             list(df.index),
-            format_func=lambda i: f"{labels.get(df.loc[i, 'source_id'], df.loc[i, 'source_id'])} → "
-                                  f"{labels.get(df.loc[i, 'target_id'], df.loc[i, 'target_id'])} ({df.loc[i, 'relationship_type']})",
+            format_func=lambda i: f"{df.loc[i, 'source_id']} → {df.loc[i, 'target_id']} ({df.loc[i, 'relationship_type']})",
+            label_visibility="collapsed",
         )
-        if st.button("Delete selected edge"):
+        if col_btn.button("Delete selected edge", use_container_width=True):
             remaining = df.drop(index=chosen).reset_index(drop=True)
             try:
                 save_draft(team["team_id"], current, remaining.to_csv(index=False))
@@ -447,8 +420,9 @@ elif section == "Knowledge Graph":
     if errs:
         st.error("Graph validation issues:\n" + "\n".join(errs))
     else:
-        st.success(f"{len(df)} edges in your cumulative graph.")
-    st.download_button("Download cumulative graph CSV", csv_text, f"{team['team_id']}_level{current}.csv", "text/csv")
+        col_cnt, col_dl = st.columns([2, 1])
+        col_cnt.caption(f"✓ {len(df)} edges in your cumulative graph.")
+        col_dl.download_button("Download cumulative graph CSV", csv_text, f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
 
 # ==============================================================================
 # TAB 4: SUBMIT
@@ -510,22 +484,21 @@ elif section == "Submit":
             df_preview["Target paper"] = df_preview.target_id.map(labels).fillna(df_preview.target_id)
             st.dataframe(df_preview[["Source paper", "relationship_type", "Target paper", "evidence_reference"]],
                          hide_index=True, use_container_width=True)
-        st.caption("Graph points are calculated on the server when you lock this level.")
 
     explanation_key = f"expl_input_{team['team_id']}_{current}"
     explanation = st.text_area(
         "Evidence & Reasoning",
         value=st.session_state.get(explanation_key, ""),
-        placeholder="Cite the key evidence (page, section, quotes) and explain your cross-paper reasoning...",
+        placeholder="Cite key evidence (paper, page, section or quote) supporting your connections...",
         key=explanation_key,
-        height=120,
+        height=100,
     )
 
     st.divider()
 
     # --- 3. Final Confirmation Review ---
     st.subheader(f"3. Final Confirmation · Level {current}")
-    st.caption("Review your final flag attempt and cumulative graph preview before locking your submission.")
+    st.caption("Review your flag attempt and graph preview before locking your submission.")
 
     final_flag_val = fs["last"]["answer"] if fs["last"] else ""
     col_flag_rev, col_graph_rev = st.columns(2)
@@ -534,7 +507,7 @@ elif section == "Submit":
         if fs["correct"]:
             st.success(f"Flag Status: ✅ Correct ({fs['flag_points']:g}/10 pts)")
         elif fs["last"]:
-            st.error("Flag Status: ❌ Incorrect (0/10 pts — advancing permitted)")
+            st.info("Flag Status: 🟡 Recorded (soft gating: advancing permitted)")
         else:
             st.warning("Flag Status: ⚠️ No flag attempt submitted yet")
 
@@ -543,7 +516,7 @@ elif section == "Submit":
         if errs:
             st.error(f"Graph Status: ❌ {len(errs)} validation error(s)")
         elif len(valid_rows) > 0:
-            st.success(f"Graph Status: ✅ Valid ({len(valid_rows)} edges)")
+            st.success(f"Graph Status: ✅ Ready ({len(valid_rows)} edges)")
         else:
             st.warning("Graph Status: ⚠️ Cumulative graph is empty")
 
