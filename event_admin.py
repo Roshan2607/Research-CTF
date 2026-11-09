@@ -42,7 +42,17 @@ from event_core import (
     revoke_admin_session,
     authenticate_admin_session,
     admin_password_is_compromised,
+    calibration_alerts,
     check_admin_password,
+    levels_for_cluster,
+    open_level,
+    override_flag,
+    release_hint_for_all,
+    reset_team,
+    review_final_discovery,
+    set_open_level,
+    team_scores,
+    DISCOVERY_REVIEW_MAX_POINTS,
 )
 from challenge.participant_data import load_corpus
 
@@ -116,6 +126,7 @@ tabs = st.tabs([
     "Official Leaderboard & Dashboard",
     "Register Teams",
     "Submissions & Review",
+    "Event Controls",
     "Logs & Audit",
 ])
 
@@ -137,25 +148,18 @@ def live_dashboard():
     c.metric("Locked Submissions", len(subs))
 
     scores = []
-    for t in teams:
-        team_subs = [v for v in subs.values() if v["team_id"] == t["team_id"] and v.get("level", 0) >= 1]
-        flags = sum(v.get("flag_points", (10 if v.get("flag_correct") else 0)) for v in team_subs)
-        graph = sum(v.get("graph_score", {}).get("points", 0) for v in team_subs)
-        manual = sum(v.get("manual_adjustment", 0.0) for v in team_subs)
-        total_graph = round(graph + manual, 2)
-        total = round(flags + total_graph, 2)
-        l0_done = "✅" if any(v.get("level") == 0 for v in subs.values() if v["team_id"] == t["team_id"]) else "—"
+    for row in team_scores():
+        if row["team_id"] not in team_ids:
+            continue
         scores.append({
-            "Team ID": t["team_id"],
-            "Team": t["name"],
-            "Cluster": t["cluster"],
-            "Demo (L0)": l0_done,
-            "Levels Completed": f"{len(team_subs)}/4",
-            "Flag Points (/40)": flags,
-            "Graph Points (/60)": total_graph,
-            "Total Score (/100)": total,
+            "Team ID": row["team_id"],
+            "Team": row["name"],
+            "Cluster": row["cluster"],
+            "Levels Locked": f"{row['levels_locked']}/4",
+            "Flag Points (/40)": row["flag_points"],
+            "Graph Points (/60)": row["graph_points"],
+            "Total Score (/100)": row["total"],
         })
-
     st.subheader("Official Team Leaderboard")
     if scores:
         st.dataframe(pd.DataFrame(scores).sort_values("Total Score (/100)", ascending=False), hide_index=True, use_container_width=True)
@@ -182,7 +186,9 @@ with tabs[1]:
     if not available_clusters:
         st.error("No competition clusters configured.")
     else:
-        with st.expander("Create a new cluster from a template"):
+        with st.expander("Create a new cluster from a template (verified papers only)"):
+            st.warning("Only add clusters whose papers, DOIs and abstracts have been verified against the publisher "
+                       "record (see docs/DATA_PROVENANCE.md). Never invent paper metadata or abstracts.")
             template = st.selectbox("Template cluster", available_clusters, key="cluster_template")
             new_cluster_name = st.text_input("New cluster name", key="new_cluster_name")
             if st.button("Create cluster"):
@@ -345,5 +351,99 @@ def logs_view():
         st.download_button("Download real-time event log (JSONL)", log_file.read_text(encoding="utf-8"), "realtime_events.jsonl", "application/json")
 
 
-with tabs[3]:
+with tabs[4]:
     logs_view()
+
+
+def _csv(df: pd.DataFrame) -> str:
+    buf = io.StringIO()
+    df.to_csv(buf, index=False, lineterminator="\n")
+    return buf.getvalue()
+
+
+with tabs[3]:
+    st.subheader("Difficulty signals")
+    cal = calibration_alerts()
+    for a in cal["alerts"]:
+        st.warning(a)
+    if not cal["alerts"]:
+        st.caption("No difficulty alerts.")
+    if cal["levels"]:
+        st.dataframe(pd.DataFrame(cal["levels"]), hide_index=True, use_container_width=True)
+        st.caption("decoy_lure_answers = wrong flag answers that match a decoy lure; "
+                   "locked_graphs_with_injected_edge = locked graphs containing an injection-planted edge (debrief tally).")
+
+    st.subheader("Level gate")
+    comp_levels = [lv["id"] for lv in levels_for_cluster(CLUSTER) if lv["id"] >= 1]
+    cur_open = open_level()
+    choice = st.selectbox("Teams may play up to level", ["All levels open"] + comp_levels,
+                          index=0 if cur_open is None else (["All levels open"] + comp_levels).index(cur_open)
+                          if cur_open in comp_levels else 0)
+    if st.button("Apply level gate"):
+        set_open_level(None if choice == "All levels open" else int(choice))
+        st.success("Level gate updated.")
+        st.rerun()
+
+    st.subheader("Release a hint to every team")
+    lv_sel = st.selectbox("Level", [lv["id"] for lv in levels_for_cluster(CLUSTER)], key="hint_level")
+    rung = st.selectbox("Hint rung", [1, 2, 3], key="hint_rung")
+    if st.button("Release hint (free for all teams)"):
+        release_hint_for_all(int(lv_sel), int(rung))
+        st.success(f"Hint {rung} released for level {lv_sel}.")
+
+    snap = admin_snapshot()
+    team_ids = sorted(t["team_id"] for t in snap["teams"])
+
+    st.subheader("Flag review / override")
+    st.caption("Accept a team's answer for its current level when it is correct but phrased unexpectedly. Recorded in the audit log.")
+    with st.form("override"):
+        c1, c2, c3 = st.columns(3)
+        o_team = c1.selectbox("Team", team_ids or ["-"])
+        o_level = c2.number_input("Level", min_value=0, max_value=10, value=1, step=1)
+        o_reviewer = c3.text_input("Reviewer name")
+        o_note = st.text_input("Why the answer is acceptable")
+        if st.form_submit_button("Accept answer (override)"):
+            try:
+                override_flag(o_team, int(o_level), o_reviewer, o_note)
+                st.success("Override recorded.")
+            except (ValueError, PermissionError) as e:
+                st.error(str(e))
+    if o_team and o_team != "-":
+        recent = snap["attempts"].get(f"{o_team}:{int(o_level)}", [])[-5:]
+        if recent:
+            st.dataframe(pd.DataFrame(recent), hide_index=True, use_container_width=True)
+
+    st.subheader("Final discovery review (Level 4)")
+    finals = snap.get("finals", {})
+    if not finals:
+        st.caption("No final discovery submissions yet.")
+    for tid, rec in sorted(finals.items()):
+        ev = rec["evaluation"]
+        with st.expander(f"{tid} · auto {rec['auto_points']:g} + review {rec.get('review_points', 0):g} · {ev['result']} · {rec['submitted_at']}"):
+            st.json(rec["submission"])
+            st.write({k: ev[k] for k in ("target_correct", "base_correct", "application_status", "principle_advisory_score")})
+            with st.form(f"review_{tid}"):
+                pts = st.number_input(f"Review points for principle, evidence and limitations (0-{DISCOVERY_REVIEW_MAX_POINTS:g})",
+                                      min_value=0.0, max_value=float(DISCOVERY_REVIEW_MAX_POINTS),
+                                      value=float(rec.get("review_points", 0.0)), step=0.5)
+                notes = st.text_input("Notes", value=rec.get("review_notes", ""))
+                reviewer = st.text_input("Reviewer", value=rec.get("reviewer", ""))
+                if st.form_submit_button("Save review"):
+                    review_final_discovery(tid, pts, notes, reviewer)
+                    st.success("Review saved.")
+
+    st.subheader("Reset a team")
+    st.caption("Clears a team's attempts, drafts, hints, submissions, final discovery and graph. The account is kept.")
+    r_team = st.selectbox("Team to reset", ["-"] + team_ids, key="reset_team")
+    r_confirm = st.text_input("Type the team ID again to confirm", key="reset_confirm")
+    if st.button("Reset team") and r_team != "-":
+        if r_confirm.strip().upper() != r_team:
+            st.error("Confirmation does not match.")
+        else:
+            reset_team(r_team)
+            st.success(f"{r_team} reset.")
+
+    st.subheader("Export")
+    lb = pd.DataFrame(team_scores())
+    if not lb.empty:
+        st.download_button("Download leaderboard (CSV)", _csv(lb), "leaderboard.csv", "text/csv")
