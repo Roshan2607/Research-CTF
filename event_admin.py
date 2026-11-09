@@ -237,13 +237,13 @@ def submissions_view():
             man_adj = rec.get("manual_adjustment", 0.0)
             c3.metric("Graph Points (/15)", f"{round(base_gp + man_adj, 2)}", delta=f"{man_adj:+} manual" if man_adj else None)
 
-            # --- Participant Explanation Review ---
-            st.markdown("#### Participant Explanation & Reasoning")
+            # --- Participant Evidence & Reasoning Review ---
+            st.markdown("#### Participant Evidence & Reasoning")
             explanation = rec.get("explanation", "").strip()
             if explanation:
                 st.info(explanation)
             else:
-                st.caption("No explanation submitted.")
+                st.caption("No evidence or reasoning submitted.")
 
             # --- Manual Graph Score Adjustment ---
             st.markdown("#### Organiser Score Adjustment")
@@ -269,7 +269,8 @@ def submissions_view():
                 df = pd.read_csv(io.StringIO(rec["csv"]), dtype=str, keep_default_na=False)
                 df["Source paper"] = df.source_id.map(labels).fillna(df.source_id)
                 df["Target paper"] = df.target_id.map(labels).fillna(df.target_id)
-                st.dataframe(df[["Source paper", "relationship_type", "Target paper", "evidence_reference"]], hide_index=True, use_container_width=True)
+                cols = [c for c in ["Source paper", "relationship_type", "Target paper"] if c in df.columns]
+                st.dataframe(df[cols], hide_index=True, use_container_width=True)
 
                 dot = [
                     'digraph G { graph [rankdir=LR, bgcolor="#ffffff", pad="0.25"];',

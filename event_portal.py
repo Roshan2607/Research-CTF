@@ -308,20 +308,17 @@ elif section == "Knowledge Graph":
     # Edge creation form
     with st.form(f"add_edge_{current}", clear_on_submit=True):
         st.markdown("**Add a Relationship**")
-        c1, c2 = st.columns(2)
+        c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
         src = c1.selectbox("Source paper", available, format_func=lambda x: labels[x])
         dst = c2.selectbox("Target paper", available, format_func=lambda x: labels[x])
-        rel = st.selectbox("Relationship type", rels)
-        evidence = st.text_input("Evidence reference (page, section or quote)", placeholder="e.g. P02, page 4, Section 3")
+        rel = c3.selectbox("Relationship type", rels)
         add = st.form_submit_button("Add edge", type="primary")
 
     if add:
         if src == dst:
             st.error("A paper cannot be connected to itself.")
-        elif not evidence.strip():
-            st.error("Add an evidence reference.")
         else:
-            new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": evidence.strip()}])
+            new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": ""}])
             st.session_state[statekey] = pd.concat([df, new_row], ignore_index=True)
             save_draft(team["team_id"], current, st.session_state[statekey].to_csv(index=False))
             st.rerun()
@@ -346,7 +343,7 @@ elif section == "Knowledge Graph":
 
     df = st.session_state[statekey].copy()
     if not locked.empty:
-        locked_keys = set(tuple(x) for x in locked[["source_id", "target_id", "relationship_type", "evidence_reference"]].fillna("").values.tolist())
+        locked_keys = set(tuple(x) for x in locked[["source_id", "target_id", "relationship_type"]].fillna("").values.tolist())
     else:
         locked_keys = set()
 
@@ -355,12 +352,12 @@ elif section == "Knowledge Graph":
     display["Source paper"] = display["source_id"].map(labels)
     display["Target paper"] = display["target_id"].map(labels)
     display["Locked"] = display.apply(
-        lambda r: tuple(r[["source_id", "target_id", "relationship_type", "evidence_reference"]].fillna("").tolist()) in locked_keys,
+        lambda r: tuple(r[["source_id", "target_id", "relationship_type"]].fillna("").tolist()) in locked_keys,
         axis=1,
     )
-    st.dataframe(display[["Source paper", "relationship_type", "Target paper", "evidence_reference", "Locked"]], hide_index=True, use_container_width=True)
+    st.dataframe(display[["Source paper", "relationship_type", "Target paper", "Locked"]], hide_index=True, use_container_width=True)
 
-    deletable = [i for i, r in df.iterrows() if tuple(r[["source_id", "target_id", "relationship_type", "evidence_reference"]].fillna("").tolist()) not in locked_keys]
+    deletable = [i for i, r in df.iterrows() if tuple(r[["source_id", "target_id", "relationship_type"]].fillna("").tolist()) not in locked_keys]
     if deletable:
         chosen = st.selectbox(
             "Select a current-level edge to delete",
@@ -458,8 +455,8 @@ elif section == "Submit":
 
     st.divider()
 
-    # --- 2. Graph & Explanation ---
-    st.subheader("2. Cumulative Graph & Explanation")
+    # --- 2. Graph & Evidence ---
+    st.subheader("2. Cumulative Graph & Evidence")
     draft = get_draft(team["team_id"], current)
 
     if team["cluster"] == CLUSTER and current > 0:
@@ -479,15 +476,15 @@ elif section == "Submit":
             df_preview = pd.read_csv(io.StringIO(draft), dtype=str, keep_default_na=False)
             df_preview["Source paper"] = df_preview.source_id.map(labels).fillna(df_preview.source_id)
             df_preview["Target paper"] = df_preview.target_id.map(labels).fillna(df_preview.target_id)
-            st.dataframe(df_preview[["Source paper", "relationship_type", "Target paper", "evidence_reference"]], hide_index=True, use_container_width=True)
+            st.dataframe(df_preview[["Source paper", "relationship_type", "Target paper"]], hide_index=True, use_container_width=True)
 
     explanation_key = f"expl_input_{team['team_id']}_{current}"
     explanation = st.text_area(
-        "Explanation & Reasoning",
+        "Evidence & Reasoning",
         value=st.session_state.get(explanation_key, ""),
-        placeholder="Briefly describe your key cross-paper connections, reasoning, and evidence...",
+        placeholder="Cite the key evidence (page, section, quotes) and explain your cross-paper reasoning for your graph connections and flag...",
         key=explanation_key,
-        height=100,
+        height=120,
     )
 
     st.divider()
