@@ -1,4 +1,4 @@
-"""Uncharted Literature - participant app.
+"""Proof of Thought - participant app.
 
     streamlit run app.py --server.port 8501
 
@@ -16,7 +16,7 @@ try:
 except ImportError:  # pragma: no cover
     pass
 
-st.set_page_config(page_title="Uncharted Literature", page_icon="🧭", layout="wide")
+st.set_page_config(page_title="Proof of Thought", page_icon="🧭", layout="wide")
 
 from challenge.participant_view import render  # noqa: E402
 

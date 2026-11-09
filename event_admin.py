@@ -24,8 +24,8 @@ from event_core import (
 )
 from challenge.participant_data import load_corpus
 
-st.set_page_config(page_title="Uncharted Literature · Admin", page_icon="🔐", layout="wide")
-st.title("🔐 Uncharted Literature · Admin")
+st.set_page_config(page_title="Proof of Thought · Admin", page_icon="🔐", layout="wide")
+st.title("🔐 Proof of Thought · Admin")
 st.caption("Live organiser console and challenge supervisor")
 
 cookie_manager = stx.CookieManager(key="ul_admin_cookie")

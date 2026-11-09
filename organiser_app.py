@@ -1,4 +1,4 @@
-"""Uncharted Literature - organiser console (protected).
+"""Proof of Thought - organiser console (protected).
 
     streamlit run organiser_app.py --server.address 127.0.0.1 --server.port 8502
 
@@ -16,7 +16,7 @@ try:
 except ImportError:  # pragma: no cover
     pass
 
-st.set_page_config(page_title="Uncharted Literature · Organiser", page_icon="🔒", layout="wide")
+st.set_page_config(page_title="Proof of Thought · Organiser", page_icon="🔒", layout="wide")
 
 from challenge.organiser_view import render  # noqa: E402
 

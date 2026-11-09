@@ -38,7 +38,7 @@ def test_participant_app_full_flow(env):
     store, team = env
     at = AppTest.from_file(str(paths.ROOT / "app.py"), default_timeout=90).run()
     _no_exceptions(at)
-    assert at.title[0].value == "Uncharted Literature"
+    assert at.title[0].value == "Proof of Thought"
     assert len(at.tabs) == 7
     page_text = json.dumps([m.value for m in at.markdown])
     assert "Hint 1" in page_text and "Hint 2" not in page_text  # only released hints are shown

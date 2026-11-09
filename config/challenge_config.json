@@ -1,6 +1,6 @@
 {
   "_comment": "Organiser-adjustable configuration. False-positive weights are PROVISIONAL and should be tuned after a pilot run.",
-  "workshop_title": "Uncharted Literature",
+  "workshop_title": "Proof of Thought",
   "branding": "OpenAI \u00d7 IEEE CS \u00d7 Research Et Al",
   "theme": "Reconstruction of Hidden Structures from Incomplete Information",
   "fp_weights": {

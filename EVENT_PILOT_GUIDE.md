@@ -1,4 +1,4 @@
-# Uncharted Literature — Incremental multi-cluster event
+# Proof of Thought — Incremental multi-cluster event
 
 ## Release plan
 

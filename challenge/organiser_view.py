@@ -91,7 +91,7 @@ def _paper_dot(g, roles, highlight: list[str] | None = None) -> str:
 
 
 def render() -> None:
-    st.title("Uncharted Literature · Organiser console")
+    st.title("Proof of Thought · Organiser console")
     st.caption("OpenAI × IEEE CS × Research Et Al · ORGANISER ONLY - do not project this screen during the challenge")
     if not _auth():
         return

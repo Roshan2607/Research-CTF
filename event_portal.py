@@ -32,8 +32,8 @@ from event_core import (
 )
 from scoring.graph_scorer import score_csv
 
-st.set_page_config(page_title="Uncharted Literature · Participant", page_icon="🧭", layout="wide")
-st.title("🧭 Uncharted Literature")
+st.set_page_config(page_title="Proof of Thought · Participant", page_icon="🧭", layout="wide")
+st.title("🧭 Proof of Thought")
 
 cookie_manager = stx.CookieManager(key="ul_participant_cookie")
 cookies = cookie_manager.get_all()

@@ -1,148 +1,110 @@
-# Uncharted Literature
+# Proof of Thought
 
-**OpenAI × IEEE CS × Research Et Al**: an AI-assisted interdisciplinary research-literacy workshop with a Knowledge Graph CTF (3 hours, teams of two).
+**Proof of Thought (PoT)** is an interdisciplinary research-literacy Knowledge Graph CTF platform. Participant teams analyze academic excerpts across multiple disciplines, reconstruct cumulative, evidence-backed knowledge graphs, and discover hidden cross-domain principles across progressive levels.
 
-Participants get 14 real research papers from biology, computer science, networking and signal processing. They **reconstruct an evidence-backed knowledge graph** of how the papers relate (scored repeatedly), then make **one final discovery submission**: which paper from another discipline shares a hidden principle with their starting paper, what that principle is, and which real-world technology operationalises it. Decoy papers and controlled prompt-injection annotations test whether teams verify evidence rather than trusting surface similarity or AI output.
+---
 
-> **Theme:** _Reconstruction of Hidden Structures from Incomplete Information._
-
-> This repository is **private** because it contains the answer key (`data/answer_key/`, `docs/ORGANISER_GUIDE.md`, `docs/DATA_PROVENANCE.md`). Give participants only the app URL, `docs/PARTICIPANT_GUIDE.md` and the card PDFs.
-
-## Quick start
+## Quick Start (Organisers)
 
 ```bash
+# 1. Setup virtual environment
 python -m venv .venv
-.venv\Scripts\activate                      # macOS/Linux: source .venv/bin/activate
+.venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-copy .env.example .env                      # macOS/Linux: cp .env.example .env
+
+# 2. Configure environment
+copy .env.example .env            # macOS/Linux: cp .env.example .env
 ```
 
-Edit `.env` and configure:
+Edit `.env` and set:
+* `ORGANISER_PASSWORD`: Admin password (minimum 12 characters).
+* `FLAG_HMAC_SECRET`: Random 64-character hex secret for HMAC tokens.
 
-- `FLAG_HMAC_SECRET`: generate using `python -c "import secrets; print(secrets.token_hex(32))"`
-- `ORGANISER_PASSWORD`: choose a strong organiser password.
+> **Security Note:** Never commit `.env` or runtime data files (`data/*.csv`, `data/*.jsonl`) to git.
 
-Never commit `.env` to Git.
+---
 
-Build and validate the challenge:
+## Running the Event
+
+Run both Streamlit applications during the workshop:
+
+### 1. Organiser Admin Console (Localhost only)
+```bash
+python -m streamlit run event_admin.py --server.address 127.0.0.1 --server.port 8504
+```
+* **URL:** `http://127.0.0.1:8504`
+* **Features:** Live team leaderboard, team/cluster registration, explanation review, manual score adjustments (+/- pts), and real-time audit logs.
+
+### 2. Participant Portal (LAN / Event Network)
+```bash
+python -m streamlit run event_portal.py --server.address 0.0.0.0 --server.port 8503
+```
+* **Localhost:** `http://127.0.0.1:8503`
+* **LAN Participants:** `http://<organiser-ip>:8503`
+* **Features:** Exactly 4 tabs:
+  1. **Start:** Briefing, level status, and accepted relationship vocabulary.
+  2. **Papers:** Released papers, abstracts, links, PDF challenge cards, and optional hints.
+  3. **Knowledge Graph:** Interactive edge builder, CSV import (with Codex support), cumulative edge table, Graphviz diagram, and CSV export.
+  4. **Submit:** Flag validation with live cooldown feedback, cumulative graph preview, methodology explanation form, and level lock.
+
+---
+
+## Event Rules & Scoring Model
+
+* **100 Points Total**: 4 levels $\times$ 25 points each (15 graph points + 10 flag points per level).
+  * **Graph Points (up to 15 pts/level)**: Scored on weighted F1 against reference connections and evidence quality, with optional organiser manual adjustments.
+  * **Flag Points (up to 10 pts/level)**: Awarded upon finding the correct level flag.
+* **Flag Attempt Rules**:
+  * Unlimited attempts with instant correct/incorrect feedback.
+  * The first **5 wrong attempts per level are free**.
+  * From the **6th wrong attempt, each costs 1 flag point**.
+  * A **30-second cooldown** applies after every wrong attempt (attempts during cooldown are rejected without further penalty).
+* **Cumulative Knowledge Graph**:
+  * One continuous graph carries across all 4 levels.
+  * Relationships submitted in prior levels are permanently locked.
+  * New edges can be added via dropdowns or CSV upload (Codex-formatted files supported).
+* **Level Submissions & Immutability**:
+  * Advancing requires submitting at least one flag attempt, the cumulative graph, and a written **explanation** of the discovered connections.
+  * Submissions are locked on the backend; once locked, graph edges, flags, and explanations cannot be modified.
+* **Level 0 Demo Team**:
+  * Facilitator demo team (`is_demo=True`) is excluded from the official scoreboard by default.
+
+---
+
+## Key File Structure
+
+```
+├── event_core.py                 # Core business logic: auth, drafts, cooldowns, penalties, locking
+├── event_portal.py               # Participant web portal (4 tabs)
+├── event_admin.py                # Protected organiser dashboard & manual review console
+├── challenge/
+│   ├── cards.py                  # Challenge card PDF generator (ReportLab)
+│   ├── participant_data.py       # Participant data loading & isolation whitelist
+│   └── submission_store.py       # Legacy atomic JSON storage engine
+├── config/
+│   └── challenge_config.json     # Workshop parameters & false-positive scoring weights
+├── data/
+│   ├── event_content.csv         # Level questions, flag answers, papers, and hints
+│   ├── corpus_seed.json          # Master paper seed manifest
+│   ├── participant/cards/        # 1-page PDF challenge cards (P01..P14.pdf)
+│   └── answer_key/               # Canonical paths, decoys, and injection annotations
+├── scoring/
+│   ├── graph_scorer.py           # Weighted typed-edge graph scoring engine
+│   └── flag_validator.py         # HMAC flag token validator
+└── tests/                        # Comprehensive pytest test suite (106 tests)
+```
+
+---
+
+## Maintenance & Testing Commands
 
 ```bash
-python scripts/build_challenge.py
+# Run full automated test suite
 python -m pytest
-```
 
-## Running the applications
+# Regenerate challenge cards (requires ReportLab)
+python scripts/build_challenge.py
 
-The **four-level multi-cluster event workflow** uses two separate Streamlit applications.
-
-Open two separate terminals in the project directory.
-
-**1. Organiser admin dashboard**
-
-```bash
-python -m streamlit run event_admin.py --server.address 127.0.0.1 --server.port 8503
-```
-
-Open the admin dashboard at:
-
-`http://127.0.0.1:8503`
-
-This dashboard is intended for organisers on the local machine.
-
-**2. Participant portal**
-
-```bash
-python -m streamlit run event_portal.py --server.address 0.0.0.0 --server.port 8501
-```
-
-Open the participant portal locally at:
-
-`http://127.0.0.1:8501`
-
-Participants connected to the same Wi-Fi/LAN can access it using:
-
-`http://<organiser-ip>:8501`
-
-Keep both applications running during the event.
-
-## What is in the box
-
-| Deliverable                                                                | Where                                                                                                                                                               |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Original Streamlit participant app / organiser console                     | `app.py`, `organiser_app.py`, `challenge/participant_view.py`, `challenge/organiser_view.py`                                                                        |
-| Multi-cluster organiser dashboard                                          | `event_admin.py`                                                                                                                                                    |
-| Multi-cluster participant portal                                           | `event_portal.py`                                                                                                                                                   |
-| Event workflow and state management                                        | `event_core.py`                                                                                                                                                     |
-| Verified research corpus (14 papers, 4 disciplines)                        | `data/corpus_seed.json` → `data/source_manifest.json` (OpenAlex + Crossref, `scripts/fetch_metadata.py`)                                                            |
-| Master heterogeneous knowledge graph (47 nodes, 126 evidence-backed edges) | `data/organiser/master_graph.json`, `graph/`                                                                                                                        |
-| Participant-safe corpus and challenge package                              | `data/participant/` (generated from a whitelist)                                                                                                                    |
-| Canonical path, alternatives, decoys, injections, final answer             | `data/answer_key/`                                                                                                                                                  |
-| Prompt-injection wrapper cards                                             | `data/participant/cards/P01..P14.pdf`, `challenge/cards.py`, `challenge/document_reader.py`                                                                         |
-| Discovery pipeline Stages 0–4 (PoG / EoG / Hyvönen-inspired)               | `graph/builder.py`, `path_discovery.py`, `alternative_paths.py`, `relationship_explainer.py`, `application_discovery.py`, `pipeline.py`                             |
-| Iterative weighted typed-edge F1 scorer                                    | `scoring/graph_scorer.py`, `scoring/reference.py`, `scoring/weighted_metrics.py`                                                                                    |
-| Kaggle metric, format and setup                                            | `scoring/kaggle_metric.py`, `scoring/kaggle_format.py`, `kaggle/`, [docs/KAGGLE_SETUP.md](docs/KAGGLE_SETUP.md)                                                     |
-| One-shot HMAC flag validator                                               | `scoring/flag_validator.py`                                                                                                                                         |
-| Sample submissions                                                         | `data/samples/`                                                                                                                                                     |
-| Event workflow guide                                                       | [EVENT_PILOT_GUIDE.md](EVENT_PILOT_GUIDE.md)                                                                                                                        |
-| Guides                                                                     | [Organiser](docs/ORGANISER_GUIDE.md) · [Participant](docs/PARTICIPANT_GUIDE.md) · [Architecture](docs/ARCHITECTURE.md) · [Data provenance](docs/DATA_PROVENANCE.md) |
-| Tests and results                                                          | `tests/`, [docs/TEST_RESULTS.md](docs/TEST_RESULTS.md)                                                                                                              |
-
-## Four-level multi-cluster event workflow
-
-The staged event workflow is available separately from the original participant and organiser applications.
-
-It reuses the Start Here, Corpus and Vocabulary sections and adds:
-
-- Team-password login.
-- Team creation and cluster assignment.
-- Four retryable flags.
-- CSV graph builder with automatic preview.
-- Per-level immutable submissions.
-- Graph and flag scoring.
-- Organiser dashboard with live team progress.
-- Submission review and event activity logs.
-
-The participant Graph Builder uses paper-ID and relationship dropdowns to avoid invalid free-typed labels. Horizontal navigation is below the page title.
-
-The Streamlit configuration retains disconnected sessions for up to eight hours, subject to the browser reconnecting to the same running server. Drafts are saved independently.
-
-See [EVENT_PILOT_GUIDE.md](EVENT_PILOT_GUIDE.md) for setup, credentials, participant flow and the scoring model.
-
-## Useful commands
-
-```bash
-python scripts/fetch_metadata.py
-# Refresh bibliographic metadata from OpenAlex/Crossref (network)
-
+# Verify quoted evidence passages against Open Access sources
 python scripts/verify_evidence.py
-# Re-check every quoted evidence passage against OA full text (network)
-
-python -m scoring.graph_scorer data/samples/sample_submission_revised.csv
-# Score an edge list (organiser detail)
-
-python -m scoring.kaggle_format my_edges.csv kaggle_submission.csv
-# Convert edge list to Kaggle grid format
-
-python scripts/demo_walkthrough.py
-# Run the demonstration walkthrough
 ```
-
-The demonstration walkthrough writes `docs/DEMO_TRANSCRIPT.md`, covering organiser build → neutral corpus → initial graph (F1 0.26 public) → injection breakdown → revised graph (0.71) → hidden connection → locked final answer → post-deadline results.
-
-## Configuration
-
-- `config/challenge_config.json`: false-positive weights (ordinary 1.0, decoy 0.5, injection 3.0, provisional), submission limits, public/private split and final deadline.
-- `.env`: `FLAG_HMAC_SECRET`, `ORGANISER_PASSWORD`, optional `FINAL_DEADLINE`. Never commit this file.
-- `UL_SUBMISSIONS_DIR`: optional override for where runtime submission data is stored.
-
-## Status and limitations
-
-Working end to end: corpus → graph → participant package → iterative scoring (local and Kaggle-format) → review queue → one-shot flag → organiser results.
-
-Known limitations:
-
-- Seven papers are paywalled. Their edges rest on abstracts and reference lists, and deeper claims are marked `REQUIRES_REVIEW`.
-- Some items need a human expert's sign-off before use with students (see ORGANISER_GUIDE §8). The most important is confirming the starting paper's grouping algorithm in its full text.
-- Kaggle competition creation is manual (the API cannot do it). The local scorer is the source of truth and the fallback.
-- Single-process JSON storage: suitable for one workshop on one laptop, not for multi-server deployment.
-- No live LLM or web-search integration. Stage 4 uses organiser-researched application records behind an interface stub.
