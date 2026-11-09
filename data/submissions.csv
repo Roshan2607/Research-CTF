@@ -1,12 +1,12 @@
 team_id,team_name,cluster,level,submitted_at,submitted_flag,flag_correct,flag_points,graph_points,manual_adjustment,explanation,locked,edge_count,graph_csv
-TEAM_LOCK,Lock Team,Hidden Structures: Networking × Evolutionary Biology,0,2026-11-09T07:49:58+00:00,FLAG{TRIE},True,10,15.0,0.0,L0,True,1,"source_id,target_id,relationship_type
+TEAM_LOCK,Lock Team,Hidden Structures: Networking × Evolutionary Biology,0,2026-11-09T07:58:03+00:00,FLAG{TRIE},True,10,15.0,0.0,L0,True,1,"source_id,target_id,relationship_type
 L0A,L0B,SHARES_PRINCIPLE
 "
-TEAM_LOCK,Lock Team,Hidden Structures: Networking × Evolutionary Biology,1,2026-11-09T07:49:58+00:00,tree reconstruction,True,10,10.0,0.0,L1 explanation,True,2,"source_id,target_id,relationship_type
+TEAM_LOCK,Lock Team,Hidden Structures: Networking × Evolutionary Biology,1,2026-11-09T07:58:03+00:00,tree reconstruction,True,10,10.0,0.0,L1 explanation,True,2,"source_id,target_id,relationship_type
 P01,P02,CITES
 P02,P01,EXTENDS
 "
-TEAM_LOCK,Lock Team,Hidden Structures: Networking × Evolutionary Biology,2,2026-11-09T07:49:58+00:00,leaf-only observations,True,10,10.0,0.0,L2 explanation,True,3,"source_id,target_id,relationship_type
+TEAM_LOCK,Lock Team,Hidden Structures: Networking × Evolutionary Biology,2,2026-11-09T07:58:03+00:00,leaf-only observations,True,10,10.0,0.0,L2 explanation,True,3,"source_id,target_id,relationship_type
 P01,P02,CITES
 P02,P01,EXTENDS
 P03,P04,CITES

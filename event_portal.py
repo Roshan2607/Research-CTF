@@ -2,6 +2,7 @@
 from pathlib import Path
 import html
 import io
+import re
 from datetime import datetime, timedelta
 
 try:
