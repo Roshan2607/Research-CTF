@@ -1,1 +1,9 @@
-team_id,team_name,cluster,level,submitted_at,submitted_flag,flag_correct,locked,edge_count,graph_csv
+team_id,team_name,cluster,level,submitted_at,submitted_flag,flag_correct,flag_points,graph_points,manual_adjustment,explanation,locked,edge_count,graph_csv
+TEAM_C1,Swarm Team,Cluster 1: Insect Behaviour × Swarm Robotics × Computer Networks,1,2026-11-09T06:04:25+00:00,stigmergy,True,10,15.0,0.0,Explanation for Level 1,True,0,"source_id,target_id,relationship_type,evidence_reference
+"
+TEAM_C1,Swarm Team,Cluster 1: Insect Behaviour × Swarm Robotics × Computer Networks,2,2026-11-09T06:04:25+00:00,ant colony optimization,True,10,15.0,0.0,Explanation for Level 2,True,0,"source_id,target_id,relationship_type,evidence_reference
+"
+TEAM_C1,Swarm Team,Cluster 1: Insect Behaviour × Swarm Robotics × Computer Networks,3,2026-11-09T06:04:25+00:00,quorum sensing,True,10,15.0,0.0,Explanation for Level 3,True,0,"source_id,target_id,relationship_type,evidence_reference
+"
+TEAM_C1,Swarm Team,Cluster 1: Insect Behaviour × Swarm Robotics × Computer Networks,4,2026-11-09T06:04:25+00:00,byzantine fault tolerance,True,10,15.0,0.0,Explanation for Level 4,True,0,"source_id,target_id,relationship_type,evidence_reference
+"

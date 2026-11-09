@@ -102,13 +102,8 @@ def render_card(card: dict, out_path: Path, branding: str, injection_text: str |
         Paragraph(escape(card["abstract"]), st["body"]),
         Spacer(1, 1.5 * mm),
         Paragraph(escape(card["abstract_attribution"]), st["small"]),
-        Spacer(1, 2 * mm),
+        Spacer(1, 3 * mm),
         _annotation_block(injection_text, st),
-        Paragraph("Reading prompts", st["h"]),
-    ]
-    for i, q in enumerate(card["reading_prompts"], 1):
-        story.append(Paragraph(escape(f"{i}. {q}"), st["body"]))
-    story += [
         Spacer(1, 4 * mm),
         Paragraph(
             "Proof of Thought · Challenge Excerpt Card. Check evidence in the paper before asserting relationships.",

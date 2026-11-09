@@ -258,6 +258,17 @@ elif section == "Papers":
     st.divider()
     st.subheader("Level Guidance & Instructions")
     st.markdown(f"**Level {current} Objective:** {spec['question']}")
+
+    with st.expander("General Reading Prompts (Guide for any paper)", expanded=True):
+        st.markdown("""
+1. **Problem**: What problem does the paper try to solve? Summarize in one sentence.
+2. **Hidden vs Observed**: What is hidden or unknown, and what is directly measured?
+3. **Methods**: What method or abstraction do the authors introduce?
+4. **Evidence**: What evidence is provided (proofs, simulations, empirical data)?
+5. **Assumptions & Limitations**: What assumptions constrain this work?
+6. **Cross-Domain Analogies**: Which other papers share this principle or mathematical structure?
+        """)
+
     with st.expander("Optional Hints"):
         if spec["hints"]:
             for i, h in enumerate(spec["hints"], 1):

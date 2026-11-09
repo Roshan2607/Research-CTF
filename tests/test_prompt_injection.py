@@ -98,8 +98,8 @@ def test_cards_have_identical_layout(cards):
         with pymupdf.open(str(pdf)) as d:
             blocks = d[0].get_text("blocks")
             notes = next(b for b in blocks if "Notes: record" in b[4])
-            prompts = next(b for b in blocks if b[4].startswith("Reading prompts"))
-            gaps.add(round(prompts[1] - notes[1], 1))
+            footer = next(b for b in blocks if "Proof of Thought" in b[4] and b != blocks[0])
+            gaps.add(round(footer[1] - notes[1], 1))
     assert len(gaps) == 1, f"annotation block height differs between cards: {gaps}"
 
 
