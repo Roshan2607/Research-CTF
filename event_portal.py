@@ -184,6 +184,43 @@ labels = {pid: f"{pid} — {byid[pid]['title']}" for pid in byid}
 spec = next(x for x in team_levels if x["id"] == current)
 key = f"{team['team_id']}:{current}"
 
+
+def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: dict | None = None) -> None:
+    """Render a clean Graphviz diagram from an edge dataframe."""
+    if df is None or df.empty:
+        st.info("No edges in the cumulative graph to display.")
+        return
+
+    byid = byid or {}
+    node_set = list(available) if available else []
+    for pid in sorted(set(df["source_id"].dropna().unique()) | set(df["target_id"].dropna().unique())):
+        if pid not in node_set:
+            node_set.append(pid)
+
+    dot = [
+        'digraph G { graph [rankdir=LR, bgcolor="#ffffff", pad="0.25"]; '
+        'node [shape=box, style="rounded,filled", fillcolor="#EAF2FF", color="#315A8A", fontcolor="#142B45", fontname="Arial", fontsize=10, penwidth=1.5]; '
+        'edge [color="#2563EB", fontcolor="#173F7A", fontname="Arial", fontsize=9, penwidth=2, arrowsize=0.8];'
+    ]
+
+    for pid in node_set:
+        clean_pid = re.sub(r'[^A-Za-z0-9_]', '', str(pid).strip().upper())
+        title = byid.get(pid, {}).get("title", "") if pid in byid else ""
+        clean_title = re.sub(r'["\\\r\n]', ' ', str(title[:50])).strip()
+        lbl = f"{clean_pid}\\n{clean_title}" if clean_title else clean_pid
+        dot.append(f'"{clean_pid}" [label="{lbl}"];')
+
+    for _, r in df.iterrows():
+        clean_s = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("source_id", "")).strip().upper())
+        clean_t = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("target_id", "")).strip().upper())
+        clean_rel = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("relationship_type", "")).strip())
+        style = "dir=none" if clean_rel in ("SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM") else "dir=forward"
+        if clean_s and clean_t:
+            dot.append(f'"{clean_s}" -> "{clean_t}" [label=" {clean_rel} ", {style}];')
+
+    dot.append("}")
+    st.graphviz_chart("\n".join(dot), use_container_width=True)
+
 # ==============================================================================
 # TAB 1: START
 # ==============================================================================
@@ -374,21 +411,7 @@ elif section == "Knowledge Graph":
 
     st.subheader("Live Graph Diagram")
     if not df.empty:
-        dot = [
-            'digraph G { graph [rankdir=LR, bgcolor="#ffffff", pad="0.25"]; node [shape=box, style="rounded,filled", fillcolor="#EAF2FF", color="#315A8A", fontcolor="#142B45", fontname="Arial", fontsize=10, penwidth=1.5]; edge [color="#2563EB", fontcolor="#173F7A", fontname="Arial", fontsize=9, penwidth=2, arrowsize=0.8];'
-        ]
-        for pid in available:
-            clean_title = re.sub(r'["\\]', '', str(byid[pid]["title"][:50]))
-            dot.append(f'"{pid}" [label="{pid}\\n{clean_title}"];')
-        for _, r in df.iterrows():
-            clean_s = re.sub(r'[^A-Za-z0-9_]', '', str(r["source_id"]))
-            clean_t = re.sub(r'[^A-Za-z0-9_]', '', str(r["target_id"]))
-            clean_rel = re.sub(r'[^A-Za-z0-9_]', '', str(r["relationship_type"]))
-            style = "dir=none" if clean_rel in ("SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM") else "dir=forward"
-            if clean_s and clean_t:
-                dot.append(f'"{clean_s}" -> "{clean_t}" [label="{clean_rel}", {style}];')
-        dot.append("}")
-        st.graphviz_chart("\n".join(dot), use_container_width=True)
+        render_graph_diagram(df, available=available, byid=byid)
     else:
         st.info("Add the first relationship to see the graph diagram.")
 
@@ -419,11 +442,15 @@ elif section == "Submit":
     rec = d["submissions"].get(key)
     if rec:
         st.success(f"Level {current} is locked and submitted.")
-        st.write(f"**Submitted flag:** {rec.get('submitted_flag')} ({rec.get('flag_points', 0)}/10 pts)")
+        st.write(f"**Submitted flag:** `{rec.get('submitted_flag', '')}` ({rec.get('flag_points', 0)}/10 pts)")
         st.write(f"**Graph score:** {rec.get('graph_score', {}).get('points', 0)}/15 pts ({rec.get('edge_count', 0)} edges)")
         if rec.get("manual_adjustment"):
             st.write(f"**Organiser adjustment:** {rec.get('manual_adjustment')} pts ({rec.get('organiser_notes', '')})")
         st.write(f"**Explanation:** {rec.get('explanation')}")
+        if rec.get("csv"):
+            st.subheader("Submitted Graph Diagram")
+            df_locked = pd.read_csv(io.StringIO(rec["csv"]), dtype=str, keep_default_na=False)
+            render_graph_diagram(df_locked, available=available, byid=byid)
         st.stop()
 
     # --- 1. Flag Section ---
@@ -490,11 +517,44 @@ elif section == "Submit":
 
     st.divider()
 
-    # --- 3. Final Submit Button ---
+    # --- 3. Final Confirmation Review ---
+    st.subheader(f"3. Final Confirmation · Level {current}")
+    st.caption("Review your final flag attempt and cumulative graph preview before locking your submission.")
+
+    final_flag_val = fs["last"]["answer"] if fs["last"] else ""
+    col_flag_rev, col_graph_rev = st.columns(2)
+    with col_flag_rev:
+        st.markdown(f"**Submitted Flag Attempt:** `{final_flag_val or 'No flag attempted'}`")
+        if fs["correct"]:
+            st.success(f"Flag Status: ✅ Correct ({fs['flag_points']}/10 pts)")
+        elif fs["last"]:
+            st.error("Flag Status: ❌ Incorrect (0/10 pts — advancing permitted)")
+        else:
+            st.warning("Flag Status: ⚠️ No flag attempt submitted yet")
+
+    with col_graph_rev:
+        st.markdown(f"**Cumulative Graph Edges:** {len(parsed.edges)}")
+        if parsed.errors:
+            st.error(f"Graph Status: ❌ {len(parsed.errors)} validation error(s)")
+        elif len(parsed.edges) > 0:
+            st.success(f"Graph Status: ✅ Valid ({len(parsed.edges)} edges)")
+        else:
+            st.warning("Graph Status: ⚠️ Cumulative graph is empty")
+
+    if draft.strip() and len(parsed.edges) > 0 and not parsed.errors:
+        st.markdown("**Graph Diagram Preview:**")
+        df_preview = pd.read_csv(io.StringIO(draft), dtype=str, keep_default_na=False)
+        render_graph_diagram(df_preview, available=available, byid=byid)
+
+    st.markdown("---")
     can_submit = bool(draft.strip() and len(parsed.edges) > 0 and not parsed.errors and fs["attempts"] > 0)
     if not can_submit:
         if fs["attempts"] == 0:
-            st.caption("ℹ️ Submit at least one flag attempt above to enable level locking.")
+            st.caption("ℹ️ Submit at least one flag attempt in Section 1 above to enable level locking.")
+        elif not draft.strip() or len(parsed.edges) == 0:
+            st.caption("ℹ️ Add at least one edge in Knowledge Graph to enable level locking.")
+        elif parsed.errors:
+            st.caption("ℹ️ Fix graph validation issues before level locking.")
 
     if st.button(f"Lock & Submit Level {current}", type="primary", disabled=not can_submit):
         if not explanation.strip():
