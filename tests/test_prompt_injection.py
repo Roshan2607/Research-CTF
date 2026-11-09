@@ -41,7 +41,8 @@ def texts(cards):
 
 def test_annotations_are_distinguishable_in_organiser_metadata(inj):
     assert 1 <= len(inj) <= 2
-    assert {a["difficulty"] for a in inj} == {"straightforward", "contextual"}
+    kinds = {a["id"]: a["difficulty"] for a in inj}
+    assert kinds["INJ-1"] == "straightforward" and kinds["INJ-2"].startswith("contextual")
     for a in inj:
         assert a["id"] and a["host_card_participant_id"] and a["text"] and a["induced_edge"] and a["detection_marker"]
         assert a["rendering"]["colour_rgb"] == [1, 1, 1]
@@ -82,9 +83,14 @@ def test_injection_is_rendered_invisibly(inj, cards):
 
 
 def test_document_pipeline_flags_injected_instructions(inj, texts):
+    """The keyword scanner catches the blunt INJ-1 but, by design, NOT the subtle INJ-2 - which is the lesson:
+    keyword filters fail; only checking a claim against the paper catches a plausible false statement."""
+    blunt = {a["host_card_participant_id"] for a in inj if not a.get("evades_keyword_filter")}
+    subtle = {a["host_card_participant_id"] for a in inj if a.get("evades_keyword_filter")}
+    assert blunt and subtle
     for pid, text in texts.items():
         flagged = bool(scan_for_instructions(text))
-        assert flagged == (pid in {a["host_card_participant_id"] for a in inj}), pid
+        assert flagged == (pid in blunt), pid
 
 
 def test_original_abstract_unaltered_on_every_card(texts):
@@ -118,8 +124,12 @@ def test_naive_assistant_is_manipulated_and_guard_quarantines(inj, texts):
     assert expected <= naive, "demo should show the naive pipeline adopting the injected edges"
     proposals, quarantined = guarded_extract(texts)
     guarded = {(e["source_id"], e["target_id"], e["relationship_type"]) for e in proposals}
-    assert not (expected & guarded)
-    assert len(quarantined) >= len(expected)
+    blunt = {tuple(a["induced_edge"]) for a in inj if not a.get("evades_keyword_filter")}
+    subtle = {tuple(a["induced_edge"]) for a in inj if a.get("evades_keyword_filter")}
+    assert not (blunt & guarded), "instruction-like injections are quarantined"
+    assert len(quarantined) >= len(blunt)
+    # the subtle injection gets past the keyword guard, but only ever as an unverified AI proposal
+    assert subtle <= guarded
     assert all(p["status"] == "AI_PROPOSED" for p in proposals)
 
 

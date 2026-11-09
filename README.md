@@ -18,7 +18,7 @@ copy .env.example .env            # macOS/Linux: cp .env.example .env
 
 Edit `.env` and set:
 * `ORGANISER_PASSWORD`: Admin password (minimum 12 characters).
-* `FLAG_HMAC_SECRET`: Random 64-character hex secret for HMAC tokens.
+* `FLAG_HMAC_SECRET`: Random 64-character hex secret for the Level 4 final-discovery tokens; then run `python scripts/build_challenge.py`.
 
 > **Security Note:** Never commit `.env` or runtime data files (`data/*.csv`, `data/*.jsonl`) to git.
 
@@ -33,7 +33,7 @@ Run both Streamlit applications during the workshop:
 python -m streamlit run event_admin.py --server.address 127.0.0.1 --server.port 8504
 ```
 * **URL:** `http://127.0.0.1:8504`
-* **Features:** Live team leaderboard, team/cluster registration, explanation review, manual score adjustments (+/- pts), and real-time audit logs.
+* **Features:** Live leaderboard, team registration, explanation review, manual score adjustments, Event Controls (level gate, hints, flag overrides, final-discovery review, team reset, difficulty alerts) and audit logs.
 
 ### 2. Participant Portal (LAN / Event Network)
 ```bash
@@ -51,23 +51,18 @@ python -m streamlit run event_portal.py --server.address 0.0.0.0 --server.port 8
 
 ## Event Rules & Scoring Model
 
-* **100 Points Total**: 4 levels $\times$ 25 points each (15 graph points + 10 flag points per level).
-  * **Graph Points (up to 15 pts/level)**: Scored on weighted F1 against reference connections and evidence quality, with optional organiser manual adjustments.
-  * **Flag Points (up to 10 pts/level)**: Awarded upon finding the correct level flag.
-* **Flag Attempt Rules**:
-  * Unlimited attempts with instant correct/incorrect feedback.
-  * The first **5 wrong attempts per level are free**.
-  * From the **6th wrong attempt, each costs 1 flag point**.
-  * A **30-second cooldown** applies after every wrong attempt (attempts during cooldown are rejected without further penalty).
-* **Cumulative Knowledge Graph**:
-  * One continuous graph carries across all 4 levels.
-  * Relationships submitted in prior levels are permanently locked.
-  * New edges can be added via dropdowns or CSV upload (Codex-formatted files supported).
-* **Level Submissions & Immutability**:
-  * Advancing requires submitting at least one flag attempt, the cumulative graph, and a written **explanation** of the discovered connections.
-  * Submissions are locked on the backend; once locked, graph edges, flags, and explanations cannot be modified.
-* **Level 0 Demo Team**:
-  * Facilitator demo team (`is_demo=True`) is excluded from the official scoreboard by default.
+* **100 points total**: 4 competition levels x 25 points (15 graph + 10 flag/discovery). Level 0 is an unscored, clearly synthetic warm-up.
+* **Papers are released by role, not by ID** (one verified 15-paper corpus): L1 4 papers, L2 5, L3 4, L4 2. Every level has scoreable reference edges (cumulative 5 / 16 / 26 / 41).
+* **Graph points** are computed **on the server** when a level is locked: weighted typed-edge F1 over the papers released so far. Edges planted by hidden AI-directed instructions cost 3x, but only once the card carrying the instruction is released.
+* **Flags (Levels 1-3)**: a few words are enough - answers are matched by keyword groups, not exact strings. A correct flag (or a named organiser override) is required to lock a level.
+  * The first 5 wrong attempts per level are free, then each costs 0.5 points (at most 5 per level).
+  * Cooldown after each wrong attempt: 10 s, 10 s, then 30 s.
+  * Hints: a 3-rung ladder per level, unlocked after 2 / 4 / 6 wrong attempts. Only rung 3 costs 1 point. Organisers can release any rung for free.
+* **Level 4 = one-shot final discovery**: hidden paper, shared principle, real-world application, evidence and limitations. It is validated against HMAC tokens (3 + 2 automatic points) and organiser-reviewed (up to 5 points). Results are hidden until the deadline.
+* **Cumulative graph**: one graph across all levels. It stays editable until the final lock, and each locked level keeps an immutable snapshot of the graph it was scored on.
+* **Organiser controls**: level gate, hint releases, flag overrides, final-discovery review, team reset, difficulty alerts, CSV export.
+
+See [EVENT_PILOT_GUIDE.md](EVENT_PILOT_GUIDE.md) for the release plan, answers and difficulty targets (organiser only).
 
 ---
 
@@ -91,7 +86,7 @@ python -m streamlit run event_portal.py --server.address 0.0.0.0 --server.port 8
 ├── scoring/
 │   ├── graph_scorer.py           # Weighted typed-edge graph scoring engine
 │   └── flag_validator.py         # HMAC flag token validator
-└── tests/                        # Comprehensive pytest test suite (106 tests)
+└── tests/                        # pytest suite (engine, live content, calibration, apps)
 ```
 
 ---

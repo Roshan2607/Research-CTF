@@ -4,9 +4,18 @@
 
 > You don't need any background in graph theory, research methods or AI security. Everything you need is explained below.
 
+## 0. How the event runs (Proof of Thought portal)
+
+* Papers arrive in **four levels**. Each level adds a few papers and asks one short question (the *flag*).
+  A few words are enough; exact wording does not matter.
+* Your **knowledge graph** grows across all levels. You can fix earlier edges at any time until the final level is locked.
+* To lock a level you need the correct flag, your graph and a short explanation with evidence.
+  Wrong flag attempts after the first 5 cost 0.5 points each; hints unlock after 2, 4 and 6 wrong attempts.
+* **Level 4 is the final discovery** - one attempt, no feedback until the deadline (see section 6).
+
 ## 1. The story
 
-You get 14 research papers from four fields: biology, computer science, networking and signal processing. Their titles
+You get 15 research papers from four fields: biology, computer science, networking and signal processing. Their titles
 make them look unrelated, and most of them are. But some papers in different fields are secretly working on the same
 idea, using completely different words.
 

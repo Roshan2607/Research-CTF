@@ -11,7 +11,7 @@ from measurements that are partial, indirect or taken only at the edges of a sys
 
 | Domain ID | Label | Papers |
 |---|---|---|
-| `DOM_BIO` | Biology & biomedical science | Saitou & Nei 1987; Margolin et al. 2006 |
+| `DOM_BIO` | Biology & biomedical science | Saitou & Nei 1987; Margolin et al. 2006; Shepp & Logan 1974 (biomedical imaging) |
 | `DOM_CS`  | Computer science, graph theory & ML | Chow & Liu 1968; Erdős et al. 1999; Choi et al. 2011 |
 | `DOM_NET` | Networking & distributed systems | Demers et al. 1987; Ratnasamy & McCanne 1999; Duffield et al. 2002; Coates et al. 2002; Ni & Tatikonda 2011 |
 | `DOM_SIG` | Signal processing, statistics & applied maths | Vardi 1996; Castro et al. 2004; Candès et al. 2006; Bhamidi et al. 2010 |
@@ -22,7 +22,7 @@ Selection rules applied:
    paper in which network-tomography researchers themselves name the connection to phylogenetics and image reconstruction.
 2. **Defensible inclusion.** Each paper has a reason to be here (table below), not keyword overlap alone.
 3. **Mix of eras.** 1968 → 2011, with foundational and later work in each discipline.
-4. **Open access preferred.** 8 of 14 have a free-to-read version. The rest are listed with DOI links only.
+4. **Open access preferred.** 8 of 15 have a free-to-read version. The rest are listed with DOI links only.
 5. **No redistribution of full text.** Participant cards carry metadata, the attributed abstract and links. They never carry
    the paper body.
 
@@ -47,6 +47,7 @@ domain or role.
 | P12 | `PAPER_NITATIKONDA2011` | Ni & Tatikonda, *Network tomography based on additive metrics*, IEEE TIT 57(12), 2011 (arXiv 2008) | **full text (preprint)** | Says that network inference "is similar to the phylogenetic inference problem" and uses neighbor-joining. | **INTERMEDIATE 1** |
 | P13 | `PAPER_COATES2002` | Coates et al., *Maximum likelihood network topology identification from edge-based unicast measurements*, SIGMETRICS 2002 | abstract | Topology inference with a global likelihood instead of pair-merging. | alternative-path node |
 | P14 | `PAPER_CASTRO2004` | Castro, Coates, Liang, Nowak, Yu, *Network tomography: recent developments*, Stat. Sci. 19(3), 2004 | abstract | Review that names the phylogenetics connection. | alternative-path hub |
+| P15 | `PAPER_SHEPPLOGAN1974` | Shepp & Logan, *The Fourier reconstruction of a head section*, IEEE Trans. Nucl. Sci. 21(3), 1974 | abstract | Added Nov 2026 as an easy decoy. It is classic CT image reconstruction from projections: the same vocabulary (reconstruction, tomography) as network tomography, but no hidden tree. Verified via OpenAlex and Crossref. | **DECOY (easy, L1)** |
 
 "Evidence level" says how far the organiser read: **full text** means passages were located with page numbers (PyMuPDF on the
 open-access PDF); **abstract** means only claims visible in the abstract or in OpenAlex reference lists are used as evidence.

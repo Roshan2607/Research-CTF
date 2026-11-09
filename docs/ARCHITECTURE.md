@@ -41,7 +41,7 @@ outside `data/participant`.
 | `graph/relationship_explainer.py` | **Stage 3** (Hyvönen-inspired): explained cross-domain relations via shared principle/method/problem/chains; always `AI_PROPOSED` |
 | `graph/application_discovery.py` | **Stage 4**: evidence-backed application report, gated on a defensible Stage 3 relation; `ApplicationSearch` interface stub for external search |
 | `graph/pipeline.py` | Runs Stages 0 → 1 & 2 → 3 → 4 (organiser only) |
-| `scoring/reference.py` | Candidate universe (473 typed edges) and organiser classification; stable hash Public/Private split |
+| `scoring/reference.py` | Candidate universe (543 typed edges over 15 papers) and organiser classification; stable hash Public/Private split |
 | `scoring/weighted_metrics.py` | Weighted precision / recall / F1 with safe zero handling |
 | `scoring/graph_scorer.py` | Submission parsing/validation and scoring; participant view = 3 aggregate numbers |
 | `scoring/kaggle_metric.py`, `kaggle_format.py` | Kaggle `score()` (pandas only) and edge-list ↔ grid conversion |

@@ -133,6 +133,13 @@
       "domain": "DOM_SIG",
       "open_access_url": "https://projecteuclid.org/journals/statistical-science/volume-19/issue-3/Network-Tomography-Recent-Developments/10.1214/088342304000000422.full",
       "access_note": "Open access at Project Euclid. Review article (secondary source). Abstract reviewed; automated full-text download was blocked by the host."
+    },
+    {
+      "internal_id": "PAPER_SHEPPLOGAN1974",
+      "doi": "10.1109/TNS.1974.6499235",
+      "domain": "DOM_BIO",
+      "open_access_url": null,
+      "access_note": "Paywalled (IEEE Transactions on Nuclear Science). Abstract and bibliographic metadata only."
     }
   ],
   "domains": {
@@ -156,6 +163,7 @@
     "PAPER_ERDOS1999": "P11",
     "PAPER_NITATIKONDA2011": "P12",
     "PAPER_COATES2002": "P13",
-    "PAPER_CASTRO2004": "P14"
+    "PAPER_CASTRO2004": "P14",
+    "PAPER_SHEPPLOGAN1974": "P15"
   }
 }
