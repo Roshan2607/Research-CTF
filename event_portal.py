@@ -207,7 +207,16 @@ if section == "Start":
     """)
 
     with st.expander("Accepted Relationship Types (Vocabulary)", expanded=True):
-        st.dataframe(pd.DataFrame(vocab["relationship_types"]), hide_index=True, use_container_width=True)
+        vocab_df = pd.DataFrame(vocab["relationship_types"])
+        cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
+        clean_vocab_df = vocab_df[cols].rename(
+            columns={
+                "relationship_type": "Relationship Type",
+                "meaning": "Meaning",
+                "example": "Example",
+            }
+        )
+        st.dataframe(clean_vocab_df, hide_index=True, use_container_width=True)
 
 # ==============================================================================
 # TAB 2: PAPERS
