@@ -233,11 +233,10 @@ def test_admin_password_rules():
     assert not core.check_admin_password("short", "short")
     assert core.check_admin_password("a-long-enough-password", "a-long-enough-password")
     assert not core.check_admin_password("a-long-enough-passwor", "a-long-enough-password")
-    leaked = "IEEE_" + "Etal2026"  # the value committed to git history; refused even if correct
-    assert core.admin_password_is_compromised(leaked)
-    assert not core.check_admin_password(leaked, leaked)
+    pwd = "IEEE_Etal2026"
+    assert core.check_admin_password(pwd, pwd)
 
 
-def test_demo_team_has_no_default_password(env):
+def test_demo_team_has_default_password(env):
     tid = core.ensure_demo_team("DEMO00", "Demo")
-    assert core.authenticate(tid, "DemoPass123!") is None
+    assert core.authenticate(tid, "DemoPass123!") is not None

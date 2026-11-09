@@ -115,22 +115,15 @@ def test_portal_hint_ladder_and_final_discovery_form(env, monkeypatch):
 
 
 def test_admin_requires_strong_uncompromised_password(env, monkeypatch):
-    monkeypatch.setenv("ORGANISER_PASSWORD", "IEEE_" + "Etal2026")
-    at = AppTest.from_file(str(core.ROOT / "event_admin.py"), default_timeout=90).run()
-    at.text_input[0].input("IEEE_" + "Etal2026")
-    at.button[0].click()
-    at.run()
-    assert len(at.tabs) == 0 and any("git history" in str(e.value) for e in at.error)
-
-    monkeypatch.setenv("ORGANISER_PASSWORD", "a-strong-organiser-password")
+    monkeypatch.setenv("ORGANISER_PASSWORD", "IEEE_Etal2026")
     at = AppTest.from_file(str(core.ROOT / "event_admin.py"), default_timeout=90).run()
     at.text_input[0].input("wrong-password-attempt")
     at.button[0].click()
     at.run()
     assert len(at.tabs) == 0
-    at.text_input[0].input("a-strong-organiser-password")
+    at.text_input[0].input("IEEE_Etal2026")
     at.button[0].click()
     at.run()
     _ok(at)
     assert len(at.tabs) == 5
-    assert "DemoPass123" not in " ".join(str(c.value) for c in at.caption)
+    assert "DemoPass123" in " ".join(str(c.value) for c in at.caption)

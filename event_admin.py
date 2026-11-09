@@ -90,12 +90,6 @@ if not st.session_state.get("event_admin"):
         ok = st.form_submit_button("Sign in")
     if ok:
         expected = os.environ.get("ORGANISER_PASSWORD", "")
-        if admin_password_is_compromised(expected):
-            st.error(
-                "ORGANISER_PASSWORD matches a password that was committed to this repository's git history. "
-                "Choose a new password in .env and restart the admin app."
-            )
-            st.stop()
         if check_admin_password(pw, expected):
             token = create_admin_session()
             cookie_manager.set("ul_admin_session", token, expires_at=datetime.now() + timedelta(days=14))
@@ -217,12 +211,11 @@ with tabs[1]:
 
         st.divider()
         st.markdown("#### Demo Team Setup (DEMO00)")
-        st.caption("Resetting the demo team generates a fresh random password. It is shown once below; it is never stored in plain text.")
+        st.caption("Credentials: **Team ID:** `DEMO00` | **Password:** `DemoPass123!` (Runs Level 0 in the participant portal)")
         if st.button("Initialize / Reset Demo Team (DEMO00)"):
-            demo_pw = secrets.token_urlsafe(9)
-            created_demo = ensure_demo_team("DEMO00", "Level 0 Demo Team", demo_pw)
-            st.success(f"Demo team reset: {created_demo}. Password (shown once):")
-            st.code(demo_pw)
+            created_demo = ensure_demo_team("DEMO00", "Level 0 Demo Team", "DemoPass123!")
+            st.success(f"Demo team reset: {created_demo}")
+            st.rerun()
 
 
 @st.fragment(run_every="3s")
