@@ -34,6 +34,7 @@ from challenge.participant_data import card_pdf_path, load_corpus, load_vocabula
 from event_core import (
     CLUSTER,
     LEVELS,
+    _content,
     attempt_flag,
     authenticate,
     authenticate_session,
@@ -144,9 +145,27 @@ section = st.radio(
 corpus = load_corpus()
 vocab = load_vocabulary()
 available = released_papers(current, team["cluster"])
-papers = [p for p in corpus if p["participant_id"] in available]
-byid = {p["participant_id"]: p for p in corpus}
-labels = {p["participant_id"]: f"{p['participant_id']} — {p['title']}" for p in corpus}
+cluster_content_rows = [r for r in _content() if r.get("cluster", "").strip() == team["cluster"]]
+content_map = {r["paper_id"]: r for r in cluster_content_rows}
+
+byid = {p["participant_id"]: dict(p) for p in corpus}
+for pid, r in content_map.items():
+    if pid in byid and team["cluster"] != CLUSTER:
+        byid[pid]["title"] = r.get("paper_title") or byid[pid]["title"]
+        byid[pid]["challenge_card_path"] = r.get("challenge_card_path")
+        byid[pid]["citation"] = f"{pid} · {r.get('paper_title', '')}"
+        byid[pid]["abstract"] = f"Research excerpt on {r.get('paper_title', '')}."
+    elif pid not in byid:
+        byid[pid] = {
+            "participant_id": pid,
+            "title": r.get("paper_title", pid),
+            "citation": f"{pid} · {r.get('paper_title', '')}",
+            "abstract": f"Research excerpt on {r.get('paper_title', '')}.",
+            "challenge_card_path": r.get("challenge_card_path"),
+        }
+
+papers = [byid[pid] for pid in available if pid in byid]
+labels = {pid: f"{pid} — {byid[pid]['title']}" for pid in byid}
 spec = next(x for x in team_levels if x["id"] == current)
 key = f"{team['team_id']}:{current}"
 
@@ -197,8 +216,14 @@ elif section == "Papers":
                 url = p.get("open_access_url") or p.get("doi_url")
                 if url:
                     st.markdown(f"[Open paper link]({url})")
-                card = card_pdf_path(p["participant_id"])
-                if card.exists():
+                card_path_val = p.get("challenge_card_path")
+                card = Path(card_path_val) if card_path_val else None
+                if not card or not card.exists():
+                    try:
+                        card = card_pdf_path(p["participant_id"])
+                    except Exception:
+                        card = None
+                if card and card.exists():
                     st.download_button(
                         "Download challenge card PDF",
                         card.read_bytes(),
@@ -394,15 +419,22 @@ elif section == "Submit":
         st.warning("Your cumulative graph is empty. Add at least one edge in the Knowledge Graph tab before submitting.")
         st.stop()
 
-    parsed, result = score_csv(draft, allow_any_pair=True)
+    if team["cluster"] == CLUSTER:
+        parsed, result = score_csv(draft, allow_any_pair=True)
+    else:
+        allowed_rels = [r["name"] for r in vocab.get("relationship_types", [])]
+        valid_rows, errs = parse_uploaded_graph_csv(draft, available, allowed_rels)
+        parsed = type("ParsedSubmissionCompat", (), {"errors": errs, "edges": valid_rows, "evidence": {}})()
+        result = None
+
     if parsed.errors:
         st.error("Please fix these graph validation errors in the Knowledge Graph tab before submitting:\n" + "\n".join(parsed.errors))
         st.stop()
 
     st.write(f"**Edges to submit:** {len(parsed.edges)}")
     df_preview = pd.read_csv(io.StringIO(draft), dtype=str, keep_default_na=False)
-    df_preview["Source paper"] = df_preview.source_id.map(labels)
-    df_preview["Target paper"] = df_preview.target_id.map(labels)
+    df_preview["Source paper"] = df_preview.source_id.map(labels).fillna(df_preview.source_id)
+    df_preview["Target paper"] = df_preview.target_id.map(labels).fillna(df_preview.target_id)
     st.dataframe(df_preview[["Source paper", "relationship_type", "Target paper", "evidence_reference"]], hide_index=True, use_container_width=True)
 
     st.divider()
@@ -437,16 +469,24 @@ elif section == "Submit":
             st.error("Please provide an explanation in Section 3 before submitting.")
             st.stop()
 
-        metrics = result.organiser_view()["public"]
-        # Per specification: 15 graph points per level based on weighted F1
-        graph_points = round(metrics["weighted_f1"] * 15.0, 2)
-        score_dict = {
-            "weighted_f1": metrics["weighted_f1"],
-            "weighted_precision": metrics["weighted_precision"],
-            "recall": metrics["recall"],
-            "points": graph_points,
-            "edges": len(parsed.edges),
-        }
+        if result:
+            metrics = result.organiser_view()["public"]
+            graph_points = round(metrics["weighted_f1"] * 15.0, 2)
+            score_dict = {
+                "weighted_f1": metrics["weighted_f1"],
+                "weighted_precision": metrics["weighted_precision"],
+                "recall": metrics["recall"],
+                "points": graph_points,
+                "edges": len(parsed.edges),
+            }
+        else:
+            score_dict = {
+                "weighted_f1": 0.0,
+                "weighted_precision": 0.0,
+                "recall": 0.0,
+                "points": 0.0,
+                "edges": len(parsed.edges),
+            }
 
         try:
             finalise(

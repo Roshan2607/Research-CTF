@@ -225,3 +225,59 @@ def test_level_0_demo_workflow(tmp_path, monkeypatch):
     assert core.check_demo_flag("FLAG{TRIE}") is True
     assert core.check_demo_flag("trie") is True
     assert core.check_demo_flag("FLAG{WRONG}") is False
+
+
+def test_four_competition_clusters_are_configured_and_playable(tmp_path, monkeypatch):
+    monkeypatch.setattr(core, "STATE", tmp_path / "event_state.json")
+    monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
+
+    all_clusters = core.clusters()
+    expected_prefixes = [
+        "Cluster 1: Insect Behaviour",
+        "Cluster 2: Genomics",
+        "Cluster 3: Mechanical Vibrations",
+        "Cluster 4: Thermal Networks",
+    ]
+    for prefix in expected_prefixes:
+        assert any(c.startswith(prefix) for c in all_clusters), f"Missing cluster {prefix}"
+
+    # Test full 4-level team journey in Cluster 1
+    c1 = next(c for c in all_clusters if c.startswith("Cluster 1:"))
+    core.create_team("TEAM_C1", "Swarm Team", "StrongPass123", cluster=c1)
+    team = core.authenticate("TEAM_C1", "StrongPass123")
+    assert team["cluster"] == c1
+
+    levels = core.levels_for_cluster(c1)
+    assert len(levels) == 4
+
+    for lvl in levels:
+        lid = lvl["id"]
+        # Verify papers released
+        released = core.released_papers(lid, c1)
+        assert len(released) == lid * 2
+        # Verify challenge card files exist on disk
+        rows = [r for r in core._content() if r.get("cluster", "").strip() == c1 and int(r.get("level", 0)) == lid]
+        for r in rows:
+            card_path = core.ROOT / r["challenge_card_path"]
+            assert card_path.exists(), f"Card not found at {card_path}"
+
+        # Attempt flag
+        correct_answer = lvl["answers"][0]
+        att = core.attempt_flag("TEAM_C1", lid, correct_answer)
+        assert att["correct"] is True
+
+        # Finalise level
+        core.finalise(
+            team="TEAM_C1",
+            level=lid,
+            csv_text="source_id,target_id,relationship_type,evidence_reference\n",
+            flag_correct=True,
+            graph_score={"points": 15.0},
+            submitted_flag=correct_answer,
+            explanation=f"Explanation for Level {lid}",
+        )
+
+    progress = core.team_progress("TEAM_C1")
+    assert progress[0] == [1, 2, 3, 4]
+    assert progress[1] is None
+

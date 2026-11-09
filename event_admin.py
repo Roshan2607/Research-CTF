@@ -86,6 +86,10 @@ if st.sidebar.button("Sign out"):
 
 corpus = load_corpus()
 labels = {p["participant_id"]: f"{p['participant_id']} — {p['title']}" for p in corpus}
+from event_core import _content
+for r in _content():
+    if r.get("paper_id") and r.get("paper_title"):
+        labels[r["paper_id"]] = f"{r['paper_id']} — {r['paper_title']}"
 tabs = st.tabs([
     "Official Leaderboard & Dashboard",
     "Register Teams",
@@ -240,8 +244,8 @@ def submissions_view():
             st.markdown("#### Submitted Cumulative Graph")
             try:
                 df = pd.read_csv(io.StringIO(rec["csv"]), dtype=str, keep_default_na=False)
-                df["Source paper"] = df.source_id.map(labels)
-                df["Target paper"] = df.target_id.map(labels)
+                df["Source paper"] = df.source_id.map(labels).fillna(df.source_id)
+                df["Target paper"] = df.target_id.map(labels).fillna(df.target_id)
                 st.dataframe(df[["Source paper", "relationship_type", "Target paper", "evidence_reference"]], hide_index=True, use_container_width=True)
 
                 dot = [
