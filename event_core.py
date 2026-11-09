@@ -77,7 +77,7 @@ def validate_config(cfg: dict[str, Any]) -> list[str]:
                 def_cluster = str(cfg.get("default_cluster", CLUSTER)).strip()
                 with CONTENT.open(encoding="utf-8-sig", newline="") as f:
                     rows = list(csv.DictReader(f))
-                c_levels = sorted({int(r["level"]) for r in rows if r.get("cluster", "").strip() == def_cluster and r.get("level", "").isdigit()})
+                c_levels = sorted({int(r["level"]) for r in rows if r.get("cluster", "").strip() == def_cluster and r.get("level", "").isdigit() and int(r["level"]) > 0})
                 if c_levels and cfg["num_levels"] != len(c_levels):
                     errs.append(
                         f"Configured num_levels ({cfg['num_levels']}) does not match authoritative level count "
@@ -547,7 +547,9 @@ def revoke_admin_session(token: str) -> None:
 
 
 def released_papers(level: int, cluster: str = CLUSTER) -> list[str]:
-    return [p for l in levels_for_cluster(cluster) if l["id"] <= level for p in l["paper_ids"]]
+    if level == 0:
+        return [p for l in levels_for_cluster(cluster) if l["id"] == 0 for p in l["paper_ids"]]
+    return [p for l in levels_for_cluster(cluster) if 1 <= l["id"] <= level for p in l["paper_ids"]]
 
 
 # ---------------------------------------------------------------------- Knowledge Graph Persistence
@@ -596,8 +598,8 @@ def save_team_graph(team_id: str, graph: TeamKnowledgeGraph) -> None:
                     raise PermissionError(f"Historical snapshot for level {lvl_int} cannot be modified.")
 
             # Reject unauthorized modification, deletion, or reassignment of edges belonging to locked levels
-            if completed:
-                locked_levels = set(completed)
+            locked_levels = {lvl for lvl in completed if lvl >= 1}
+            if locked_levels:
                 active_edge_keys = {
                     (
                         e.source_id.strip().upper(),
@@ -736,8 +738,10 @@ def attempt_flag(team: str, level: int, answer: str) -> dict:
             completed, current = team_progress(tid)
             if level in completed or key in d.get("submissions", {}):
                 return {"correct": False, "message": "This level is already locked.", "cooldown_remaining": 0}
-            if current is None or level != current:
-                return {"correct": False, "message": f"Level {level} is locked. You must complete Level {current} first.", "cooldown_remaining": 0}
+            if current is None:
+                return {"correct": False, "message": "All levels have already been completed.", "cooldown_remaining": 0}
+            if level != current:
+                return {"correct": False, "message": f"Cannot attempt flags for Level {level}; your active level is Level {current}.", "cooldown_remaining": 0}
 
             spec = next((x for x in specs if x["id"] == level), None)
             clean_ans = str(answer or "").strip()
@@ -828,7 +832,7 @@ def finalise(
             if level in completed or key in d.get("submissions", {}):
                 raise PermissionError("This level has already been submitted and locked.")
             if current is None or level != current:
-                raise PermissionError(f"Cannot finalize Level {level}. You must complete Level {current} first.")
+                raise PermissionError(f"Cannot submit level {level}; you must complete Level {current} first. Your active level is Level {current}.")
 
             # Validate graph CSV
             allowed = released_papers(level, cluster)
@@ -838,6 +842,47 @@ def finalise(
 
             if not clean_rows:
                 raise ValueError("A final submission must contain a cumulative knowledge graph with at least one relationship edge.")
+
+            # Validate retention of prior locked edges from earlier levels
+            comp_completed = [l for l in completed if l >= 1]
+            if comp_completed and level > 1:
+                import io, pandas as pd
+                try:
+                    curr_df = pd.read_csv(io.StringIO(clean_csv), dtype=str).fillna("")
+                    req_cols = {"source_id", "target_id", "relationship_type"}
+                    if not req_cols.issubset(curr_df.columns):
+                        raise ValueError("Prior locked edges from earlier levels cannot be deleted or altered.")
+                    curr_edges = {
+                        (r["source_id"].strip().upper(), r["target_id"].strip().upper(), r["relationship_type"].strip().upper().replace(" ", "_"))
+                        for _, r in curr_df.iterrows()
+                        if r["source_id"].strip() and r["target_id"].strip()
+                    }
+                    for prev_lvl in comp_completed:
+                        prev_snap = get_graph_snapshot(tid, prev_lvl)
+                        prev_sub = d.get("submissions", {}).get(f"{tid}:{prev_lvl}")
+                        prev_edges = set()
+                        if prev_snap and prev_snap.get("edges"):
+                            for se in prev_snap["edges"]:
+                                s = str(se.get("source_id", "")).strip().upper()
+                                t = str(se.get("target_id", "")).strip().upper()
+                                rel = str(se.get("relationship_type", "")).strip().upper().replace(" ", "_")
+                                if s and t:
+                                    prev_edges.add((s, t, rel))
+                        elif prev_sub and prev_sub.get("csv"):
+                            prev_df = pd.read_csv(io.StringIO(prev_sub["csv"]), dtype=str).fillna("")
+                            if req_cols.issubset(prev_df.columns):
+                                for _, r in prev_df.iterrows():
+                                    s = str(r["source_id"]).strip().upper()
+                                    t = str(r["target_id"]).strip().upper()
+                                    rel = str(r["relationship_type"]).strip().upper().replace(" ", "_")
+                                    if s and t:
+                                        prev_edges.add((s, t, rel))
+                        if prev_edges and not prev_edges.issubset(curr_edges):
+                            raise ValueError("Prior locked edges from earlier levels cannot be deleted or altered.")
+                except ValueError:
+                    raise
+                except Exception:
+                    pass
 
             attempts = d.get("attempts", {}).get(key, [])
             if not attempts:
@@ -858,7 +903,7 @@ def finalise(
 
             # Snapshot team knowledge graph at this level
             g = get_team_graph(tid)
-            g.set_edges_from_list(clean_rows, current_level=level, locked_levels=completed)
+            g.set_edges_from_list(clean_rows, current_level=level, locked_levels=comp_completed)
             g.snapshot_level(level=level, submitted_at=sub_time, csv_text=clean_csv)
             d.setdefault("graphs", {})[tid] = g.to_dict()
 
@@ -975,6 +1020,16 @@ def ensure_demo_team(team_id: str | None = None, name: str | None = None, passwo
                 "created_at": now(),
             }
             d.setdefault("graphs", {})[tid] = TeamKnowledgeGraph(tid).to_dict()
+            # Clear any previous submissions, attempts and drafts when resetting demo team
+            for k in list(d.get("submissions", {}).keys()):
+                if k.startswith(f"{tid}:"):
+                    del d["submissions"][k]
+            for k in list(d.get("attempts", {}).keys()):
+                if k.startswith(f"{tid}:"):
+                    del d["attempts"][k]
+            for k in list(d.get("drafts", {}).keys()):
+                if k.startswith(f"{tid}:"):
+                    del d["drafts"][k]
             save(d)
             log_event({"at": now(), "event": "demo_team_initialized", "team_id": tid})
             return tid
@@ -1023,6 +1078,9 @@ def parse_uploaded_graph_csv(
     if "evidence_reference" not in raw_df.columns:
         raw_df["evidence_reference"] = ""
 
+    if len(raw_df) > 300:
+        return [], [f"Too many rows ({len(raw_df)}). The limit is 300 rows."]
+
     clean_rows = []
     allowed_set = {r.strip().upper() for r in allowed_relations}
     available_set = {p.strip().upper() for p in available_papers}
@@ -1047,4 +1105,12 @@ def parse_uploaded_graph_csv(
             continue
         clean_rows.append({"source_id": s, "target_id": t, "relationship_type": rel, "evidence_reference": ev})
 
-    return clean_rows, errors
+    seen = set()
+    deduped = []
+    for r in clean_rows:
+        pair_key = (r["source_id"], r["target_id"], r["relationship_type"])
+        if pair_key not in seen:
+            seen.add(pair_key)
+            deduped.append(r)
+
+    return deduped, errors

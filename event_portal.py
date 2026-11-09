@@ -34,6 +34,7 @@ from challenge.participant_data import card_pdf_path, load_corpus, load_vocabula
 from event_core import (
     CLUSTER,
     LEVELS,
+    _content,
     attempt_flag,
     authenticate,
     authenticate_session,
@@ -53,6 +54,20 @@ from scoring.graph_scorer import score_csv
 
 st.set_page_config(page_title="Proof of Thought · Participant", page_icon="🧭", layout="wide")
 st.title("🧭 Proof of Thought")
+
+st.markdown("""
+<style>
+[data-testid="stMetricValue"] {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+}
+[data-testid="stMetricDelta"] {
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 cookie_manager = stx.CookieManager(key="ul_participant_cookie")
 cookies = cookie_manager.get_all()
@@ -144,9 +159,27 @@ section = st.radio(
 corpus = load_corpus()
 vocab = load_vocabulary()
 available = released_papers(current, team["cluster"])
-papers = [p for p in corpus if p["participant_id"] in available]
-byid = {p["participant_id"]: p for p in corpus}
-labels = {p["participant_id"]: f"{p['participant_id']} — {p['title']}" for p in corpus}
+cluster_content_rows = [r for r in _content() if r.get("cluster", "").strip() == team["cluster"]]
+content_map = {r["paper_id"]: r for r in cluster_content_rows}
+
+byid = {p["participant_id"]: dict(p) for p in corpus}
+for pid, r in content_map.items():
+    if pid in byid and team["cluster"] != CLUSTER:
+        byid[pid]["title"] = r.get("paper_title") or byid[pid]["title"]
+        byid[pid]["challenge_card_path"] = r.get("challenge_card_path")
+        byid[pid]["citation"] = f"{pid} · {r.get('paper_title', '')}"
+        byid[pid]["abstract"] = f"Research excerpt on {r.get('paper_title', '')}."
+    elif pid not in byid:
+        byid[pid] = {
+            "participant_id": pid,
+            "title": r.get("paper_title", pid),
+            "citation": f"{pid} · {r.get('paper_title', '')}",
+            "abstract": f"Research excerpt on {r.get('paper_title', '')}.",
+            "challenge_card_path": r.get("challenge_card_path"),
+        }
+
+papers = [byid[pid] for pid in available if pid in byid]
+labels = {pid: f"{pid} — {byid[pid]['title']}" for pid in byid}
 spec = next(x for x in team_levels if x["id"] == current)
 key = f"{team['team_id']}:{current}"
 
@@ -155,10 +188,15 @@ key = f"{team['team_id']}:{current}"
 # ==============================================================================
 if section == "Start":
     st.header("How the Challenge Works")
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Current Level", f"Level {current}: {spec['title']}")
-    col2.metric("Papers Available", f"{len(available)} of {sum(len(x['paper_ids']) for x in team_levels)}")
-    col3.metric("Level Points", "15 Graph + 10 Flag = 25 pts")
+    col1, col2, col3 = st.columns([1.6, 1.0, 1.2])
+    lvl_label = "Level 0 (Demo)" if current == 0 else f"Level {current}"
+    col1.metric("Current Level", lvl_label, delta=spec["title"], delta_color="off")
+    tot_papers = 2 if current == 0 else sum(len(x['paper_ids']) for x in team_levels if x['id'] >= 1)
+    col2.metric("Papers Available", f"{len(available)} of {tot_papers}")
+    if current == 0:
+        col3.metric("Level Type", "Onboarding Demo", delta="Practice · FLAG{TRIE}", delta_color="off")
+    else:
+        col3.metric("Level Points", "25 pts max", delta="15 Graph + 10 Flag", delta_color="off")
 
     st.markdown("""
 ### Guidelines
@@ -174,7 +212,16 @@ if section == "Start":
     """)
 
     with st.expander("Accepted Relationship Types (Vocabulary)", expanded=True):
-        st.dataframe(pd.DataFrame(vocab["relationship_types"]), hide_index=True, use_container_width=True)
+        vocab_df = pd.DataFrame(vocab["relationship_types"])
+        cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
+        clean_vocab_df = vocab_df[cols].rename(
+            columns={
+                "relationship_type": "Relationship Type",
+                "meaning": "Meaning",
+                "example": "Example",
+            }
+        )
+        st.dataframe(clean_vocab_df, hide_index=True, use_container_width=True)
 
 # ==============================================================================
 # TAB 2: PAPERS
@@ -197,8 +244,14 @@ elif section == "Papers":
                 url = p.get("open_access_url") or p.get("doi_url")
                 if url:
                     st.markdown(f"[Open paper link]({url})")
-                card = card_pdf_path(p["participant_id"])
-                if card.exists():
+                card_path_val = p.get("challenge_card_path")
+                card = Path(card_path_val) if card_path_val else None
+                if not card or not card.exists():
+                    try:
+                        card = card_pdf_path(p["participant_id"])
+                    except Exception:
+                        card = None
+                if card and card.exists():
                     st.download_button(
                         "Download challenge card PDF",
                         card.read_bytes(),
@@ -210,6 +263,17 @@ elif section == "Papers":
     st.divider()
     st.subheader("Level Guidance & Instructions")
     st.markdown(f"**Level {current} Objective:** {spec['question']}")
+
+    with st.expander("General Reading Prompts (Guide for any paper)", expanded=True):
+        st.markdown("""
+1. **Problem**: What problem does the paper try to solve? Summarize in one sentence.
+2. **Hidden vs Observed**: What is hidden or unknown, and what is directly measured?
+3. **Methods**: What method or abstraction do the authors introduce?
+4. **Evidence**: What evidence is provided (proofs, simulations, empirical data)?
+5. **Assumptions & Limitations**: What assumptions constrain this work?
+6. **Cross-Domain Analogies**: Which other papers share this principle or mathematical structure?
+        """)
+
     with st.expander("Optional Hints"):
         if spec["hints"]:
             for i, h in enumerate(spec["hints"], 1):
@@ -244,20 +308,17 @@ elif section == "Knowledge Graph":
     # Edge creation form
     with st.form(f"add_edge_{current}", clear_on_submit=True):
         st.markdown("**Add a Relationship**")
-        c1, c2 = st.columns(2)
+        c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
         src = c1.selectbox("Source paper", available, format_func=lambda x: labels[x])
         dst = c2.selectbox("Target paper", available, format_func=lambda x: labels[x])
-        rel = st.selectbox("Relationship type", rels)
-        evidence = st.text_input("Evidence reference (page, section or quote)", placeholder="e.g. P02, page 4, Section 3")
+        rel = c3.selectbox("Relationship type", rels)
         add = st.form_submit_button("Add edge", type="primary")
 
     if add:
         if src == dst:
             st.error("A paper cannot be connected to itself.")
-        elif not evidence.strip():
-            st.error("Add an evidence reference.")
         else:
-            new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": evidence.strip()}])
+            new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": ""}])
             st.session_state[statekey] = pd.concat([df, new_row], ignore_index=True)
             save_draft(team["team_id"], current, st.session_state[statekey].to_csv(index=False))
             st.rerun()
@@ -282,7 +343,7 @@ elif section == "Knowledge Graph":
 
     df = st.session_state[statekey].copy()
     if not locked.empty:
-        locked_keys = set(tuple(x) for x in locked[["source_id", "target_id", "relationship_type", "evidence_reference"]].fillna("").values.tolist())
+        locked_keys = set(tuple(x) for x in locked[["source_id", "target_id", "relationship_type"]].fillna("").values.tolist())
     else:
         locked_keys = set()
 
@@ -291,12 +352,12 @@ elif section == "Knowledge Graph":
     display["Source paper"] = display["source_id"].map(labels)
     display["Target paper"] = display["target_id"].map(labels)
     display["Locked"] = display.apply(
-        lambda r: tuple(r[["source_id", "target_id", "relationship_type", "evidence_reference"]].fillna("").tolist()) in locked_keys,
+        lambda r: tuple(r[["source_id", "target_id", "relationship_type"]].fillna("").tolist()) in locked_keys,
         axis=1,
     )
-    st.dataframe(display[["Source paper", "relationship_type", "Target paper", "evidence_reference", "Locked"]], hide_index=True, use_container_width=True)
+    st.dataframe(display[["Source paper", "relationship_type", "Target paper", "Locked"]], hide_index=True, use_container_width=True)
 
-    deletable = [i for i, r in df.iterrows() if tuple(r[["source_id", "target_id", "relationship_type", "evidence_reference"]].fillna("").tolist()) not in locked_keys]
+    deletable = [i for i, r in df.iterrows() if tuple(r[["source_id", "target_id", "relationship_type"]].fillna("").tolist()) not in locked_keys]
     if deletable:
         chosen = st.selectbox(
             "Select a current-level edge to delete",
@@ -316,18 +377,27 @@ elif section == "Knowledge Graph":
             'digraph G { graph [rankdir=LR, bgcolor="#ffffff", pad="0.25"]; node [shape=box, style="rounded,filled", fillcolor="#EAF2FF", color="#315A8A", fontcolor="#142B45", fontname="Arial", fontsize=10, penwidth=1.5]; edge [color="#2563EB", fontcolor="#173F7A", fontname="Arial", fontsize=9, penwidth=2, arrowsize=0.8];'
         ]
         for pid in available:
-            dot.append(f'"{pid}" [label="{pid}\\n{html.escape(byid[pid]["title"][:52])}"];')
+            clean_title = re.sub(r'["\\]', '', str(byid[pid]["title"][:50]))
+            dot.append(f'"{pid}" [label="{pid}\\n{clean_title}"];')
         for _, r in df.iterrows():
-            typ = r["relationship_type"]
-            style = "dir=none" if typ in ("SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM") else "dir=forward"
-            dot.append(f'"{r["source_id"]}" -> "{r["target_id"]}" [label="{typ}", {style}];')
+            clean_s = re.sub(r'[^A-Za-z0-9_]', '', str(r["source_id"]))
+            clean_t = re.sub(r'[^A-Za-z0-9_]', '', str(r["target_id"]))
+            clean_rel = re.sub(r'[^A-Za-z0-9_]', '', str(r["relationship_type"]))
+            style = "dir=none" if clean_rel in ("SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM") else "dir=forward"
+            if clean_s and clean_t:
+                dot.append(f'"{clean_s}" -> "{clean_t}" [label="{clean_rel}", {style}];')
         dot.append("}")
         st.graphviz_chart("\n".join(dot), use_container_width=True)
     else:
         st.info("Add the first relationship to see the graph diagram.")
 
     csv_text = df.to_csv(index=False)
-    parsed, _ = score_csv(csv_text, allow_any_pair=True)
+    if team["cluster"] == CLUSTER and current > 0:
+        parsed, _ = score_csv(csv_text, allow_any_pair=True)
+    else:
+        allowed_rels = [r.get("relationship_type") or r.get("name") for r in vocab.get("relationship_types", [])]
+        valid_rows, errs = parse_uploaded_graph_csv(csv_text, available, allowed_rels)
+        parsed = type("ParsedSubmissionCompat", (), {"errors": errs, "edges": valid_rows, "evidence": {}})()
     if parsed.errors:
         st.error("Graph validation issues:\n" + "\n".join(parsed.errors))
     else:
@@ -343,110 +413,112 @@ elif section == "Knowledge Graph":
 # TAB 4: SUBMIT
 # ==============================================================================
 elif section == "Submit":
-    st.header(f"Submit & Lock Level {current}")
+    st.header(f"Submit Level {current}")
     d = load()
     rec = d["submissions"].get(key)
     if rec:
-        st.success("This level has already been submitted and locked.")
-        st.write(f"**Submitted at:** {rec.get('submitted_at')}")
-        st.write(f"**Submitted flag:** {rec.get('submitted_flag')}")
-        st.write(f"**Flag score:** {rec.get('flag_points', 0)} / 10 pts")
-        st.write(f"**Graph score:** {rec.get('graph_score', {}).get('points', 0)} / 15 pts")
+        st.success(f"Level {current} is locked and submitted.")
+        st.write(f"**Submitted flag:** {rec.get('submitted_flag')} ({rec.get('flag_points', 0)}/10 pts)")
+        st.write(f"**Graph score:** {rec.get('graph_score', {}).get('points', 0)}/15 pts ({rec.get('edge_count', 0)} edges)")
         if rec.get("manual_adjustment"):
             st.write(f"**Organiser adjustment:** {rec.get('manual_adjustment')} pts ({rec.get('organiser_notes', '')})")
         st.write(f"**Explanation:** {rec.get('explanation')}")
         st.stop()
 
     # --- 1. Flag Section ---
-    st.subheader(f"1. Flag Check · Level {current}")
+    st.subheader(f"1. Flag Check")
     st.write(spec["question"])
     fs = flag_status(team["team_id"], current)
 
     if fs["cooldown_remaining"] > 0:
-        st.warning(f"⏳ Cooldown active: please wait {fs['cooldown_remaining']}s before checking another flag.")
+        st.warning(f"⏳ Cooldown active: wait {fs['cooldown_remaining']}s")
     elif fs["correct"]:
-        st.success(f"✅ Correct flag solved! ({fs['flag_points']}/10 flag points earned)")
+        st.success(f"✅ Correct ({fs['flag_points']}/10 pts)")
     elif fs["last"]:
-        st.error(f"❌ Most recent flag was incorrect. (Total attempts: {fs['attempts']}; {fs['wrong_attempts']} wrong)")
+        st.error(f"❌ Incorrect")
 
     with st.form(f"flag_{current}"):
-        answer = st.text_input("Enter flag answer", placeholder="Type your answer here")
-        check = st.form_submit_button("Check flag", disabled=bool(fs["cooldown_remaining"] > 0))
+        col_inp, col_btn = st.columns([4, 1])
+        answer = col_inp.text_input("Flag answer", placeholder="Type your answer here", label_visibility="collapsed")
+        check = col_btn.form_submit_button("Check flag", use_container_width=True, disabled=bool(fs["cooldown_remaining"] > 0))
 
     if check:
-        result = attempt_flag(team["team_id"], current, answer)
-        if result["correct"]:
-            st.success(result["message"])
-        else:
-            st.error(result["message"])
-        st.rerun()
+        if answer.strip():
+            result = attempt_flag(team["team_id"], current, answer)
+            if result["correct"]:
+                st.success(result["message"])
+            else:
+                st.error(result["message"])
+            st.rerun()
 
-    st.caption(
-        f"Attempts logged: {fs['attempts']} (First 5 wrong attempts are free; 6th onwards costs 1 pt. 30s cooldown applies after wrong attempts)."
-    )
+    st.caption(f"Attempts: {fs['attempts']}")
 
     st.divider()
 
-    # --- 2. Graph Verification ---
-    st.subheader("2. Cumulative Graph Verification")
+    # --- 2. Graph & Evidence ---
+    st.subheader("2. Cumulative Graph & Evidence")
     draft = get_draft(team["team_id"], current)
-    if not draft.strip():
-        st.warning("Your cumulative graph is empty. Add at least one edge in the Knowledge Graph tab before submitting.")
-        st.stop()
 
-    parsed, result = score_csv(draft, allow_any_pair=True)
-    if parsed.errors:
-        st.error("Please fix these graph validation errors in the Knowledge Graph tab before submitting:\n" + "\n".join(parsed.errors))
-        st.stop()
+    if team["cluster"] == CLUSTER and current > 0:
+        parsed, result = score_csv(draft, allow_any_pair=True)
+    else:
+        allowed_rels = [r.get("relationship_type") or r.get("name") for r in vocab.get("relationship_types", [])]
+        valid_rows, errs = parse_uploaded_graph_csv(draft, available, allowed_rels)
+        parsed = type("ParsedSubmissionCompat", (), {"errors": errs, "edges": valid_rows, "evidence": {}})()
+        result = None
 
-    st.write(f"**Edges to submit:** {len(parsed.edges)}")
-    df_preview = pd.read_csv(io.StringIO(draft), dtype=str, keep_default_na=False)
-    df_preview["Source paper"] = df_preview.source_id.map(labels)
-    df_preview["Target paper"] = df_preview.target_id.map(labels)
-    st.dataframe(df_preview[["Source paper", "relationship_type", "Target paper", "evidence_reference"]], hide_index=True, use_container_width=True)
+    if not draft.strip() or len(parsed.edges) == 0:
+        st.warning("Cumulative graph is empty. Add at least one edge in the Knowledge Graph tab before submitting.")
+    elif parsed.errors:
+        st.error("Graph validation issues:\n" + "\n".join(parsed.errors))
+    else:
+        with st.expander(f"Review Cumulative Graph ({len(parsed.edges)} edges)", expanded=False):
+            df_preview = pd.read_csv(io.StringIO(draft), dtype=str, keep_default_na=False)
+            df_preview["Source paper"] = df_preview.source_id.map(labels).fillna(df_preview.source_id)
+            df_preview["Target paper"] = df_preview.target_id.map(labels).fillna(df_preview.target_id)
+            st.dataframe(df_preview[["Source paper", "relationship_type", "Target paper"]], hide_index=True, use_container_width=True)
 
-    st.divider()
-
-    # --- 3. Explanation Form ---
-    st.subheader("3. Graph Explanation & Reasoning")
-    st.caption("Explain the core connections discovered, your reasoning, and key paper evidence (required for organiser review).")
     explanation_key = f"expl_input_{team['team_id']}_{current}"
     explanation = st.text_area(
-        "Explanation text",
+        "Evidence & Reasoning",
         value=st.session_state.get(explanation_key, ""),
-        placeholder="Describe how the papers connect across domains, the evidence supporting these edges, and any limitations observed...",
+        placeholder="Cite the key evidence (page, section, quotes) and explain your cross-paper reasoning for your graph connections and flag...",
         key=explanation_key,
+        height=120,
     )
 
     st.divider()
 
-    # --- 4. Final Confirmation & Lock ---
-    st.subheader("4. Review & Finalize")
-    if fs["attempts"] == 0:
-        st.warning("⚠️ You must submit at least one flag attempt in Section 1 before you can finalize this level.")
-        st.stop()
+    # --- 3. Final Submit Button ---
+    can_submit = bool(draft.strip() and len(parsed.edges) > 0 and not parsed.errors and fs["attempts"] > 0)
+    if not can_submit:
+        if fs["attempts"] == 0:
+            st.caption("ℹ️ Submit at least one flag attempt above to enable level locking.")
 
-    flag_submitted = fs["last"]["answer"] if fs["last"] else ""
-    st.write(f"**Flag status:** {'✅ Solved' if fs['correct'] else '❌ Not solved'} (Points: {fs['flag_points']}/10)")
-    st.write(f"**Cumulative graph edges:** {len(parsed.edges)}")
-
-    confirm = st.checkbox("We have reviewed our cumulative graph, flag, and explanation and wish to lock this level.", key=f"confirm_{team['team_id']}_{current}")
-
-    if st.button("Submit and unlock next level", type="primary", disabled=not confirm):
+    if st.button(f"Lock & Submit Level {current}", type="primary", disabled=not can_submit):
         if not explanation.strip():
-            st.error("Please provide an explanation in Section 3 before submitting.")
+            st.error("Please provide an explanation before submitting.")
             st.stop()
 
-        metrics = result.organiser_view()["public"]
-        # Per specification: 15 graph points per level based on weighted F1
-        graph_points = round(metrics["weighted_f1"] * 15.0, 2)
-        score_dict = {
-            "weighted_f1": metrics["weighted_f1"],
-            "weighted_precision": metrics["weighted_precision"],
-            "recall": metrics["recall"],
-            "points": graph_points,
-            "edges": len(parsed.edges),
-        }
+        if result:
+            metrics = result.organiser_view()["public"]
+            graph_points = round(metrics["weighted_f1"] * 15.0, 2)
+            score_dict = {
+                "weighted_f1": metrics["weighted_f1"],
+                "weighted_precision": metrics["weighted_precision"],
+                "recall": metrics["recall"],
+                "points": graph_points,
+                "edges": len(parsed.edges),
+            }
+        else:
+            graph_points = 15.0 if (current == 0 and len(parsed.edges) > 0) else 0.0
+            score_dict = {
+                "weighted_f1": 0.0,
+                "weighted_precision": 0.0,
+                "recall": 0.0,
+                "points": graph_points,
+                "edges": len(parsed.edges),
+            }
 
         try:
             finalise(
@@ -455,7 +527,7 @@ elif section == "Submit":
                 csv_text=draft,
                 flag_correct=fs["correct"],
                 graph_score=score_dict,
-                submitted_flag=flag_submitted,
+                submitted_flag=fs["last"]["answer"] if fs["last"] else "",
                 explanation=explanation.strip(),
             )
             st.session_state.pop(f'graph_df_{team["team_id"]}_{current}', None)

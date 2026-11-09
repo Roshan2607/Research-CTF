@@ -74,45 +74,39 @@ def render_card(card: dict, out_path: Path, branding: str, injection_text: str |
     st = _styles()
     doc = SimpleDocTemplate(
         str(out_path), pagesize=A4, leftMargin=20 * mm, rightMargin=20 * mm, topMargin=16 * mm, bottomMargin=16 * mm,
-        title=f"Uncharted Literature challenge card {card['participant_id']}", author="Workshop organisers",
-        subject="Workshop wrapper - not the original publication",
+        title=f"Proof of Thought challenge card {card['participant_id']}", author="Proof of Thought Organisers",
+        subject="Challenge card excerpt",
         invariant=1,  # reproducible output: no timestamps / random IDs, so rebuilds do not churn
     )
-    access = card.get("open_access_url") or card["doi_url"]
-    meta = Table(
-        [
-            [Paragraph("<b>Authors</b>", st["meta"]), Paragraph(escape(", ".join(card["authors"])), st["meta"])],
-            [Paragraph("<b>Published</b>", st["meta"]), Paragraph(escape(f"{card['venue']} ({card['year']})" + (
-                f" - an earlier version was first made public in {card['first_public_year']}"
-                if card.get("first_public_year") and card["first_public_year"] != card["year"] else "")), st["meta"])],
-            [Paragraph("<b>DOI</b>", st["meta"]), Paragraph(escape(card["doi_url"]), st["meta"])],
-            [Paragraph("<b>Read it</b>", st["meta"]), Paragraph(escape(f"{access}  -  {card['access']}"), st["meta"])],
-            [Paragraph("<b>Domain</b>", st["meta"]), Paragraph(escape(card["domain"]), st["meta"])],
-        ],
-        colWidths=[24 * mm, 146 * mm],
-    )
+    access_url = card.get("open_access_url") or card.get("doi_url", "")
+    meta_rows = [
+        [Paragraph("<b>Authors</b>", st["meta"]), Paragraph(escape(", ".join(card["authors"])), st["meta"])],
+        [Paragraph("<b>Published</b>", st["meta"]), Paragraph(escape(f"{card['venue']} ({card['year']})"), st["meta"])],
+    ]
+    if access_url:
+        meta_rows.append([Paragraph("<b>Paper Link</b>", st["meta"]), Paragraph(escape(access_url), st["meta"])])
+    if card.get("domain"):
+        meta_rows.append([Paragraph("<b>Domain</b>", st["meta"]), Paragraph(escape(card["domain"]), st["meta"])])
+
+    meta = Table(meta_rows, colWidths=[24 * mm, 146 * mm])
     meta.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
+
     story = [
-        Paragraph(escape(f"Uncharted Literature  |  {branding}  |  Knowledge Graph CTF"), st["brand"]),
+        Paragraph(escape("Proof of Thought · Research Challenge Card"), st["brand"]),
         Spacer(1, 3 * mm),
         Paragraph(card["participant_id"], st["pid"]),
         Paragraph(escape(card["title"]), st["title"]),
         meta,
-        Paragraph("Abstract (quoted verbatim from the publication)", st["h"]),
+        Spacer(1, 1 * mm),
+        Paragraph("Abstract", st["h"]),
         Paragraph(escape(card["abstract"]), st["body"]),
         Spacer(1, 1.5 * mm),
         Paragraph(escape(card["abstract_attribution"]), st["small"]),
-        Spacer(1, 2 * mm),
+        Spacer(1, 3 * mm),
         _annotation_block(injection_text, st),
-        Paragraph("Reading prompts", st["h"]),
-    ]
-    for i, q in enumerate(card["reading_prompts"], 1):
-        story.append(Paragraph(escape(f"{i}. {q}"), st["body"]))
-    story += [
         Spacer(1, 4 * mm),
         Paragraph(
-            "This card is a workshop wrapper prepared by the organisers. Only the abstract is quoted from the "
-            "publication; read the paper itself through the link above before asserting any relationship.",
+            "Proof of Thought · Challenge Excerpt Card. Check evidence in the paper before asserting relationships.",
             st["small"],
         ),
     ]

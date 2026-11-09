@@ -146,6 +146,8 @@ def load_challenge_info() -> dict:
 
 
 def card_pdf_path(participant_id: str) -> Path:
+    if participant_id in ("L0A", "L0B"):
+        return _participant_file(paths.CARDS_DIR / f"{participant_id}.pdf")
     if not (len(participant_id) == 3 and participant_id[0] == "P" and participant_id[1:].isdigit()):
         raise ValueError("invalid participant id")
     return _participant_file(paths.CARDS_DIR / f"{participant_id}.pdf")
