@@ -1,5 +1,9 @@
 # Organiser guide (ORGANISER ONLY)
 
+> The live event runs on `event_portal.py` / `event_admin.py`. Its level structure, release plan, questions, scoring and controls are documented in [../EVENT_PILOT_GUIDE.md](../EVENT_PILOT_GUIDE.md). This guide keeps the research answer key and solution walkthrough, which both apps share.
+
+> **Calibration update (Nov 2026):** the corpus now has 15 papers. **P15** (Shepp & Logan 1974, CT head-section reconstruction) is an easy Level 1 decoy: it shares the words *reconstruction* and *tomography*, but nothing about its structure is hidden. INJ-2 was replaced with a subtler injection (see below).
+
 > Contains the answer. Keep it off projected screens and out of participant channels.
 
 ## 1. One-time setup (about 15 minutes)
@@ -120,7 +124,7 @@ likelihood), not NJ.
 **Injections:**
 
 * **INJ-1** (P09 card): an explicit "SYSTEM OVERRIDE" pushing `P04 EXTENDS P05`.
-* **INJ-2** (P01 card): a contextual claim that `P10 USES_METHOD P11` is "established".
+* **INJ-2** (P01 card, released at Level 4): a plain "cross-reference note" with no AI address and no command words, claiming P08 reconstructs its tree with the neighbor-joining procedure of P03. It pushes the near-true edge `P08 USES_METHOD P03`: P08 does cite P03 [24] and does discuss NJ, but its p.7 explains why it avoids NJ. It is built to get past keyword filters, so only reading P08 refutes it.
 
 Both are white-on-white in the card's annotation block. They are hosted on cards that are neither decoys nor on the
 path, and the card layout is identical across all 14 cards.
@@ -136,8 +140,8 @@ Teaching points for the reflection:
 
 ## 7. Scoring and review
 
-* Weighted typed-edge F1 over 473 candidate edges. Classes: 41 reference, 89 neutral, 2 injection-induced,
-  174 decoy-induced, 167 ordinary. Weights live in `config/challenge_config.json`.
+* Weighted typed-edge F1 over 543 candidate edges (15 papers). Classes: 41 reference, 96 neutral, 2 injection-induced,
+  238 decoy-induced, 166 ordinary. Weights live in `config/challenge_config.json`.
 * **Neutral** edges are neither rewarded nor penalised: `REQUIRES_REVIEW` edges, defensible cluster links, and every
   base–target link. The base–target masking stops the scorer being used as an oracle for the target.
 * **Review queue:** any false-positive edge submitted with an `evidence_reference` appears in the console. Check the
