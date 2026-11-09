@@ -106,3 +106,70 @@ class ParticipantBackend:
 @lru_cache(maxsize=1)
 def _registry() -> dict:
     return paths.read_json(paths.FLAG_REGISTRY)
+
+
+# ------------------------------------------------------------------ Section A: Multi-Level Submission Management
+class LevelSubmissionService:
+    """Manages multi-level submissions with backend level-locking and graph snapshotting."""
+
+    def __init__(self, state_path: os.PathLike | str | None = None):
+        self.state_path = state_path
+
+    def submit_level(
+        self,
+        team_id: str,
+        level: int,
+        graph_csv: str,
+        explanation: str,
+        submitted_flag: str = "",
+        graph_score: dict | None = None,
+    ) -> dict:
+        """Validate and finalize exactly ONE submission per team per level.
+
+        Atomic: simultaneous submissions cannot both succeed.
+        Level lock is enforced on the backend; once locked, graph, flag, and explanation are immutable.
+        """
+        import event_core as core
+
+        team_id = str(team_id).strip().upper()
+        if not team_id:
+            raise ValueError("Team ID is required.")
+
+        clean_expl = str(explanation or "").strip()
+        if not clean_expl:
+            raise ValueError("A methodology explanation is required for final level submission.")
+
+        clean_csv = str(graph_csv or "").strip()
+        if not clean_csv:
+            raise ValueError("A cumulative knowledge graph is required for final level submission.")
+
+        # Check that graph is not just a header
+        lines = [line.strip() for line in clean_csv.splitlines() if line.strip()]
+        if len(lines) <= 1:
+            raise ValueError("Your cumulative graph must contain at least one relationship edge.")
+
+        # Delegate to core.finalise which uses atomic file-locking
+        return core.finalise(
+            team=team_id,
+            level=level,
+            csv_text=clean_csv,
+            flag_correct=False,  # updated from flag_status inside finalise
+            graph_score=graph_score or {},
+            submitted_flag=submitted_flag,
+            explanation=clean_expl,
+        )
+
+    def is_locked(self, team_id: str, level: int) -> bool:
+        import event_core as core
+        d = core.load()
+        return f"{team_id.strip().upper()}:{level}" in d.get("submissions", {})
+
+    def get_submission(self, team_id: str, level: int) -> dict | None:
+        import event_core as core
+        d = core.load()
+        return d.get("submissions", {}).get(f"{team_id.strip().upper()}:{level}")
+
+    def get_submitted_graph_snapshot(self, team_id: str, level: int) -> dict | None:
+        import event_core as core
+        return core.get_graph_snapshot(team_id, level)
+

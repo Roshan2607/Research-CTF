@@ -1,8 +1,30 @@
 {
   "_comment": "Organiser-adjustable configuration. False-positive weights are PROVISIONAL and should be tuned after a pilot run.",
   "workshop_title": "Proof of Thought",
-  "branding": "OpenAI \u00d7 IEEE CS \u00d7 Research Et Al",
+  "branding": "OpenAI × IEEE CS × Research Et Al",
   "theme": "Reconstruction of Hidden Structures from Incomplete Information",
+  "num_levels": 4,
+  "default_cluster": "Hidden Structures: Networking × Evolutionary Biology",
+  "clusters": [
+    "Hidden Structures: Networking × Evolutionary Biology",
+    "Level 0 Demo"
+  ],
+  "rules": {
+    "free_wrong_attempts": 5,
+    "penalty_after_free": 1.0,
+    "cooldown_seconds": 30,
+    "graph_points_per_level": 15.0,
+    "flag_points_per_level": 10.0,
+    "submission_limit_per_level": 1
+  },
+  "demo_team": {
+    "team_id": "DEMO00",
+    "name": "Level 0 Demo Team",
+    "cluster": "Level 0 Demo",
+    "is_demo": true,
+    "default_password": "DemoPass123!",
+    "flag": "FLAG{TRIE}"
+  },
   "fp_weights": {
     "ordinary": 1.0,
     "decoy_induced": 0.5,

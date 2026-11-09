@@ -24,6 +24,13 @@ def test_four_level_pipeline_and_locking(tmp_path, monkeypatch):
     )
     assert core.team_progress("TEAM01")[1] == 1
 
+    level_graphs = {
+        1: "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1 Page 2\n",
+        2: "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1 Page 2\nP02,P03,CITES,Section 2 Page 5\n",
+        3: "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1 Page 2\nP02,P03,CITES,Section 2 Page 5\nP03,P05,CITES,Section 3 Page 8\n",
+        4: "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Section 1 Page 2\nP02,P03,CITES,Section 2 Page 5\nP03,P05,CITES,Section 3 Page 8\nP05,P07,CITES,Section 4 Page 11\n",
+    }
+
     # Complete competition levels 1 through 4
     for level, answer in enumerate([
         "tree reconstruction",
@@ -34,11 +41,11 @@ def test_four_level_pipeline_and_locking(tmp_path, monkeypatch):
         assert core.team_progress("TEAM01")[1] == level
         assert core.attempt_flag("TEAM01", level, "not it")["correct"] is False
         assert core.attempt_flag("TEAM01", level, answer)["correct"] is True
-        core.save_draft("TEAM01", level, "source_id,target_id,relationship_type,evidence_reference\n")
+        core.save_draft("TEAM01", level, level_graphs[level])
         core.finalise(
             "TEAM01",
             level,
-            "source_id,target_id,relationship_type,evidence_reference\n",
+            level_graphs[level],
             True,
             {"points": 12.5},
             explanation="Detailed explanation of shared topology inference",
@@ -288,14 +295,18 @@ def test_four_competition_clusters_are_configured_and_playable(tmp_path, monkeyp
     levels = core.levels_for_cluster(c1)
     assert len(levels) == 5
 
+    cumulative_edges = []
     for lvl in levels:
         lid = lvl["id"]
         # Verify papers released
         released = core.released_papers(lid, c1)
         if lid == 0:
             assert len(released) == 2
+            csv_text = "source_id,target_id,relationship_type,evidence_reference\n"
         else:
             assert len(released) == lid * 2
+            cumulative_edges.append(f"{released[2*lid-2]},{released[2*lid-1]},CITES")
+            csv_text = "source_id,target_id,relationship_type\n" + "\n".join(cumulative_edges) + "\n"
         # Verify challenge card files exist on disk
         rows = [r for r in core._content() if r.get("cluster", "").strip() == c1 and int(r.get("level", 0)) == lid]
         for r in rows:
@@ -311,7 +322,7 @@ def test_four_competition_clusters_are_configured_and_playable(tmp_path, monkeyp
         core.finalise(
             team="TEAM_C1",
             level=lid,
-            csv_text="source_id,target_id,relationship_type,evidence_reference\n",
+            csv_text=csv_text,
             flag_correct=True,
             graph_score={"points": 15.0},
             submitted_flag=correct_answer,
