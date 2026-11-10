@@ -49,10 +49,61 @@ python -m streamlit run event_portal.py --server.address 0.0.0.0 --server.port 8
 
 ---
 
+## Novel-edge judge (optional)
+
+Teams can propose relationships that are not in the organisers' reference graph. When enabled, an LLM judge reviews those
+edges in the background after a level locks. It never blocks a lock and **does not change any score or gate yet**; verdicts
+are only stored (`data/submissions/judging.sqlite3`) for organisers. It is **off by default**.
+Measured behaviour and limits: [docs/EVAL_PROOF.md](docs/EVAL_PROOF.md).
+
+### Option A: sign in with ChatGPT (no API key)
+
+Uses the organiser's own ChatGPT plan allowance (a plan that supports "Sign in with ChatGPT", per OpenAI: Plus/Pro).
+Do this **once on every machine that runs the portal**; credentials are per machine and a fresh checkout has none.
+
+```bash
+pip install -r requirements.txt
+python3 scripts/chatgpt_login.py        # opens your browser; sign in and approve
+```
+
+* It prints `signed in as <your account> (scopes: ...)` when it worked.
+* It needs a browser on the **same machine** (it listens on `http://127.0.0.1:1455/auth/callback`), so it will not work on a
+  headless server or over SSH.
+* Credentials are saved to `~/.pot-judge/chatgpt-auth.json` (mode 0600, outside the repo, never commit it). Set `POT_JUDGE_HOME`
+  to change the folder. They refresh automatically.
+* Not signed in? The judge stops and new edges stay `pending`; scoring and level locks are unaffected. Sign in and restart.
+
+Then start the participant portal with judging on:
+
+```bash
+JUDGING_ENABLED=1 JUDGE_PROVIDER=chatgpt python3 -m streamlit run event_portal.py --server.address 0.0.0.0 --server.port 8503
+```
+
+### Option B: an API key
+
+```bash
+export OPENAI_API_KEY=...      # or ANTHROPIC_API_KEY=...
+JUDGING_ENABLED=1 JUDGE_PROVIDER=openai python3 -m streamlit run event_portal.py    # or JUDGE_PROVIDER=anthropic
+```
+
+### Settings
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `JUDGING_ENABLED` | off | Set to `1` to queue novel edges after each level lock |
+| `JUDGE_PROVIDER` | none | `chatgpt`, `openai` or `anthropic`. With none set, edges still queue and can be judged later |
+| `JUDGE_MODEL` | `gpt-6.1-terra` for `chatgpt` | Model slug. For `chatgpt`, run `GET /v1/models` with your login to see what your account allows |
+| `JUDGE_WORKERS` / `JUDGE_BATCH` | `28` / `5` | Parallel judge workers and edges per call (35 teams at once finished in under 18 s in testing) |
+| `JUDGING_DB` | `data/submissions/judging.sqlite3` | Queue and verdict store |
+| `UL_GRAPH_GATE` | on | `off` disables the graph progression gate (see below) |
+
+Load test before an event: `python3 scripts/sustained_load.py --bursts 4 --gap 20` (spends plan usage).
+
 ## Event Rules & Scoring Model
 
 * **100 points total**: 4 competition levels x 25 points (15 graph + 10 flag/discovery). Level 0 is an unscored, clearly synthetic warm-up.
 * **Papers are released by role, not by ID** (one verified 15-paper corpus): L1 4 papers, L2 5, L3 4, L4 2. Every level has scoreable reference edges (cumulative 5 / 16 / 26 / 41).
+* **Graph progression gate**: locking a level needs a correct flag **and** a server-side weighted F1 at or above the level's floor (0.40 at Level 1, 0.50 at Levels 2-4; `config/challenge_config.json` -> `graph_gate`). A refused lock keeps the team on the level; retries are rate-limited; organisers can waive it per team and level in the admin console (Event Controls -> Graph gate waiver).
 * **Graph points** are computed **on the server** when a level is locked: weighted typed-edge F1 over the papers released so far. Edges planted by hidden AI-directed instructions cost 3x, but only once the card carrying the instruction is released.
 * **Flags (Levels 1-3)**: a few words are enough - answers are matched by keyword groups, not exact strings. A correct flag (or a named organiser override) is required to lock a level.
   * The first 5 wrong attempts per level are free, then each costs 0.5 points (at most 5 per level).
