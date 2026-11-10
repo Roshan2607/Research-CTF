@@ -60,8 +60,8 @@ from event_core import (
 )
 from challenge.participant_data import load_corpus
 
-st.set_page_config(page_title="Proof of Thought · Admin", page_icon="🔐", layout="wide")
-st.title("🔐 Proof of Thought · Admin")
+st.set_page_config(page_title="Proof of Thought · Admin", layout="wide")
+st.title("Proof of Thought · Admin")
 st.caption("Live organiser console and challenge supervisor")
 
 st.markdown("""
@@ -207,7 +207,12 @@ with tabs[1]:
             tid = st.text_input("Team ID (e.g. TEAM01)")
             name = st.text_input("Team Name")
             password = st.text_input("Initial Password (min 8 chars)", type="password")
-            selected_cluster = st.selectbox("Assigned Cluster", clusters(), key="team_cluster_select")
+            avail_clusters = clusters()
+            if len(avail_clusters) == 1:
+                selected_cluster = avail_clusters[0]
+                st.caption(f"Cluster: **{selected_cluster}**")
+            else:
+                selected_cluster = st.selectbox("Assigned Cluster", avail_clusters, key="team_cluster_select")
             ok = st.form_submit_button("Create team", type="primary")
 
         if ok:
@@ -220,8 +225,8 @@ with tabs[1]:
 
         st.divider()
         st.markdown("#### Demo Team Setup (DEMO00)")
-        st.caption("Credentials: **Team ID:** `DEMO00` | **Password:** `DemoPass123!` (Runs Level 0 in the participant portal)")
-        if st.button("Initialize / Reset Demo Team (DEMO00)"):
+        st.caption("Credentials: **Team ID:** `DEMO00` | **Password:** `DemoPass123!` (Pre-configured for Level 0 practice)")
+        if st.button("Reset Demo Team (DEMO00)"):
             created_demo = ensure_demo_team("DEMO00", "Level 0 Demo Team", "DemoPass123!")
             st.success(f"Demo team reset: {created_demo}")
             st.rerun()

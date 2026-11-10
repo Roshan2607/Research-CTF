@@ -57,10 +57,11 @@ from event_core import (
     safe_csv,
     level_points,
     google_form_url,
+    load_demo_level0,
 )
 
-st.set_page_config(page_title="Proof of Thought · Participant", page_icon="🧭", layout="wide")
-st.title("🧭 Proof of Thought")
+st.set_page_config(page_title="Proof of Thought · Participant", layout="wide")
+st.title("Proof of Thought")
 
 st.markdown("""
 <style>
@@ -121,8 +122,8 @@ with st.sidebar:
         st.info("Demo Team (Level 0)")
     st.markdown("### Level progress")
     for lv in team_levels:
-        icon = "✅" if lv["id"] in completed else ("🟡" if lv["id"] == current else "🔒")
-        st.write(f"{icon} Level {lv['id']}: {lv['title']}")
+        tag = "[Completed]" if lv["id"] in completed else ("[Current]" if lv["id"] == current else "[Locked]")
+        st.write(f"{tag} Level {lv['id']}: {lv['title']}")
     if st.button("Sign out"):
         token_to_revoke = (cookies.get("ul_team_session") if isinstance(cookies, dict) else None) or cookie_manager.get("ul_team_session")
         revoke_session(token_to_revoke)
@@ -176,6 +177,16 @@ cluster_content_rows = [r for r in _content() if r.get("cluster", "").strip() ==
 content_map = {r["paper_id"]: r for r in cluster_content_rows}
 
 byid = {p["participant_id"]: dict(p) for p in corpus}
+demo_l0_spec = load_demo_level0()
+for dp in demo_l0_spec.get("papers", []):
+    dpid = dp["id"]
+    byid[dpid] = {
+        "participant_id": dpid,
+        "title": dp.get("title", dpid),
+        "citation": f"{dpid} · {dp.get('title', '')} ({dp.get('inspired_by', '')})",
+        "abstract": dp.get("excerpt", ""),
+        "challenge_card_path": f"data/participant/cards/{dpid}.pdf",
+    }
 for pid, r in content_map.items():
     if pid in byid and team["cluster"] != CLUSTER:
         byid[pid]["title"] = r.get("paper_title") or byid[pid]["title"]
@@ -192,7 +203,7 @@ for pid, r in content_map.items():
         }
 
 if current is None:
-    st.header("🏆 Final Event Results")
+    st.header("Final Event Results")
     st.balloons()
     d = load()
     summary_rows = []
@@ -204,7 +215,7 @@ if current is None:
         is_demo_lv = lv["id"] == 0
         lvl_pts = level_points(lv["id"])
         sim_pct = round(rec.get("graph_score", {}).get("weighted_f1", 0) * 100, 1)
-        status_str = "Unscored Demo" if is_demo_lv else ("✅ Correct" if rec.get("flag_correct") else "❌ Incorrect")
+        status_str = "Unscored Demo" if is_demo_lv else ("Correct" if rec.get("flag_correct") else "Incorrect")
         summary_rows.append({
             "Level": f"Level {lv['id']}: {lv['title']}",
             "Submitted Flag": rec.get("submitted_flag", ""),
@@ -269,24 +280,20 @@ if section == "Start":
     lvl_label = "Level 0 (Demo)" if current == 0 else f"Level {current}"
     lvl_pts = level_points(current)
 
-    c_top_l, c_top_r = st.columns([3, 1])
-    with c_top_l:
-        st.subheader(f"🏁 {lvl_label}: {spec['title']}")
-        if current == 0:
-            st.caption("Practice Warm-Up · Unscored")
-        else:
-            st.caption(f"Maximum Points: **{lvl_pts['total']:g} pts** ({lvl_pts['graph']:g} Graph + {lvl_pts['flag']:g} Flag)")
-    with c_top_r:
-        st.link_button("📝 Open Google Form", google_form_url(), use_container_width=True, type="primary")
+    st.subheader(f"{lvl_label}: {spec['title']}")
+    if current == 0:
+        st.caption("Practice Warm-Up · Unscored")
+    else:
+        st.caption(f"Maximum Points: **{lvl_pts['total']:g} pts** ({lvl_pts['graph']:g} Graph + {lvl_pts['flag']:g} Flag)")
 
-    st.markdown(f"> 🎯 **Level Objective**: {spec['question']}")
+    st.markdown(f"> **Level Objective**: {spec['question']}")
 
     c1, c2, c3 = st.columns(3)
     c1.info("**1. Read & Research**\nInspect papers and download PDF cards on the **Papers** tab.")
     c2.info("**2. Build & Validate**\nConnect relationships and validate your CSV on **Knowledge Graph**.")
     c3.info("**3. Submit on Form**\nSubmit your flag, validated graph, and evidence on the **Submit** tab.")
 
-    with st.expander("📖 Relationship Vocabulary Reference (6 types)", expanded=False):
+    with st.expander("Relationship Vocabulary Reference (6 types)", expanded=False):
         vocab_df = pd.DataFrame(vocab["relationship_types"])
         cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
         clean_vocab_df = vocab_df[cols].rename(
@@ -298,12 +305,53 @@ if section == "Start":
 # TAB 2: PAPERS
 # ==============================================================================
 elif section == "Papers":
-    st.subheader(f"🎯 Level {current} Objective")
+    st.subheader(f"Level {current} Objective")
     st.info(f"**{spec['question']}**")
 
-    # Hints Ladder
+    st.subheader(f"Papers Released for Level {current}")
+    cur_papers = [p for p in papers if p["participant_id"] in spec["paper_ids"]]
+    for p in cur_papers:
+        with st.expander(f"{p['participant_id']} — {p['title']}", expanded=True):
+            st.markdown(f"**Citation:** {p.get('citation', '')}")
+            st.write(p.get("abstract", ""))
+            c_link, c_dl = st.columns([1, 1])
+            url = p.get("open_access_url") or p.get("doi_url")
+            if url:
+                c_link.markdown(f"[Open original paper link]({url})")
+            card_path_val = p.get("challenge_card_path")
+            card = None
+            if card_path_val:
+                candidate = (Path(__file__).parent / card_path_val).resolve()
+                cards_root = (Path(__file__).parent / "data" / "participant" / "cards").resolve()
+                if candidate.is_relative_to(cards_root) and candidate.exists():
+                    card = candidate
+            if not card or not card.exists():
+                try:
+                    card = card_pdf_path(p["participant_id"])
+                except Exception:
+                    card = None
+            if card and card.exists():
+                c_dl.download_button(
+                    f"Download {p['participant_id']} PDF Card",
+                    card.read_bytes(),
+                    f"{p['participant_id']}_challenge_card.pdf",
+                    "application/pdf",
+                    key=f"card_{team['team_id']}_{p['participant_id']}",
+                )
+
+    past_levels = [lv for lv in team_levels if lv["id"] < current]
+    if past_levels:
+        with st.expander("Previously Released Papers (Earlier Levels)", expanded=False):
+            for plv in past_levels:
+                plv_papers = [p for p in papers if p["participant_id"] in plv["paper_ids"]]
+                if plv_papers:
+                    st.markdown(f"**Level {plv['id']} ({plv['title']})**")
+                    for p in plv_papers:
+                        st.caption(f"• **{p['participant_id']}** — {p['title']}")
+
+    # Hints Ladder (Placed last on the Papers tab)
     ladder = hint_status(team["team_id"], current)
-    with st.expander("💡 Hints for Level " + str(current), expanded=any(h["revealed"] for h in ladder)):
+    with st.expander(f"Hints for Level {current}", expanded=any(h["revealed"] for h in ladder)):
         if not ladder:
             st.caption("No hints configured for this level.")
         for h in ladder:
@@ -319,48 +367,7 @@ elif section == "Papers":
                         st.error(str(e))
                     st.rerun()
             else:
-                st.caption(f"🔒 {label} is locked (released by organisers if required).")
-
-    st.subheader(f"📄 Papers Released for Level {current}")
-    cur_papers = [p for p in papers if p["participant_id"] in spec["paper_ids"]]
-    for p in cur_papers:
-        with st.expander(f"{p['participant_id']} — {p['title']}", expanded=True):
-            st.markdown(f"**Citation:** {p.get('citation', '')}")
-            st.write(p.get("abstract", ""))
-            c_link, c_dl = st.columns([1, 1])
-            url = p.get("open_access_url") or p.get("doi_url")
-            if url:
-                c_link.markdown(f"[🔗 Open original paper link]({url})")
-            card_path_val = p.get("challenge_card_path")
-            card = None
-            if card_path_val:
-                candidate = (Path(__file__).parent / card_path_val).resolve()
-                cards_root = (Path(__file__).parent / "data" / "participant" / "cards").resolve()
-                if candidate.is_relative_to(cards_root) and candidate.exists():
-                    card = candidate
-            if not card or not card.exists():
-                try:
-                    card = card_pdf_path(p["participant_id"])
-                except Exception:
-                    card = None
-            if card and card.exists():
-                c_dl.download_button(
-                    f"⬇️ Download {p['participant_id']} PDF Card",
-                    card.read_bytes(),
-                    f"{p['participant_id']}_challenge_card.pdf",
-                    "application/pdf",
-                    key=f"card_{team['team_id']}_{p['participant_id']}",
-                )
-
-    past_levels = [lv for lv in team_levels if lv["id"] < current]
-    if past_levels:
-        with st.expander("📁 Previously Released Papers (Earlier Levels)", expanded=False):
-            for plv in past_levels:
-                plv_papers = [p for p in papers if p["participant_id"] in plv["paper_ids"]]
-                if plv_papers:
-                    st.markdown(f"**Level {plv['id']} ({plv['title']})**")
-                    for p in plv_papers:
-                        st.caption(f"• **{p['participant_id']}** — {p['title']}")
+                st.caption(f"[Locked] {label} (released by organisers if required).")
 
 # ==============================================================================
 # TAB 3: KNOWLEDGE GRAPH
@@ -394,14 +401,14 @@ elif section == "Knowledge Graph":
 
     c_kg_l, c_kg_r = st.columns([3, 1])
     with c_kg_l:
-        st.subheader(f"🕸️ Knowledge Graph Builder · Level {current}")
+        st.subheader(f"Knowledge Graph Builder · Level {current}")
         st.caption(f"{len(df)} cumulative edges · {len(available)} released papers available to connect.")
     with c_kg_r:
         if not df.empty:
-            st.download_button("⬇️ Download CSV", safe_csv(df), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
+            st.download_button("Download CSV", safe_csv(df), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
 
     # 1. Quick CSV Import & Validator
-    with st.expander("📥 Import / Paste Graph CSV (Fast & Easy)", expanded=df.empty):
+    with st.expander("Import / Paste Graph CSV (Fast & Easy)", expanded=df.empty):
         st.caption("Paste or upload your cumulative graph CSV. Validates headers, released papers, and relationship vocabulary.")
         val_csv_input = st.text_area(
             "Paste Graph CSV",
@@ -410,7 +417,7 @@ elif section == "Knowledge Graph":
             placeholder="source_id,target_id,relationship_type,evidence_reference\nP05,P02,CITES,Sec 1 Page 2\n...",
         )
         c_v1, c_v2 = st.columns([1.2, 1.8])
-        if c_v1.button("✅ Validate & Set Graph", key=f"btn_set_csv_{team['team_id']}_{current}", type="primary"):
+        if c_v1.button("Validate & Set Graph", key=f"btn_set_csv_{team['team_id']}_{current}", type="primary"):
             if not val_csv_input.strip():
                 st.warning("Please paste some CSV text to validate.")
             else:
@@ -424,7 +431,7 @@ elif section == "Knowledge Graph":
                     try:
                         save_draft(team["team_id"], current, new_df.to_csv(index=False))
                         st.session_state[statekey] = new_df
-                        st.success(f"✅ Graph updated with {len(new_df)} valid edge(s)!")
+                        st.success(f"Graph updated with {len(new_df)} valid edge(s).")
                     except (ValueError, PermissionError) as e:
                         st.error(str(e))
                     st.rerun()
@@ -446,7 +453,7 @@ elif section == "Knowledge Graph":
                     st.rerun()
 
     # 2. Manual Edge Editor (Collapsible)
-    with st.expander("➕ Add / Remove Individual Edge", expanded=False):
+    with st.expander("Add / Remove Individual Edge", expanded=False):
         with st.form(f"add_edge_{current}", clear_on_submit=True):
             c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
             src = c1.selectbox("Source paper", available, format_func=lambda x: labels.get(x, x))
@@ -496,20 +503,13 @@ elif section == "Knowledge Graph":
                     st.error(str(e))
                 st.rerun()
 
-    # 3. Live Graph Diagram & Table
+    # 3. Live Graph Diagram
     df = st.session_state[statekey].copy()
     if not df.empty:
-        st.subheader("📊 Live Graph Diagram")
+        st.subheader("Live Graph Diagram")
         render_graph_diagram(df, available=available, byid=byid)
-
-        with st.expander(f"📋 Cumulative Edge Table ({len(df)} edges)", expanded=False):
-            display = df.copy()
-            display["Source paper"] = display["source_id"].map(labels).fillna(display["source_id"])
-            display["Target paper"] = display["target_id"].map(labels).fillna(display["target_id"])
-            st.dataframe(display[["Source paper", "relationship_type", "Target paper", "evidence_reference"]],
-                         hide_index=True, use_container_width=True)
     else:
-        st.info("ℹ️ Your cumulative graph is empty. Paste a CSV above or add an edge to visualize your graph.")
+        st.info("Your cumulative graph is empty. Paste a CSV above or add an edge to visualize your graph.")
 
 # ==============================================================================
 # TAB 4: SUBMIT
@@ -520,7 +520,7 @@ elif section == "Submit":
     if rec:
         lock_msg = st.session_state.pop(f"lock_msg_{team['team_id']}_{current}", None)
         if lock_msg:
-            st.success(f"🎉 {lock_msg}")
+            st.success(lock_msg)
         is_demo = bool(current == 0 or team.get("is_demo"))
         if is_demo:
             st.success("Level 0 warm-up is locked and completed (Unscored Practice).")
@@ -531,7 +531,7 @@ elif section == "Submit":
             fp = rec.get("flag_points", 0)
             st.success(f"Level {current} is locked and submitted.")
             c1, c2, c3 = st.columns(3)
-            c1.metric("Flag Points", f"{fp:g} / {lvl_pts['flag']:g} pts", "✅ Solved" if rec.get("flag_correct") else "❌ Unsolved")
+            c1.metric("Flag Points", f"{fp:g} / {lvl_pts['flag']:g} pts", "Solved" if rec.get("flag_correct") else "Unsolved")
             c2.metric("Graph Points", f"{gp:g} / {lvl_pts['graph']:g} pts", f"{sim_pct}% similarity")
             c3.metric("Level Total", f"{fp + gp:g} / {lvl_pts['total']:g} pts")
             st.write(f"**Submitted flag:** `{rec.get('submitted_flag', '')}`")
@@ -547,13 +547,13 @@ elif section == "Submit":
 
     c_top_l, c_top_r = st.columns([3, 1])
     with c_top_l:
-        st.subheader(f"📋 Submit Level {current}")
+        st.subheader(f"Submit Level {current}")
         st.caption("Submit your official responses via Google Form. You can test your flag and lock progress below.")
     with c_top_r:
-        st.link_button("📝 Open Google Form", google_form_url(), use_container_width=True, type="primary")
+        st.link_button("Open Google Form", google_form_url(), use_container_width=True, type="primary")
 
     # --- 1. Flag Section ---
-    st.markdown(f"> 🎯 **Level {current} Objective**: {spec['question']}")
+    st.markdown(f"> **Level {current} Objective**: {spec['question']}")
     fs = flag_status(team["team_id"], current)
     max_fp = level_points(current)["flag"]
 
@@ -563,14 +563,14 @@ elif section == "Submit":
         (st.success if last_feedback["correct"] else st.error)(last_feedback["message"])
 
     if fs["correct"]:
-        st.success(f"✅ Flag Solved! ({fs['flag_points']:g} / {max_fp:g} pts)")
+        st.success(f"Flag Solved ({fs['flag_points']:g} / {max_fp:g} pts)")
     elif fs["cooldown_remaining"] > 0:
-        st.warning(f"⏳ Cooldown active: wait {fs['cooldown_remaining']}s")
+        st.warning(f"Cooldown active: wait {fs['cooldown_remaining']}s")
         import time
         time.sleep(1)
         st.rerun()
     elif fs["last"] and not last_feedback:
-        st.error("❌ Not yet — check the papers again (hints available on the Papers tab).")
+        st.error("Not yet — check the papers again (hints available on the Papers tab).")
 
     if not fs["correct"]:
         with st.form(f"flag_{current}"):
@@ -580,9 +580,9 @@ elif section == "Submit":
         if check and answer.strip():
             result = attempt_flag(team["team_id"], current, answer.strip())
             if result["correct"]:
-                st.session_state[flag_msg_key] = {"correct": True, "message": f"✅ Solved! ({result.get('earned_points', max_fp):g} / {max_fp:g} pts)"}
+                st.session_state[flag_msg_key] = {"correct": True, "message": f"Solved! ({result.get('earned_points', max_fp):g} / {max_fp:g} pts)"}
             else:
-                st.session_state[flag_msg_key] = {"correct": False, "message": result.get("message") or "❌ Not yet — check the papers again."}
+                st.session_state[flag_msg_key] = {"correct": False, "message": result.get("message") or "Not yet — check the papers again."}
             st.rerun()
 
     if fs.get("hint_cost"):
@@ -598,14 +598,14 @@ elif section == "Submit":
     c_g_stat, c_g_dl = st.columns([3, 1])
     with c_g_stat:
         if not valid_rows:
-            st.warning("⚠️ Cumulative graph is empty. Add edges in the Knowledge Graph tab.")
+            st.warning("Cumulative graph is empty. Add edges in the Knowledge Graph tab.")
         elif errs:
-            st.error(f"❌ Graph validation issues ({len(errs)} error(s)):\n" + "\n".join(f"• {e}" for e in errs[:3]))
+            st.error(f"Graph validation issues ({len(errs)} error(s)):\n" + "\n".join(f"• {e}" for e in errs[:3]))
         else:
-            st.success(f"✅ Cumulative Graph: **{len(valid_rows)} edge(s)** ready for submission.")
+            st.success(f"Cumulative Graph: **{len(valid_rows)} edge(s)** ready for submission.")
     with c_g_dl:
         if valid_rows:
-            st.download_button("⬇️ Download Graph CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
+            st.download_button("Download Graph CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
 
     explanation_key = f"expl_input_{team['team_id']}_{current}"
     explanation = st.text_area(
@@ -623,11 +623,11 @@ elif section == "Submit":
 
     if not can_submit:
         if fs["attempts"] == 0:
-            st.caption("ℹ️ Submit at least one flag attempt above to enable level locking.")
+            st.caption("Submit at least one flag attempt above to enable level locking.")
         elif not draft.strip() or len(valid_rows) == 0:
-            st.caption("ℹ️ Add at least one edge in Knowledge Graph to enable level locking.")
+            st.caption("Add at least one edge in Knowledge Graph to enable level locking.")
         elif errs:
-            st.caption("ℹ️ Fix graph validation issues before level locking.")
+            st.caption("Fix graph validation issues before level locking.")
 
     if st.button(btn_label, type="primary", disabled=not can_submit):
         if not explanation.strip():

@@ -1,7 +1,7 @@
 {
-  "title": "Level 0 Demo: Audience Onboarding",
+  "title": "Level 0: Warm-Up & Audience Onboarding",
   "synthetic": true,
-  "synthetic_notice": "Level 0 uses SYNTHETIC demo excerpts written by the organisers. They are not quotations from any paper; the cited works are listed only as inspiration and further reading.",
+  "synthetic_notice": "Level 0 practice exercises are introductory materials designed to familiarize participants with challenge card structure and graph construction.",
   "flag": "FLAG{TRIE}",
   "flag_aliases": [
     "FLAG{TRIE}",
@@ -14,17 +14,17 @@
   "papers": [
     {
       "id": "L0A",
-      "title": "[Synthetic demo] Storing cell lineages efficiently",
+      "title": "Storing Cell Lineages Efficiently",
       "inspired_by": "Sulston, Schierenberg, White & Thomson (1983), The embryonic cell lineage of the nematode Caenorhabditis elegans, Developmental Biology 100(1):64-119",
       "doi": "10.1016/0012-1606(83)90201-4",
-      "excerpt": "SYNTHETIC DEMO TEXT (written by the organisers, not quoted from any paper). Imagine recording the full ancestry of every cell in a developing embryo: every cell's record repeats the same early divisions shared with its relatives. Storing each lineage separately wastes space on identical shared beginnings."
+      "excerpt": "Imagine recording the full ancestry of every cell in a developing embryo: every cell's record repeats the same early divisions shared with its relatives. Storing each lineage separately wastes space on identical shared beginnings."
     },
     {
       "id": "L0B",
-      "title": "[Synthetic demo] Sharing common prefixes",
+      "title": "Sharing Common Prefixes",
       "inspired_by": "Fredkin (1960), Trie Memory, Communications of the ACM 3(9):490-499",
       "doi": "10.1145/367390.367400",
-      "excerpt": "SYNTHETIC DEMO TEXT (written by the organisers, not quoted from any paper). A dictionary of words can be stored as a tree in which words that begin with the same letters share the same path from the root, so each shared beginning is stored only once."
+      "excerpt": "A dictionary of words can be stored as a tree in which words that begin with the same letters share the same path from the root, so each shared beginning is stored only once."
     }
   ],
   "teaching_points": [
