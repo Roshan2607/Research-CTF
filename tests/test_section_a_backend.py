@@ -246,12 +246,12 @@ def test_flag_validation_correct_immediate_feedback(isolated_env, monkeypatch):
 
     res = core.attempt_flag("TEAM_FLAG_1", 1, "tree reconstruction")
     assert res["correct"] is True
-    assert res["earned_points"] == 10
+    assert res["earned_points"] == core.level_points(1)["flag"]
     assert "Correct flag!" in res["message"]
 
     status = core.flag_status("TEAM_FLAG_1", 1)
     assert status["correct"] is True
-    assert status["flag_points"] == 10
+    assert status["flag_points"] == core.level_points(1)["flag"]
     assert status["penalty_points"] == 0
     assert status["attempts"] == 1
 
@@ -272,7 +272,7 @@ def test_first_five_incorrect_attempts_free(isolated_env, monkeypatch):
 
     res_correct = core.attempt_flag("TEAM_FREE_5", 1, "tree reconstruction")
     assert res_correct["correct"] is True
-    assert res_correct["earned_points"] == 10
+    assert res_correct["earned_points"] == core.level_points(1)["flag"]
 
 
 def test_sixth_and_subsequent_incorrect_attempts_penalty(isolated_env, monkeypatch):
@@ -294,9 +294,9 @@ def test_sixth_and_subsequent_incorrect_attempts_penalty(isolated_env, monkeypat
 
     rc = core.attempt_flag("TEAM_PENALTY", 1, "tree reconstruction")
     assert rc["correct"] is True
-    assert rc["earned_points"] == 8
+    assert rc["earned_points"] == core.level_points(1)["flag"] - 2
     st_c = core.flag_status("TEAM_PENALTY", 1)
-    assert st_c["flag_points"] == 8
+    assert st_c["flag_points"] == core.level_points(1)["flag"] - 2
 
 
 def test_flag_cooldown_enforcement_and_rejected_attempt_not_counted(isolated_env):
@@ -395,7 +395,7 @@ def test_demo_flag_isolation_and_pipeline(isolated_env, monkeypatch):
 
     res_correct = core.attempt_flag(demo_id, 0, "FLAG{TRIE}")
     assert res_correct["correct"] is True
-    assert res_correct["earned_points"] == 10
+    assert res_correct["earned_points"] == core.level_points(0)["flag"]
 
     snap = core.admin_snapshot()
     real_ids = [t["team_id"] for t in snap["teams"]]
@@ -428,7 +428,7 @@ def test_valid_final_submission_and_locking(isolated_env, monkeypatch):
 
     assert rec["locked"] is True
     assert rec["flag_correct"] is True
-    assert rec["flag_points"] == 10
+    assert rec["flag_points"] == core.level_points(1)["flag"]
     assert rec["explanation"] == explanation
     assert svc.is_locked("TEAM_SUB_1", 1) is True
 

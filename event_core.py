@@ -142,6 +142,32 @@ except Exception:
 COOLDOWN_SECONDS = int(os.environ.get("UL_COOLDOWN_SECONDS", _RULES.get("cooldown_seconds", 30)))
 FREE_WRONG_ATTEMPTS = int(_RULES.get("free_wrong_attempts", 5))
 FLAG_POINTS_PER_LEVEL = int(_RULES.get("flag_points_per_level", 10))
+LEVEL_POINTS_CONFIG = {
+    0: {"total": 0.0, "graph": 0.0, "flag": 0.0},
+    1: {"total": 2500.0, "graph": 1500.0, "flag": 1000.0},
+    2: {"total": 3000.0, "graph": 1800.0, "flag": 1200.0},
+    3: {"total": 5000.0, "graph": 3000.0, "flag": 2000.0},
+    4: {"total": 10000.0, "graph": 6000.0, "flag": 4000.0},
+}
+
+
+def level_points(level: int) -> dict:
+    """Returns {'total': float, 'graph': float, 'flag': float} for a level."""
+    cfg = _CFG.get("level_points", {}) if isinstance(_CFG, dict) else {}
+    if str(level) in cfg:
+        c = cfg[str(level)]
+        return {"total": float(c.get("total", 2500.0)), "graph": float(c.get("graph", 1500.0)), "flag": float(c.get("flag", 1000.0))}
+    return LEVEL_POINTS_CONFIG.get(int(level), {"total": 2500.0, "graph": 1500.0, "flag": 1000.0})
+
+
+def hint_cost_for_level(level: int, rung: int) -> float:
+    fp = level_points(level)["flag"]
+    if fp <= 0:
+        return 0.0
+    pct = 0.20 if int(rung) == 3 else 0.10
+    return round(fp * pct, 2)
+
+
 GRAPH_POINTS_PER_LEVEL = float(_RULES.get("graph_points_per_level", 15.0))
 PENALTY_PER_WRONG = float(_RULES.get("penalty_after_free", 1.0))
 MAX_PENALTY_PER_LEVEL = float(_RULES.get("max_penalty_per_level", FLAG_POINTS_PER_LEVEL))
@@ -157,16 +183,17 @@ DISCOVERY_APPLICATION_POINTS = float(_DISCOVERY.get("application", 2.0))
 DISCOVERY_REVIEW_MAX_POINTS = float(_DISCOVERY.get("organiser_review_max", 5.0))
 
 
-def _validator():
+def _validator(level: int = 1):
     from scoring.flag_validator import LevelFlagValidator
 
+    fp = level_points(level)["flag"]
     return LevelFlagValidator(
         cooldown_seconds=COOLDOWN_SECONDS,
         free_wrong_attempts=FREE_WRONG_ATTEMPTS,
-        flag_points_per_level=FLAG_POINTS_PER_LEVEL,
+        flag_points_per_level=fp,
         penalty_per_attempt=PENALTY_PER_WRONG,
         cooldown_schedule=COOLDOWN_SCHEDULE,
-        max_penalty=MAX_PENALTY_PER_LEVEL,
+        max_penalty=fp if fp > 0 else 0.0,
     )
 
 
@@ -814,7 +841,7 @@ def hint_status(team: str, level: int) -> list[dict]:
     out = []
     for i, text in enumerate(spec["hints"], 1):
         unlocked = i in released
-        cost = HINT_COSTS.get(i, 1.0)
+        cost = hint_cost_for_level(level, i)
         out.append({
             "rung": i,
             "unlocked": unlocked,
@@ -888,7 +915,7 @@ def attempt_flag(team: str, level: int, answer: str) -> dict:
                 return {"correct": False, "message": "Flag answer exceeds maximum length of 200 characters.", "cooldown_remaining": 0}
 
             history = d.get("attempts", {}).get(key, [])
-            res = _validator().evaluate_attempt(
+            res = _validator(level).evaluate_attempt(
                 team_id=tid,
                 level=level,
                 answer=clean_ans,
@@ -922,7 +949,10 @@ def flag_status(team: str, level: int) -> dict:
     key = f"{tid}:{level}"
     d = load()
     history = d.get("attempts", {}).get(key, [])
-    return _validator().compute_status(history, hint_cost=hint_cost(tid, level, d))
+    max_fp = level_points(level)["flag"]
+    status = _validator(level).compute_status(history, hint_cost=hint_cost(tid, level, d))
+    status["max_flag_points"] = max_fp
+    return status
 
 
 def override_flag(team: str, level: int, reviewer: str, note: str = "", waive_penalties: bool = False) -> dict:
@@ -1018,7 +1048,7 @@ def score_level_graph(cluster: str, level: int, csv_text: str) -> dict:
     m = compute(counts, scorer.weights)
     return {
         "scored": True,
-        "points": round(m.weighted_f1 * GRAPH_POINTS_PER_LEVEL, 2),
+        "points": round(m.weighted_f1 * level_points(level)["graph"], 2),
         "weighted_f1": round(m.weighted_f1, 4),
         "weighted_precision": round(m.weighted_precision, 4),
         "recall": round(m.recall, 4),
@@ -1216,11 +1246,12 @@ def finalise(
                     actual_flag_correct = True
                 else:
                     from scoring.flag_validator import answer_matches
-                    actual_flag_correct = answer_matches(flag_recorded, spec["answers"])
+                    actual_flag_correct = any(a.get("correct") for a in attempts) or answer_matches(flag_recorded, spec["answers"])
                 fs = flag_status(tid, level)
                 penalty = fs.get("penalty_points", 0.0) if fs else 0.0
                 h_cost = hint_cost(tid, level, d)
-                actual_flag_points = round(max(0.0, FLAG_POINTS_PER_LEVEL - penalty - h_cost), 2) if actual_flag_correct else 0.0
+                max_fp = level_points(level)["flag"]
+                actual_flag_points = round(max(0.0, max_fp - penalty - h_cost), 2) if actual_flag_correct else 0.0
 
             if not clean_expl:
                 raise ValueError("An explanation is required to finalize this level.")

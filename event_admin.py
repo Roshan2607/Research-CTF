@@ -50,6 +50,8 @@ from event_core import (
     override_flag,
     safe_csv,
     release_hint_for_all,
+    level_points,
+    hint_cost_for_level,
     reset_team,
     review_final_discovery,
     set_open_level,
@@ -245,12 +247,13 @@ def submissions_view():
     for sub_key, rec, team in sorted(records, key=lambda x: (x[1]["team_id"], x[1]["level"])):
         with st.expander(f"{rec['team_id']} · Level {rec['level']} · {team.get('name', '')} ({team.get('cluster', '')}) · {rec['submitted_at']}"):
             c1, c2, c3 = st.columns(3)
+            lvl_p = level_points(rec.get("level", 1))
             c1.metric("Flag Solved", "Yes" if rec.get("flag_correct") else "No")
-            c1.caption(f"Flag: {rec.get('submitted_flag') or '(none)'} | Points: {rec.get('flag_points', 0)}/10")
+            c1.caption(f"Flag: {rec.get('submitted_flag') or '(none)'} | Points: {rec.get('flag_points', 0):g}/{lvl_p['flag']:g}")
             c2.metric("Cumulative Edges", rec.get("edge_count", 0))
             base_gp = rec.get("graph_score", {}).get("points", 0)
             man_adj = rec.get("manual_adjustment", 0.0)
-            c3.metric("Graph Points (/15)", f"{round(base_gp + man_adj, 2)}", delta=f"{man_adj:+} manual" if man_adj else None)
+            c3.metric(f"Graph Points (/{lvl_p['graph']:g})", f"{round(base_gp + man_adj, 2)}", delta=f"{man_adj:+} manual" if man_adj else None)
 
             # --- Participant Evidence & Reasoning Review ---
             st.markdown("#### Participant Evidence & Reasoning")
@@ -384,7 +387,7 @@ with tabs[3]:
     st.subheader("Release a hint to every team")
     lv_sel = st.selectbox("Level", [lv["id"] for lv in levels_for_cluster(CLUSTER)], key="hint_level")
     rung = st.selectbox("Hint rung", [1, 2, 3], key="hint_rung")
-    cost_pts = 2.0 if rung == 3 else 1.0
+    cost_pts = hint_cost_for_level(int(lv_sel), int(rung))
     if st.button(f"Release Hint {rung} for Level {lv_sel} (Costs {cost_pts:g} pt{'s' if rung == 3 else ''} upon reveal)"):
         release_hint_for_all(int(lv_sel), int(rung))
         st.success(f"Hint {rung} released for level {lv_sel} (participants can now reveal it for {cost_pts:g} pt{'s' if rung == 3 else ''}).")

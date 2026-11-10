@@ -77,7 +77,7 @@ def test_four_level_pipeline_and_locking(tmp_path, monkeypatch):
     assert len(snap["submissions"]) == 5
     sub1 = snap["submissions"]["TEAM01:1"]
     assert sub1["explanation"] == "Detailed explanation of shared topology inference"
-    assert sub1["flag_points"] == 10  # 1 wrong attempt, well within 5 free attempts
+    assert sub1["flag_points"] == core.level_points(1)["flag"]  # 1 wrong attempt, well within 5 free attempts
 
 
 def test_flag_attempts_do_not_unlock_next_level(tmp_path, monkeypatch):
@@ -121,7 +121,7 @@ def test_finalise_requires_a_correct_flag_or_organiser_override(tmp_path, monkey
     core.override_flag("TEAM03", 0, reviewer="Organiser A", note="accepted 'prefix-sharing tree'")
     rec = core.finalise("TEAM03", 0, graph, False, {}, explanation="test explanation")
     assert rec["flag_correct"] is True
-    assert rec["flag_points"] == 10
+    assert rec["flag_points"] == core.level_points(0)["flag"]
     assert rec["explanation"] == "test explanation"
     assert core.team_progress("TEAM03") == ([0], 1)
 
@@ -148,42 +148,47 @@ def test_flag_penalty_scaling(tmp_path, monkeypatch):
     monkeypatch.setattr(core, "COOLDOWN_SECONDS", 0)
     core.create_team("TEAM_PEN", "Penalty Team", "StrongPass123")
 
-    # 5 wrong attempts should all be free
+    # Complete Level 0 practice first
+    core.attempt_flag("TEAM_PEN", 0, "FLAG{TRIE}")
+    core.finalise("TEAM_PEN", 0, "source_id,target_id,relationship_type\n", True, {}, explanation="Practice")
+
+    # At Level 1, 5 wrong attempts should all be free
     for i in range(1, 6):
-        res = core.attempt_flag("TEAM_PEN", 0, f"wrong {i}")
+        res = core.attempt_flag("TEAM_PEN", 1, f"wrong {i}")
         assert res["correct"] is False
-        status = core.flag_status("TEAM_PEN", 0)
+        status = core.flag_status("TEAM_PEN", 1)
         assert status["penalty_points"] == 0
 
     # 6th wrong attempt costs 1 point
-    res6 = core.attempt_flag("TEAM_PEN", 0, "wrong 6")
+    res6 = core.attempt_flag("TEAM_PEN", 1, "wrong 6")
     assert res6["correct"] is False
-    status6 = core.flag_status("TEAM_PEN", 0)
+    status6 = core.flag_status("TEAM_PEN", 1)
     assert status6["wrong_attempts"] == 6
     assert status6["penalty_points"] == 1
 
     # 7th wrong attempt costs 2 points total
-    res7 = core.attempt_flag("TEAM_PEN", 0, "wrong 7")
-    status7 = core.flag_status("TEAM_PEN", 0)
+    res7 = core.attempt_flag("TEAM_PEN", 1, "wrong 7")
+    status7 = core.flag_status("TEAM_PEN", 1)
     assert status7["wrong_attempts"] == 7
     assert status7["penalty_points"] == 2
 
-    # Now solve correctly: earned points = 10 - 2 = 8
-    res_correct = core.attempt_flag("TEAM_PEN", 0, "FLAG{TRIE}")
+    # Now solve correctly: earned points = 1000 - 2 = 998
+    l1_pts = core.level_points(1)["flag"]
+    res_correct = core.attempt_flag("TEAM_PEN", 1, "tree reconstruction")
     assert res_correct["correct"] is True
-    assert res_correct["earned_points"] == 8
+    assert res_correct["earned_points"] == l1_pts - 2
 
     # Finalise and verify points recorded in submission
     rec = core.finalise(
         "TEAM_PEN",
-        0,
-        "source_id,target_id,relationship_type,evidence_reference\n",
+        1,
+        "source_id,target_id,relationship_type,evidence_reference\nP01,P02,EXTENDS,Sec 2\n",
         True,
         {"points": 14.0},
         explanation="Solves shared task via trie prefix tree",
     )
     assert rec["flag_correct"] is True
-    assert rec["flag_points"] == 8
+    assert rec["flag_points"] == l1_pts - 2
 
 
 def test_demo_team_isolation(tmp_path, monkeypatch):

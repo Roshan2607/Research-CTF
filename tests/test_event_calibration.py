@@ -110,21 +110,24 @@ def test_hint_ladder_unlocks_and_rung3_costs_a_point(env):
     core.release_hint_for_all(1, 2)
     core.release_hint_for_all(1, 3)
     assert [h["unlocked"] for h in core.hint_status("TEAMHINT", 1)] == [True, True, True]
-    assert core.reveal_hint("TEAMHINT", 1, 1)["cost"] == 1.0
-    assert core.reveal_hint("TEAMHINT", 1, 3)["cost"] == 2.0
+    c1 = core.hint_cost_for_level(1, 1)
+    c3 = core.hint_cost_for_level(1, 3)
+    assert core.reveal_hint("TEAMHINT", 1, 1)["cost"] == c1
+    assert core.reveal_hint("TEAMHINT", 1, 3)["cost"] == c3
     core.attempt_flag("TEAMHINT", 1, "receivers")
     st = core.flag_status("TEAMHINT", 1)
-    assert st["hint_cost"] == 3.0 and st["flag_points"] == 7.0
+    assert st["hint_cost"] == (c1 + c3) and st["flag_points"] == (core.level_points(1)["flag"] - c1 - c3)
 
 
 def test_organiser_released_hint_is_free(env):
     core.create_team("TEAMREL", "Release Team", "StrongPass123")
     solve_level0("TEAMREL")
     core.release_hint_for_all(1, 3)
+    c3 = core.hint_cost_for_level(1, 3)
     h3 = core.hint_status("TEAMREL", 1)[2]
-    assert h3["unlocked"] is True and h3["revealed"] is False and h3["cost"] == 2.0
+    assert h3["unlocked"] is True and h3["revealed"] is False and h3["cost"] == c3
     rev = core.reveal_hint("TEAMREL", 1, 3)
-    assert rev["cost"] == 2.0 and rev["text"]
+    assert rev["cost"] == c3 and rev["text"]
 
 
 # ---------------------------------------------------------------- organiser gate
@@ -145,7 +148,7 @@ LEVEL1_REFERENCE = HDR + "\n".join([
 
 def test_level1_is_fully_scoreable(env):
     s = core.score_level_graph(core.CLUSTER, 1, LEVEL1_REFERENCE)
-    assert s["scope_reference_edges"] == 5 and s["weighted_f1"] == 1.0 and s["points"] == core.GRAPH_POINTS_PER_LEVEL
+    assert s["scope_reference_edges"] == 5 and s["weighted_f1"] == 1.0 and s["points"] == core.level_points(1)["graph"]
 
 
 def test_scoring_ignores_unreleased_papers_and_counts_scope(env):
@@ -171,7 +174,7 @@ def test_finalise_stores_server_score_not_client_score(env):
     solve_level0("TEAMSRV")
     core.attempt_flag("TEAMSRV", 1, "receivers")
     rec = core.finalise("TEAMSRV", 1, LEVEL1_REFERENCE, graph_score={"points": 999}, explanation="refs on p.3")
-    assert rec["graph_score"]["points"] == core.GRAPH_POINTS_PER_LEVEL
+    assert rec["graph_score"]["points"] == core.level_points(1)["graph"]
 
 
 # ---------------------------------------------------------------- one-shot final discovery at level 4
@@ -201,7 +204,7 @@ def test_level4_standard_flag_progression(env):
     assert res["correct"] is True
     rec = core.finalise("TEAMFIN", 4, LEVEL1_REFERENCE + "P12,P03,USES_METHOD,Alg.1 p.13\n", explanation="final")
     assert rec["flag_correct"] is True
-    assert rec["flag_points"] == 10.0
+    assert rec["flag_points"] == core.level_points(4)["flag"]
     assert core.team_progress("TEAMFIN")[1] is None  # all levels complete!
 
 

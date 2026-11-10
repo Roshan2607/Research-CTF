@@ -83,7 +83,7 @@ def test_portal_flow_level0_to_level1(env):
     at.run()
     _ok(at)
     rec = core.load()["submissions"]["TEAM01:1"]
-    assert rec["graph_score"]["points"] == core.GRAPH_POINTS_PER_LEVEL
+    assert rec["graph_score"]["points"] == core.level_points(1)["graph"]
 
 
 def test_portal_hint_ladder_and_final_discovery_form(env, monkeypatch):

@@ -360,9 +360,12 @@ class LevelFlagValidator:
             n_wrong = len(wrong_attempts)
             penalty = self._penalty(n_wrong)
             earned = round(max(0.0, self.flag_points_per_level - penalty), 2)
-            msg = f"Correct flag! Earned {earned:g}/{self.flag_points_per_level:g} flag points."
-            if penalty > 0:
-                msg += f" (-{penalty:g} pt penalty from {n_wrong} wrong attempts)."
+            if self.flag_points_per_level <= 0:
+                msg = "Correct flag! Practice level complete (unscored)."
+            else:
+                msg = f"Correct flag! Earned {earned:g}/{self.flag_points_per_level:g} flag points."
+                if penalty > 0:
+                    msg += f" (-{penalty:g} pt penalty from {n_wrong} wrong attempts)."
             return {"correct": True, "cooldown": False, "message": msg, "earned_points": earned,
                     "penalty_points": penalty, "cooldown_remaining": 0, "record_attempt": True,
                     "attempt_record": record}

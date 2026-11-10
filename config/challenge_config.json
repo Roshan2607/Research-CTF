@@ -4,6 +4,13 @@
   "branding": "OpenAI × IEEE CS × Research Et Al",
   "theme": "Reconstruction of Hidden Structures from Incomplete Information",
   "num_levels": 4,
+  "level_points": {
+    "0": {"total": 0.0, "graph": 0.0, "flag": 0.0},
+    "1": {"total": 2500.0, "graph": 1500.0, "flag": 1000.0},
+    "2": {"total": 3000.0, "graph": 1800.0, "flag": 1200.0},
+    "3": {"total": 5000.0, "graph": 3000.0, "flag": 2000.0},
+    "4": {"total": 10000.0, "graph": 6000.0, "flag": 4000.0}
+  },
   "default_cluster": "Hidden Structures: Networking × Evolutionary Biology",
   "clusters": [
     "Hidden Structures: Networking × Evolutionary Biology",
