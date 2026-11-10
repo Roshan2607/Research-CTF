@@ -48,6 +48,7 @@ from event_core import (
     levels_for_cluster,
     open_level,
     override_flag,
+    waive_graph_gate,
     safe_csv,
     release_hint_for_all,
     level_points,
@@ -420,6 +421,30 @@ with tabs[3]:
         recent = snap["attempts"].get(f"{o_team}:{int(o_level)}", [])[-5:]
         if recent:
             st.dataframe(pd.DataFrame(recent), hide_index=True, use_container_width=True)
+
+    st.subheader("Graph gate waiver")
+    st.caption("A team needs a correct flag AND a graph score at or above the level's floor to lock. Waive the graph "
+               "floor for a stuck team here (the flag is still required). Recorded in the audit log.")
+    with st.form("gate_waiver"):
+        w1, w2, w3 = st.columns(3)
+        w_team = w1.selectbox("Team", team_ids or ["-"], key="waive_team")
+        w_level = w2.number_input("Level", min_value=1, max_value=10, value=1, step=1, key="waive_level")
+        w_reviewer = w3.text_input("Reviewer name", key="waive_reviewer")
+        w_note = st.text_input("Why the floor is waived", key="waive_note")
+        if st.form_submit_button("Waive graph floor"):
+            try:
+                waive_graph_gate(w_team, int(w_level), w_reviewer, w_note)
+                st.success(f"Graph floor waived for {w_team}, Level {int(w_level)}.")
+            except (ValueError, PermissionError) as e:
+                st.error(str(e))
+    waivers = load().get("gate_waivers", {})
+    if waivers:
+        st.dataframe(pd.DataFrame([{"team_level": k, **v} for k, v in sorted(waivers.items())]),
+                     hide_index=True, use_container_width=True)
+    fails = load().get("gate_fails", {})
+    if fails:
+        st.caption("Teams that have been refused the gate (attempt counts): "
+                   + ", ".join(f"{k} x{v['count']}" for k, v in sorted(fails.items())))
 
     finals = snap.get("finals", {})
     if finals:

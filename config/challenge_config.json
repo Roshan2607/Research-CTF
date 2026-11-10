@@ -74,5 +74,16 @@
     "median_wrong_attempts": 4,
     "share_low_graph_f1": 0.4,
     "low_graph_f1": 0.2
+  },
+  "graph_gate": {
+    "_comment": "Level completion needs a correct flag AND server-side weighted F1 >= the floor for that level. Floors are provisional (see simulation: L1 has only 5 reference edges, so it is lower). Organisers can waive per team/level.",
+    "enabled": true,
+    "floors": {
+      "1": 0.4,
+      "2": 0.5,
+      "3": 0.5,
+      "4": 0.5
+    },
+    "retry_cooldown_seconds": 20
   }
 }
