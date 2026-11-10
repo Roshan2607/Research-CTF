@@ -50,7 +50,8 @@ def test_authorize_url_matches_the_documented_shape():
 def test_host_id_is_stable_and_private():
     a, b = A.host_id(), A.host_id()
     assert a == b
-    assert stat.S_IMODE(os.stat(A.store_dir() / "chatgpt-host.json").st_mode) == 0o600
+    if os.name != "nt":
+        assert stat.S_IMODE(os.stat(A.store_dir() / "chatgpt-host.json").st_mode) == 0o600
 
 
 def test_callback_checks():
@@ -99,7 +100,9 @@ def test_login_end_to_end_with_fake_browser_and_token_endpoint():
     info = A.login(open_browser=fake_browser, post=fake_post, port=A.CALLBACK_PORT + 1, timeout=10)
     assert info["client_id"] == "oaiapp_1"
     path = A.store_dir() / "chatgpt-auth.json"
-    assert stat.S_IMODE(os.stat(path).st_mode) == 0o600 and json.loads(path.read_text())["access_token"] == "AT"
+    if os.name != "nt":
+        assert stat.S_IMODE(os.stat(path).st_mode) == 0o600
+    assert json.loads(path.read_text())["access_token"] == "AT"
 
 
 def test_missing_plan_scope_is_rejected():
