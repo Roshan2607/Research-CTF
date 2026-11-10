@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import hmac
+import io
 import json
 import os
 import secrets
@@ -146,7 +147,7 @@ PENALTY_PER_WRONG = float(_RULES.get("penalty_after_free", 1.0))
 MAX_PENALTY_PER_LEVEL = float(_RULES.get("max_penalty_per_level", FLAG_POINTS_PER_LEVEL))
 COOLDOWN_SCHEDULE = list(_RULES.get("cooldown_schedule") or []) or None
 HINT_UNLOCK_AFTER_WRONG = [int(x) for x in _RULES.get("hint_unlock_after_wrong", [2, 4, 6])]
-HINT_RUNG3_COST = float(_RULES.get("hint_rung3_cost", 1.0))
+HINT_RUNG3_COST = float(_RULES.get("hint_rung3_cost", 2.0))
 _DISCOVERY = _CFG.get("final_discovery_points", {}) if isinstance(_CFG, dict) else {}
 DISCOVERY_TARGET_POINTS = float(_DISCOVERY.get("target_paper", 3.0))
 DISCOVERY_APPLICATION_POINTS = float(_DISCOVERY.get("application", 2.0))
@@ -237,6 +238,19 @@ def _file_lock() -> _FileLock:
 
 def now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def safe_csv(df: pd.DataFrame) -> str:
+    """Export dataframe to CSV string while escaping formula-triggering characters (=, +, -, @)."""
+    escaped = df.copy()
+    for col in escaped.columns:
+        if escaped[col].dtype == object:
+            escaped[col] = escaped[col].apply(
+                lambda v: f"'{v}" if isinstance(v, str) and v and v[0] in ("=", "+", "-", "@") else v
+            )
+    buf = io.StringIO()
+    escaped.to_csv(buf, index=False, lineterminator="\n")
+    return buf.getvalue()
 
 
 def _read_csv(path: Path) -> list[dict]:
@@ -493,9 +507,14 @@ def create_team(team_id: str, name: str, password: str, cluster: str = CLUSTER, 
             return team_id
 
 
+_DUMMY_SALT = "0" * 32
+SESSION_EXPIRY_DAYS = 14
+
+
 def authenticate(team_id: str, password: str) -> dict | None:
     t = load()["teams"].get((team_id or "").strip().upper())
     if not t:
+        _hash(password or "", _DUMMY_SALT)
         return None
     _, candidate = _hash(password, t["salt"])
     return {
@@ -522,9 +541,25 @@ def authenticate_session(token: str) -> dict | None:
     if not token:
         return None
     d = load()
-    entry = d.get("session_tokens", {}).get(hashlib.sha256(token.encode()).hexdigest())
+    digest = hashlib.sha256(token.encode()).hexdigest()
+    entry = d.get("session_tokens", {}).get(digest)
     if not entry:
         return None
+    created = entry.get("created_at")
+    if created:
+        try:
+            created_dt = datetime.fromisoformat(created)
+            if created_dt.tzinfo is None:
+                created_dt = created_dt.replace(tzinfo=timezone.utc)
+            if datetime.now(timezone.utc) - created_dt > timedelta(days=SESSION_EXPIRY_DAYS):
+                with LOCK:
+                    with _file_lock():
+                        d = load()
+                        d.get("session_tokens", {}).pop(digest, None)
+                        save(d)
+                return None
+        except Exception:
+            pass
     t = d["teams"].get(entry["team_id"])
     return {
         "team_id": t["team_id"],
@@ -666,6 +701,8 @@ def get_draft(team: str, level: int) -> str:
 
 
 def save_draft(team: str, level: int, csv_text: str) -> None:
+    if len(csv_text or "") > 50000:
+        raise ValueError("Graph CSV data exceeds the maximum allowed size (50KB).")
     tid = str(team or "").strip().upper()
     key = f"{tid}:{level}"
     with LOCK:
@@ -776,7 +813,7 @@ def hint_status(team: str, level: int) -> list[dict]:
     n = len(spec["hints"])
     for i, text in enumerate(spec["hints"], 1):
         threshold = HINT_UNLOCK_AFTER_WRONG[min(i, len(HINT_UNLOCK_AFTER_WRONG)) - 1] if HINT_UNLOCK_AFTER_WRONG else 0
-        by_attempts = spec["flag_mode"] != "final_discovery" and wrong >= threshold
+        by_attempts = spec.get("flag_mode") != "final_discovery" and wrong >= threshold
         unlocked = i in released or by_attempts
         costly = i == n and n >= 3 and i not in released
         out.append({
@@ -797,6 +834,9 @@ def reveal_hint(team: str, level: int, rung: int) -> dict:
             d = load()
             if f"{tid}:{level}" in d.get("submissions", {}):
                 raise PermissionError("This level is already locked.")
+            history = d.get("attempts", {}).get(f"{tid}:{level}", [])
+            if any(a.get("correct") for a in history):
+                raise PermissionError("The flag for this level is already solved.")
             status = {h["rung"]: h for h in hint_status(tid, level)}
             h = status.get(int(rung))
             if not h:
@@ -848,6 +888,8 @@ def attempt_flag(team: str, level: int, answer: str) -> dict:
             clean_ans = str(answer or "").strip()
             if not clean_ans:
                 return {"correct": False, "message": "Enter a flag answer before submitting an attempt.", "cooldown_remaining": 0}
+            if len(clean_ans) > 200:
+                return {"correct": False, "message": "Flag answer exceeds maximum length of 200 characters.", "cooldown_remaining": 0}
 
             history = d.get("attempts", {}).get(key, [])
             if any(a.get("correct") for a in history):
@@ -890,7 +932,7 @@ def flag_status(team: str, level: int) -> dict:
     return _validator().compute_status(history, hint_cost=hint_cost(tid, level, d))
 
 
-def override_flag(team: str, level: int, reviewer: str, note: str = "") -> dict:
+def override_flag(team: str, level: int, reviewer: str, note: str = "", waive_penalties: bool = False) -> dict:
     """Organiser accepts a team's answer for a level (e.g. a correct answer phrased unexpectedly)."""
     tid = (team or "").strip().upper()
     reviewer = str(reviewer or "").strip()
@@ -901,13 +943,19 @@ def override_flag(team: str, level: int, reviewer: str, note: str = "") -> dict:
             d = load()
             if tid not in d.get("teams", {}):
                 raise ValueError(f"Team {tid!r} does not exist.")
-            key = f"{tid}:{level}"
-            if key in d.get("submissions", {}):
+            completed, current = team_progress(tid)
+            if level in completed or f"{tid}:{level}" in d.get("submissions", {}):
                 raise PermissionError("This level is already locked.")
+            if current is not None and level != current:
+                raise PermissionError(f"Cannot override Level {level}. The team is currently on Level {current}.")
+            key = f"{tid}:{level}"
+            if waive_penalties:
+                for a in d.setdefault("attempts", {}).get(key, []):
+                    a["counted"] = False
             rec = {"at": now(), "answer": f"[organiser override by {reviewer}] {note}".strip(), "correct": True,
                    "counted": True, "override": True, "reviewer": reviewer}
             d.setdefault("attempts", {}).setdefault(key, []).append(rec)
-            d["audit"].append({"at": rec["at"], "action": "flag_override", "team_id": tid, "level": level, "reviewer": reviewer})
+            d["audit"].append({"at": rec["at"], "action": "flag_override", "team_id": tid, "level": level, "reviewer": reviewer, "waive_penalties": waive_penalties})
             save(d)
             log_event({"at": rec["at"], "event": "flag_override", "team_id": tid, "level": level, "reviewer": reviewer})
             return rec
@@ -1000,14 +1048,24 @@ def _flag_registry() -> dict:
 def final_deadline() -> datetime | None:
     raw = os.environ.get("FINAL_DEADLINE") or (_CFG.get("final_submission", {}) or {}).get("deadline")
     try:
-        return datetime.fromisoformat(raw) if raw else None
+        if not raw:
+            return None
+        dl = datetime.fromisoformat(raw)
+        if dl.tzinfo is None:
+            dl = dl.replace(tzinfo=timezone.utc)
+        return dl
     except ValueError:
         return None
 
 
 def final_results_visible(at: datetime | None = None) -> bool:
     dl = final_deadline()
-    return bool(dl and (at or datetime.now(timezone.utc)) > dl)
+    if not dl:
+        return True
+    check_time = at or datetime.now(timezone.utc)
+    if check_time.tzinfo is None:
+        check_time = check_time.replace(tzinfo=timezone.utc)
+    return check_time > dl
 
 
 def submit_final_discovery(team: str, form: dict, registry: dict | None = None, secret: str | None = None) -> dict:
@@ -1105,6 +1163,8 @@ def finalise(
     key = f"{tid}:{level}"
     clean_csv = str(csv_text or "").strip()
     clean_expl = str(explanation or "").strip()
+    if len(clean_expl) > 3000:
+        raise ValueError("Explanation exceeds maximum length of 3000 characters.")
 
     with LOCK:
         with _file_lock():
@@ -1276,6 +1336,11 @@ def reset_team(team: str) -> None:
                     del d[bucket][k]
             d.get("finals", {}).pop(tid, None)
             d.setdefault("graphs", {})[tid] = TeamKnowledgeGraph(tid).to_dict()
+            # Revoke all active sessions for this team
+            tokens = d.get("session_tokens", {})
+            for digest in list(tokens.keys()):
+                if tokens[digest].get("team_id") == tid:
+                    del tokens[digest]
             d["audit"].append({"at": now(), "action": "team_reset", "team_id": tid})
             save(d)
             log_event({"at": now(), "event": "team_reset", "team_id": tid})
@@ -1360,15 +1425,10 @@ def ensure_demo_team(team_id: str | None = None, name: str | None = None, passwo
                 "created_at": now(),
             }
             d.setdefault("graphs", {})[tid] = TeamKnowledgeGraph(tid).to_dict()
-            for k in list(d.get("submissions", {}).keys()):
-                if k.startswith(f"{tid}:"):
-                    del d["submissions"][k]
-            for k in list(d.get("attempts", {}).keys()):
-                if k.startswith(f"{tid}:"):
-                    del d["attempts"][k]
-            for k in list(d.get("drafts", {}).keys()):
-                if k.startswith(f"{tid}:"):
-                    del d["drafts"][k]
+            for bucket in ("submissions", "attempts", "drafts", "hints"):
+                for k in list(d.get(bucket, {}).keys()):
+                    if k.startswith(f"{tid}:"):
+                        del d[bucket][k]
             save(d)
             log_event({"at": now(), "event": "demo_team_initialized", "team_id": tid})
             return tid

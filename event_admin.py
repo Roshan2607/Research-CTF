@@ -48,6 +48,7 @@ from event_core import (
     levels_for_cluster,
     open_level,
     override_flag,
+    safe_csv,
     release_hint_for_all,
     reset_team,
     review_final_discovery,
@@ -255,7 +256,7 @@ def submissions_view():
             st.markdown("#### Participant Evidence & Reasoning")
             explanation = rec.get("explanation", "").strip()
             if explanation:
-                st.info(explanation)
+                st.text(explanation)
             else:
                 st.caption("No evidence or reasoning submitted.")
 
@@ -354,10 +355,7 @@ with tabs[4]:
     logs_view()
 
 
-def _csv(df: pd.DataFrame) -> str:
-    buf = io.StringIO()
-    df.to_csv(buf, index=False, lineterminator="\n")
-    return buf.getvalue()
+_csv = safe_csv
 
 
 with tabs[3]:
@@ -401,9 +399,10 @@ with tabs[3]:
         o_level = c2.number_input("Level", min_value=0, max_value=10, value=1, step=1)
         o_reviewer = c3.text_input("Reviewer name")
         o_note = st.text_input("Why the answer is acceptable")
+        o_waive = st.checkbox("Waive wrong-attempt penalties for this level (award full 10 pts)")
         if st.form_submit_button("Accept answer (override)"):
             try:
-                override_flag(o_team, int(o_level), o_reviewer, o_note)
+                override_flag(o_team, int(o_level), o_reviewer, o_note, waive_penalties=o_waive)
                 st.success("Override recorded.")
             except (ValueError, PermissionError) as e:
                 st.error(str(e))

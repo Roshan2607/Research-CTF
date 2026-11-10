@@ -204,12 +204,14 @@ def normalise_flag(s: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", s).strip()
 
 
-MAX_ANSWER_WORDS = 8
+MAX_ANSWER_WORDS = 4
 
 
 def _tokens(s: str) -> list[str]:
+    # Normalize phrases like "paper 8", "paper 08", "p 8" into "p08" before tokenizing
+    s_pre = re.sub(r"\b(?:paper|p)\s+0*(\d{1,2})\b", r"p\1", str(s or ""), flags=re.IGNORECASE)
     out = []
-    for tok in normalise_flag(s).split():
+    for tok in normalise_flag(s_pre).split():
         m = re.fullmatch(r"p0*(\d{1,2})", tok)
         if m:  # paper IDs: p8, p08, P008 -> p08
             tok = f"p{int(m.group(1)):02d}"
@@ -232,11 +234,15 @@ def _alias_hit(tokens: list[str], alias: str) -> bool:
 def answer_matches(answer: str, aliases: list[str], max_words: int = MAX_ANSWER_WORDS) -> bool:
     """Keyword-group match: accept a short answer that contains one accepted alias as a word or phrase.
 
-    Tolerates plurals, surrounding words and paper-ID formatting (p8 / P08); rejects keyword stuffing
-    (answers longer than ``max_words`` words).
+    Tolerates plurals, surrounding words and paper-ID formatting (p8 / P08 / paper 8); rejects keyword stuffing
+    (answers longer than ``max_words`` words) and hedged answers (multiple paper IDs).
     """
     tokens = _tokens(answer)
     if not tokens or len(tokens) > max_words:
+        return False
+    # Reject hedged answers naming multiple distinct paper IDs (e.g. 'P08 P06 P11')
+    p_ids = {t for t in tokens if re.fullmatch(r"p\d{2}", t)}
+    if len(p_ids) > 1:
         return False
     return any(_alias_hit(tokens, a) for a in aliases if a)
 
@@ -323,6 +329,16 @@ class LevelFlagValidator:
         clean_answer = str(answer or "").strip()
         if not clean_answer:
             return {"correct": False, "message": "Enter a flag answer before submitting an attempt.",
+                    "cooldown_remaining": 0, "record_attempt": False}
+
+        tokens = _tokens(clean_answer)
+        p_ids = {t for t in tokens if re.fullmatch(r"p\d{2}", t)}
+        if len(p_ids) > 1:
+            return {"correct": False, "cooldown": False, "message": "Please specify a single paper ID rather than listing multiple candidates.",
+                    "cooldown_remaining": 0, "record_attempt": False}
+
+        if len(tokens) > MAX_ANSWER_WORDS:
+            return {"correct": False, "cooldown": False, "message": f"Answer is too long (maximum {MAX_ANSWER_WORDS} words). Please give a concise answer.",
                     "cooldown_remaining": 0, "record_attempt": False}
 
         server_now = now or dt.datetime.now(dt.timezone.utc)

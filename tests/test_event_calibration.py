@@ -43,7 +43,7 @@ def lock(tid, level, answer, csv_text):
 def test_calibrated_rule_defaults():
     assert core.PENALTY_PER_WRONG == 0.5 and core.MAX_PENALTY_PER_LEVEL == 5.0
     assert core.COOLDOWN_SCHEDULE == [10, 10, 30]
-    assert core.HINT_UNLOCK_AFTER_WRONG == [2, 4, 6] and core.HINT_RUNG3_COST == 1.0
+    assert core.HINT_UNLOCK_AFTER_WRONG == [2, 4, 6] and core.HINT_RUNG3_COST == 2.0
     assert (core.DISCOVERY_TARGET_POINTS, core.DISCOVERY_APPLICATION_POINTS, core.DISCOVERY_REVIEW_MAX_POINTS) == (3.0, 2.0, 5.0)
 
 
@@ -110,10 +110,10 @@ def test_hint_ladder_unlocks_and_rung3_costs_a_point(env):
         core.attempt_flag("TEAMHINT", 1, f"wrong {i}")
     assert [h["unlocked"] for h in core.hint_status("TEAMHINT", 1)] == [True, True, True]
     assert core.reveal_hint("TEAMHINT", 1, 1)["cost"] == 0
-    assert core.reveal_hint("TEAMHINT", 1, 3)["cost"] == 1.0
+    assert core.reveal_hint("TEAMHINT", 1, 3)["cost"] == 2.0
     core.attempt_flag("TEAMHINT", 1, "receivers")
     st = core.flag_status("TEAMHINT", 1)
-    assert st["penalty_points"] == 0.5 and st["hint_cost"] == 1.0 and st["flag_points"] == 8.5
+    assert st["penalty_points"] == 0.5 and st["hint_cost"] == 2.0 and st["flag_points"] == 7.5
 
 
 def test_organiser_released_hint_is_free(env):

@@ -54,6 +54,7 @@ from event_core import (
     save_draft,
     team_progress,
     parse_uploaded_graph_csv,
+    safe_csv,
 )
 
 st.set_page_config(page_title="Proof of Thought · Participant", page_icon="🧭", layout="wide")
@@ -230,6 +231,7 @@ def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: 
     dot.append("}")
     st.graphviz_chart("\n".join(dot), use_container_width=True)
 
+
 # ==============================================================================
 # TAB 1: START
 # ==============================================================================
@@ -286,7 +288,12 @@ elif section == "Papers":
                 if url:
                     st.markdown(f"[Open paper link]({url})")
                 card_path_val = p.get("challenge_card_path")
-                card = Path(card_path_val) if card_path_val else None
+                card = None
+                if card_path_val:
+                    candidate = (Path(__file__).parent / card_path_val).resolve()
+                    cards_root = (Path(__file__).parent / "data" / "participant" / "cards").resolve()
+                    if candidate.is_relative_to(cards_root) and candidate.exists():
+                        card = candidate
                 if not card or not card.exists():
                     try:
                         card = card_pdf_path(p["participant_id"])
@@ -301,7 +308,6 @@ elif section == "Papers":
                         key=f"card_{team['team_id']}_{p['participant_id']}",
                     )
 
-    st.divider()
     st.divider()
     st.subheader(f"Level {current} Objective")
     st.write(spec["question"])
@@ -454,7 +460,7 @@ elif section == "Knowledge Graph":
     else:
         col_cnt, col_dl = st.columns([2, 1])
         col_cnt.caption(f"✓ {len(df)} edges in your cumulative graph.")
-        col_dl.download_button("Download cumulative graph CSV", csv_text, f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
+        col_dl.download_button("Download cumulative graph CSV", safe_csv(df), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
 
 # ==============================================================================
 # TAB 4: SUBMIT
@@ -464,12 +470,19 @@ elif section == "Submit":
     d = load()
     rec = d["submissions"].get(key)
     if rec:
-        st.success(f"Level {current} is locked and submitted.")
-        st.write(f"**Submitted flag:** `{rec.get('submitted_flag', '')}` ({rec.get('flag_points', 0)}/10 pts)")
-        st.write(f"**Graph score:** {rec.get('graph_score', {}).get('points', 0)}/15 pts ({rec.get('edge_count', 0)} edges)")
-        if rec.get("manual_adjustment"):
-            st.write(f"**Organiser adjustment:** {rec.get('manual_adjustment')} pts ({rec.get('organiser_notes', '')})")
-        st.write(f"**Explanation:** {rec.get('explanation')}")
+        lock_msg = st.session_state.pop(f"lock_msg_{team['team_id']}_{current}", None)
+        if lock_msg:
+            st.success(f"🎉 {lock_msg}")
+        is_demo = bool(current == 0 or team.get("is_demo"))
+        if is_demo:
+            st.success("Level 0 warm-up is locked and completed (Unscored Practice).")
+        else:
+            st.success(f"Level {current} is locked and submitted.")
+            st.write(f"**Submitted flag:** `{rec.get('submitted_flag', '')}` ({rec.get('flag_points', 0)}/10 pts)")
+            st.write(f"**Graph score:** {rec.get('graph_score', {}).get('points', 0)}/15 pts ({rec.get('edge_count', 0)} edges)")
+            if rec.get("manual_adjustment"):
+                st.write(f"**Organiser adjustment:** {rec.get('manual_adjustment')} pts ({rec.get('organiser_notes', '')})")
+            st.write(f"**Explanation:** {rec.get('explanation')}")
         if rec.get("csv"):
             st.subheader("Submitted Graph Diagram")
             df_locked = pd.read_csv(io.StringIO(rec["csv"]), dtype=str, keep_default_na=False)
@@ -480,12 +493,22 @@ elif section == "Submit":
     st.subheader("1. Flag Check")
     st.write(spec["question"])
     fs = flag_status(team["team_id"], current)
+
+    flag_msg_key = f"flag_feedback_{team['team_id']}_{current}"
+    last_feedback = st.session_state.get(flag_msg_key)
+    if last_feedback:
+        (st.success if last_feedback["correct"] else st.error)(last_feedback["message"])
+
     if fs["correct"]:
         st.success(f"✅ Solved ({fs['flag_points']:g}/10 pts)")
     elif fs["cooldown_remaining"] > 0:
         st.warning(f"⏳ Cooldown active: wait {fs['cooldown_remaining']}s")
-    elif fs["last"]:
+        import time
+        time.sleep(1)
+        st.rerun()
+    elif fs["last"] and not last_feedback:
         st.error("❌ Not yet - check the papers again (hints unlock on the Papers tab).")
+
     if not fs["correct"]:
         with st.form(f"flag_{current}"):
             col_inp, col_btn = st.columns([4, 1])
@@ -493,7 +516,7 @@ elif section == "Submit":
             check = col_btn.form_submit_button("Check flag", use_container_width=True, disabled=bool(fs["cooldown_remaining"] > 0))
         if check and answer.strip():
             result = attempt_flag(team["team_id"], current, answer)
-            (st.success if result["correct"] else st.error)(result["message"])
+            st.session_state[flag_msg_key] = {"correct": result["correct"], "message": result["message"]}
             st.rerun()
     st.caption(f"Attempts: {fs['attempts']} · wrong: {fs['wrong_attempts']} · penalty: {fs['penalty_points']:g}"
                + (f" · hint cost: {fs['hint_cost']:g}" if fs.get("hint_cost") else ""))
@@ -566,7 +589,9 @@ elif section == "Submit":
         render_graph_diagram(df_preview, available=available, byid=byid)
 
     st.markdown("---")
+    is_demo = bool(current == 0 or team.get("is_demo"))
     can_submit = bool(draft.strip() and valid_rows and not errs and fs["attempts"] > 0)
+    btn_label = f"Lock & Submit Level {current}"
     if not can_submit:
         if fs["attempts"] == 0:
             st.caption("ℹ️ Submit at least one flag attempt in Section 1 above to enable level locking.")
@@ -575,7 +600,7 @@ elif section == "Submit":
         elif errs:
             st.caption("ℹ️ Fix graph validation issues before level locking.")
 
-    if st.button(f"Lock & Submit Level {current}", type="primary", disabled=not can_submit):
+    if st.button(btn_label, type="primary", disabled=not can_submit):
         if not explanation.strip():
             st.error("Please provide an explanation before submitting.")
             st.stop()
@@ -583,7 +608,10 @@ elif section == "Submit":
             rec = finalise(team=team["team_id"], level=current, csv_text=draft, explanation=explanation.strip())
             st.session_state.pop(f'graph_df_{team["team_id"]}_{current}', None)
             st.session_state.pop(explanation_key, None)
-            st.success(f"Level {current} locked. Graph points: {rec['graph_score']['points']:g}/15.")
+            st.session_state[f"lock_msg_{team['team_id']}_{current}"] = (
+                "Level 0 warm-up complete! You are ready for the competition."
+                if is_demo else f"Level {current} locked. Graph points: {rec['graph_score']['points']:g}/15."
+            )
             st.rerun()
         except (ValueError, PermissionError) as e:
             st.error(str(e))
