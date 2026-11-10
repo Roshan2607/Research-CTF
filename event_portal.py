@@ -136,36 +136,38 @@ with st.sidebar:
 
 def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: dict | None = None) -> None:
     """Render a clean Graphviz diagram from an edge dataframe."""
-    if df is None or df.empty:
-        st.info("No edges in the cumulative graph to display.")
-        return
-
     byid = byid or {}
     node_set = list(available) if available else []
-    for pid in sorted(set(df["source_id"].dropna().unique()) | set(df["target_id"].dropna().unique())):
-        if pid not in node_set:
-            node_set.append(pid)
+    if df is not None and not df.empty:
+        for pid in sorted(set(df["source_id"].dropna().unique()) | set(df["target_id"].dropna().unique())):
+            if pid not in node_set:
+                node_set.append(pid)
+
+    if not node_set:
+        st.info("No papers released yet to display in graph.")
+        return
 
     dot = [
-        'digraph G { graph [rankdir=LR, bgcolor="#ffffff", pad="0.25"]; '
-        'node [shape=box, style="rounded,filled", fillcolor="#EAF2FF", color="#315A8A", fontcolor="#142B45", fontname="Arial", fontsize=10, penwidth=1.5]; '
+        'digraph G { graph [rankdir=LR, bgcolor="#ffffff", pad="0.25"]; ',
+        'node [shape=box, style="rounded,filled", fillcolor="#EAF2FF", color="#315A8A", fontcolor="#142B45", fontname="Arial", fontsize=10, penwidth=1.5]; ',
         'edge [color="#2563EB", fontcolor="#173F7A", fontname="Arial", fontsize=9, penwidth=2, arrowsize=0.8];'
     ]
 
     for pid in node_set:
         clean_pid = re.sub(r'[^A-Za-z0-9_]', '', str(pid).strip().upper())
         title = byid.get(pid, {}).get("title", "") if pid in byid else ""
-        clean_title = re.sub(r'["\\\r\n]', ' ', str(title[:50])).strip()
+        clean_title = re.sub(r'["\\\r\n]', ' ', str(title[:40])).strip()
         lbl = f"{clean_pid}\\n{clean_title}" if clean_title else clean_pid
         dot.append(f'"{clean_pid}" [label="{lbl}"];')
 
-    for _, r in df.iterrows():
-        clean_s = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("source_id", "")).strip().upper())
-        clean_t = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("target_id", "")).strip().upper())
-        clean_rel = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("relationship_type", "")).strip())
-        style = "dir=none" if clean_rel in ("SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM") else "dir=forward"
-        if clean_s and clean_t:
-            dot.append(f'"{clean_s}" -> "{clean_t}" [label=" {clean_rel} ", {style}];')
+    if df is not None and not df.empty:
+        for _, r in df.iterrows():
+            clean_s = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("source_id", "")).strip().upper())
+            clean_t = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("target_id", "")).strip().upper())
+            clean_rel = re.sub(r'[^A-Za-z0-9_]', '', str(r.get("relationship_type", "")).strip())
+            style = "dir=none" if clean_rel in ("SHARES_PRINCIPLE", "ANALOGOUS_PROBLEM") else "dir=forward"
+            if clean_s and clean_t:
+                dot.append(f'"{clean_s}" -> "{clean_t}" [label=" {clean_rel} ", {style}];')
 
     dot.append("}")
     st.graphviz_chart("\n".join(dot), use_container_width=True)
@@ -255,6 +257,7 @@ if current is None:
 section = st.radio(
     "Navigate",
     ["Start", "Papers", "Knowledge Graph", "Submit"],
+    index=1 if current >= 1 else 0,
     horizontal=True,
     label_visibility="collapsed",
     key=f"nav_{team['team_id']}_{current}",
@@ -274,24 +277,23 @@ if current >= 1 and _open is not None and current > _open:
 
 
 # ==============================================================================
-# TAB 1: START
+# TAB 1: START (Uniform Challenge Guide & Methodology)
 # ==============================================================================
 if section == "Start":
-    lvl_label = "Level 0 (Demo)" if current == 0 else f"Level {current}"
-    lvl_pts = level_points(current)
-
-    st.subheader(f"{lvl_label}: {spec['title']}")
-    if current == 0:
-        st.caption("Practice Warm-Up · Unscored")
-    else:
-        st.caption(f"Maximum Points: **{lvl_pts['total']:g} pts** ({lvl_pts['graph']:g} Graph + {lvl_pts['flag']:g} Flag)")
-
-    st.markdown(f"> **Level Objective**: {spec['question']}")
+    st.subheader("Proof of Thought: Challenge Guide & Methodology")
+    st.caption("How to research papers, build cross-disciplinary knowledge graphs, and submit findings.")
 
     c1, c2, c3 = st.columns(3)
-    c1.info("**1. Read & Research**\nInspect papers and download PDF cards on the **Papers** tab.")
-    c2.info("**2. Build & Validate**\nConnect relationships and validate your CSV on **Knowledge Graph**.")
-    c3.info("**3. Submit on Form**\nSubmit your flag, validated graph, and evidence on the **Submit** tab.")
+    c1.info("**1. Read & Research**\nInspect papers and download PDF challenge cards on the **Papers** tab.")
+    c2.info("**2. Build & Validate**\nConnect cross-paper relationships and validate your CSV on **Knowledge Graph**.")
+    c3.info("**3. Submit on Form**\nVerify your flag and submit your cumulative graph and reasoning on **Submit**.")
+
+    with st.expander("Challenge Structure & Scoring Overview", expanded=False):
+        st.markdown("""
+- **4 Progressive Levels**: Explore published literature spanning computer networks, tree algorithms, and evolutionary biology.
+- **Scoring Ratio**: 60% Knowledge Graph similarity + 40% Flag correctness per level.
+- **Dynamic Graph Discovery**: Novel verified connections outside the initial reference set are rewarded with discovery bounties.
+        """)
 
     with st.expander("Relationship Vocabulary Reference (6 types)", expanded=False):
         vocab_df = pd.DataFrame(vocab["relationship_types"])
@@ -305,13 +307,21 @@ if section == "Start":
 # TAB 2: PAPERS
 # ==============================================================================
 elif section == "Papers":
-    st.subheader(f"Level {current} Objective")
-    st.info(f"**{spec['question']}**")
+    lvl_label = "Level 0 (Demo)" if current == 0 else f"Level {current}"
+    lvl_pts = level_points(current)
+
+    st.subheader(f"{lvl_label}: {spec['title']}")
+    if current == 0:
+        st.caption("Practice Warm-Up · Unscored")
+    else:
+        st.caption(f"Maximum Points: **{lvl_pts['total']:g} pts** ({lvl_pts['graph']:g} Graph + {lvl_pts['flag']:g} Flag)")
+
+    st.markdown(f"> **Level Objective**: {spec['question']}")
 
     st.subheader(f"Papers Released for Level {current}")
     cur_papers = [p for p in papers if p["participant_id"] in spec["paper_ids"]]
     for p in cur_papers:
-        with st.expander(f"{p['participant_id']} — {p['title']}", expanded=True):
+        with st.expander(f"{p['participant_id']} — {p['title']}", expanded=False):
             st.markdown(f"**Citation:** {p.get('citation', '')}")
             st.write(p.get("abstract", ""))
             c_link, c_dl = st.columns([1, 1])
@@ -339,19 +349,24 @@ elif section == "Papers":
                     key=f"card_{team['team_id']}_{p['participant_id']}",
                 )
 
-    past_levels = [lv for lv in team_levels if lv["id"] < current]
-    if past_levels:
-        with st.expander("Previously Released Papers (Earlier Levels)", expanded=False):
-            for plv in past_levels:
-                plv_papers = [p for p in papers if p["participant_id"] in plv["paper_ids"]]
-                if plv_papers:
-                    st.markdown(f"**Level {plv['id']} ({plv['title']})**")
-                    for p in plv_papers:
-                        st.caption(f"• **{p['participant_id']}** — {p['title']}")
+    # Previously Released Papers (Earlier Levels) - Only shown if there are earlier competition papers (levels >= 1)
+    past_levels_with_papers = []
+    for plv in team_levels:
+        if 1 <= plv["id"] < current:
+            p_list = [byid[pid] for pid in plv["paper_ids"] if pid in byid]
+            if p_list:
+                past_levels_with_papers.append((plv, p_list))
 
-    # Hints Ladder (Placed last on the Papers tab)
+    if past_levels_with_papers:
+        with st.expander("Previously Released Papers (Earlier Levels)", expanded=False):
+            for plv, p_list in past_levels_with_papers:
+                st.markdown(f"**Level {plv['id']}: {plv['title']}**")
+                for p in p_list:
+                    st.caption(f"• **{p['participant_id']}** — {p['title']}")
+
+    # Hints Ladder (Placed last on the Papers tab, closed initially)
     ladder = hint_status(team["team_id"], current)
-    with st.expander(f"Hints for Level {current}", expanded=any(h["revealed"] for h in ladder)):
+    with st.expander(f"Hints for Level {current}", expanded=False):
         if not ladder:
             st.caption("No hints configured for this level.")
         for h in ladder:
@@ -407,8 +422,12 @@ elif section == "Knowledge Graph":
         if not df.empty:
             st.download_button("Download CSV", safe_csv(df), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
 
-    # 1. Quick CSV Import & Validator
-    with st.expander("Import / Paste Graph CSV (Fast & Easy)", expanded=df.empty):
+    # 1. Live Graph Visual (Placed right at the top so no scrolling is needed!)
+    st.markdown("#### Live Graph Visual")
+    render_graph_diagram(df, available=available, byid=byid)
+
+    # 2. Quick CSV Import & Validator (Closed initially)
+    with st.expander("Import / Paste Graph CSV", expanded=False):
         st.caption("Paste or upload your cumulative graph CSV. Validates headers, released papers, and relationship vocabulary.")
         val_csv_input = st.text_area(
             "Paste Graph CSV",
@@ -452,7 +471,7 @@ elif section == "Knowledge Graph":
                         st.error(str(e))
                     st.rerun()
 
-    # 2. Manual Edge Editor (Collapsible)
+    # 3. Manual Edge Editor (Closed initially)
     with st.expander("Add / Remove Individual Edge", expanded=False):
         with st.form(f"add_edge_{current}", clear_on_submit=True):
             c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
@@ -502,14 +521,6 @@ elif section == "Knowledge Graph":
                 except (ValueError, PermissionError) as e:
                     st.error(str(e))
                 st.rerun()
-
-    # 3. Live Graph Diagram
-    df = st.session_state[statekey].copy()
-    if not df.empty:
-        st.subheader("Live Graph Diagram")
-        render_graph_diagram(df, available=available, byid=byid)
-    else:
-        st.info("Your cumulative graph is empty. Paste a CSV above or add an edge to visualize your graph.")
 
 # ==============================================================================
 # TAB 4: SUBMIT
