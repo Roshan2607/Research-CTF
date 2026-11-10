@@ -263,18 +263,19 @@ def submissions_view():
             else:
                 st.caption("No evidence or reasoning submitted.")
 
-            # --- Manual Graph Score Adjustment ---
-            st.markdown("#### Organiser Score Adjustment")
+            # --- Manual Graph Score Adjustment (Bounty & Corrections) ---
+            st.markdown("#### Organiser Score Adjustment (Discovery Bounty & Corrections)")
             with st.form(f"adjust_{sub_key}"):
                 col_adj, col_notes = st.columns([1, 2])
                 adj_val = col_adj.number_input(
                     "Score Adjustment (+/- pts)",
-                    min_value=-15.0,
-                    max_value=15.0,
+                    min_value=-10000.0,
+                    max_value=10000.0,
                     value=float(rec.get("manual_adjustment", 0.0)),
-                    step=0.5,
+                    step=50.0,
+                    help="Award discovery bounties (e.g. +250 or +500 pts) for novel valid connections, or apply custom penalties.",
                 )
-                notes_val = col_notes.text_input("Reviewer Notes", value=rec.get("organiser_notes", ""))
+                notes_val = col_notes.text_input("Reviewer Notes / Bounty Reason", value=rec.get("organiser_notes", ""))
                 save_adj = st.form_submit_button("Save score adjustment")
             if save_adj:
                 adjust_submission_score(rec["team_id"], rec["level"], adj_val, notes_val)
