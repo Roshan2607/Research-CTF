@@ -54,7 +54,7 @@ def test_portal_flow_level0_to_level1(env):
     # Level 0 warm-up through the UI
     _go(at, "Submit")
     next(t for t in at.text_input if t.label == "Flag answer").input("prefix tree")
-    next(b for b in at.button if b.label == "Check flag").click()
+    next(b for b in at.button if "flag" in b.label.lower()).click()
     at.run()
     _ok(at)
     lock = next(b for b in at.button if b.label.startswith("Lock & Submit"))
@@ -68,14 +68,14 @@ def test_portal_flow_level0_to_level1(env):
     assert core.team_progress("TEAM01")[1] == 1
 
     # Level 1 (fresh session - AppTest keeps stale widget state across a level change):
-    # lock is disabled until the flag is solved; graph scored on the server
+    # lock is disabled until a flag is entered; graph scored on the server
     core.save_draft("TEAM01", 1, L1)
     at = AppTest.from_file(str(core.ROOT / "event_portal.py"), default_timeout=90).run()
     _login(at)
     _go(at, "Submit")
     assert next(b for b in at.button if b.label.startswith("Lock & Submit")).disabled
     next(t for t in at.text_input if t.label == "Flag answer").input("the receivers")
-    next(b for b in at.button if b.label == "Check flag").click()
+    next(b for b in at.button if "flag" in b.label.lower()).click()
     at.run()
     _ok(at)
     next(t for t in at.text_area if t.label == "Evidence & Reasoning").input("P02 and P13 cite P05 (reference lists)")
@@ -89,13 +89,12 @@ def test_portal_flow_level0_to_level1(env):
 def test_portal_hint_ladder_and_final_discovery_form(env, monkeypatch):
     core.attempt_flag("TEAM01", 0, "trie")
     core.finalise("TEAM01", 0, "", explanation="warm-up")
-    for i in range(2):
-        core.attempt_flag("TEAM01", 1, f"wrong {i}")
+    core.release_hint_for_all(1, 1)
     at = AppTest.from_file(str(core.ROOT / "event_portal.py"), default_timeout=90).run()
     _login(at)
     _go(at, "Papers")
     reveal = [b for b in at.button if b.label.startswith("Reveal Hint")]
-    assert [b.label for b in reveal] == ["Reveal Hint 1"]
+    assert len(reveal) == 1 and "Hint 1" in reveal[0].label
     reveal[0].click()
     at.run()
     _ok(at)
@@ -111,7 +110,7 @@ def test_portal_hint_ladder_and_final_discovery_form(env, monkeypatch):
     at.run()
     _go(at, "Submit")
     assert any(t.label == "Flag answer" for t in at.text_input)
-    assert any(b.label.startswith("Lock & Submit") for b in at.button)
+    assert any("Confirm Final Submission" in b.label or "Lock & Submit" in b.label for b in at.button)
 
 
 def test_admin_requires_strong_uncompromised_password(env, monkeypatch):

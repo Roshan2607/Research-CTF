@@ -43,7 +43,7 @@ def lock(tid, level, answer, csv_text):
 def test_calibrated_rule_defaults():
     assert core.PENALTY_PER_WRONG == 0.5 and core.MAX_PENALTY_PER_LEVEL == 5.0
     assert core.COOLDOWN_SCHEDULE == [10, 10, 30]
-    assert core.HINT_UNLOCK_AFTER_WRONG == [2, 4, 6] and core.HINT_RUNG3_COST == 2.0
+    assert core.HINT_RUNG1_COST == 1.0 and core.HINT_RUNG2_COST == 1.0 and core.HINT_RUNG3_COST == 2.0
     assert (core.DISCOVERY_TARGET_POINTS, core.DISCOVERY_APPLICATION_POINTS, core.DISCOVERY_REVIEW_MAX_POINTS) == (3.0, 2.0, 5.0)
 
 
@@ -106,14 +106,15 @@ def test_hint_ladder_unlocks_and_rung3_costs_a_point(env):
     assert [h["unlocked"] for h in core.hint_status("TEAMHINT", 1)] == [False, False, False]
     with pytest.raises(PermissionError):
         core.reveal_hint("TEAMHINT", 1, 1)
-    for i in range(6):
-        core.attempt_flag("TEAMHINT", 1, f"wrong {i}")
+    core.release_hint_for_all(1, 1)
+    core.release_hint_for_all(1, 2)
+    core.release_hint_for_all(1, 3)
     assert [h["unlocked"] for h in core.hint_status("TEAMHINT", 1)] == [True, True, True]
-    assert core.reveal_hint("TEAMHINT", 1, 1)["cost"] == 0
+    assert core.reveal_hint("TEAMHINT", 1, 1)["cost"] == 1.0
     assert core.reveal_hint("TEAMHINT", 1, 3)["cost"] == 2.0
     core.attempt_flag("TEAMHINT", 1, "receivers")
     st = core.flag_status("TEAMHINT", 1)
-    assert st["penalty_points"] == 0.5 and st["hint_cost"] == 2.0 and st["flag_points"] == 7.5
+    assert st["hint_cost"] == 3.0 and st["flag_points"] == 7.0
 
 
 def test_organiser_released_hint_is_free(env):
@@ -121,7 +122,9 @@ def test_organiser_released_hint_is_free(env):
     solve_level0("TEAMREL")
     core.release_hint_for_all(1, 3)
     h3 = core.hint_status("TEAMREL", 1)[2]
-    assert h3["unlocked"] and h3["revealed"] and h3["cost"] == 0 and h3["text"]
+    assert h3["unlocked"] is True and h3["revealed"] is False and h3["cost"] == 2.0
+    rev = core.reveal_hint("TEAMREL", 1, 3)
+    assert rev["cost"] == 2.0 and rev["text"]
 
 
 # ---------------------------------------------------------------- organiser gate

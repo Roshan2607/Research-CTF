@@ -131,70 +131,6 @@ with st.sidebar:
         st.session_state.pop("event_team", None)
         st.rerun()
 
-if current is None:
-    st.success(f"All {len(team_levels)} levels completed!")
-    # Show summary of all submitted levels
-    d = load()
-    summary_rows = []
-    for lv in team_levels:
-        rec = d["submissions"].get(f"{team['team_id']}:{lv['id']}", {})
-        gp = rec.get("graph_score", {}).get("points", 0) + rec.get("manual_adjustment", 0)
-        fp = rec.get("flag_points", 0)
-        summary_rows.append({
-            "Level": f"Level {lv['id']}: {lv['title']}",
-            "Flag Solved": "✅" if rec.get("flag_correct") else "❌",
-            "Flag Points (/10)": fp,
-            "Graph Points (/15)": round(gp, 2),
-            "Total (/25)": round(fp + gp, 2),
-            "Edges": rec.get("edge_count", 0),
-        })
-    st.subheader("Your Final Event Results")
-    st.dataframe(pd.DataFrame(summary_rows), hide_index=True, use_container_width=True)
-    st.stop()
-
-# Exactly Four Tabs as per specification: Start, Papers, Knowledge Graph, Submit
-section = st.radio(
-    "Navigate",
-    ["Start", "Papers", "Knowledge Graph", "Submit"],
-    horizontal=True,
-    label_visibility="collapsed",
-    key=f"nav_{team['team_id']}_{current}",
-)
-
-corpus = load_corpus()
-vocab = load_vocabulary()
-available = released_papers(current, team["cluster"])
-cluster_content_rows = [r for r in _content() if r.get("cluster", "").strip() == team["cluster"]]
-content_map = {r["paper_id"]: r for r in cluster_content_rows}
-
-byid = {p["participant_id"]: dict(p) for p in corpus}
-for pid, r in content_map.items():
-    if pid in byid and team["cluster"] != CLUSTER:
-        byid[pid]["title"] = r.get("paper_title") or byid[pid]["title"]
-        byid[pid]["challenge_card_path"] = r.get("challenge_card_path")
-        byid[pid]["citation"] = f"{pid} · {r.get('paper_title', '')}"
-        byid[pid]["abstract"] = f"Research excerpt on {r.get('paper_title', '')}."
-    elif pid not in byid:
-        byid[pid] = {
-            "participant_id": pid,
-            "title": r.get("paper_title", pid),
-            "citation": f"{pid} · {r.get('paper_title', '')}",
-            "abstract": f"Research excerpt on {r.get('paper_title', '')}.",
-            "challenge_card_path": r.get("challenge_card_path"),
-        }
-
-papers = [byid[pid] for pid in available if pid in byid]
-labels = {pid: f"{pid} — {byid[pid]['title']}" for pid in byid}
-spec = next(x for x in team_levels if x["id"] == current)
-key = f"{team['team_id']}:{current}"
-
-_open = open_level()
-if current >= 1 and _open is not None and current > _open:
-    st.info(f"Level {current} has not been opened yet. Well done on finishing Level {current - 1} - "
-            "the organisers will release the next level shortly. Refresh this page when they announce it.")
-    st.stop()
-
-
 def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: dict | None = None) -> None:
     """Render a clean Graphviz diagram from an edge dataframe."""
     if df is None or df.empty:
@@ -230,6 +166,95 @@ def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: 
 
     dot.append("}")
     st.graphviz_chart("\n".join(dot), use_container_width=True)
+
+
+corpus = load_corpus()
+vocab = load_vocabulary()
+cluster_content_rows = [r for r in _content() if r.get("cluster", "").strip() == team["cluster"]]
+content_map = {r["paper_id"]: r for r in cluster_content_rows}
+
+byid = {p["participant_id"]: dict(p) for p in corpus}
+for pid, r in content_map.items():
+    if pid in byid and team["cluster"] != CLUSTER:
+        byid[pid]["title"] = r.get("paper_title") or byid[pid]["title"]
+        byid[pid]["challenge_card_path"] = r.get("challenge_card_path")
+        byid[pid]["citation"] = f"{pid} · {r.get('paper_title', '')}"
+        byid[pid]["abstract"] = f"Research excerpt on {r.get('paper_title', '')}."
+    elif pid not in byid:
+        byid[pid] = {
+            "participant_id": pid,
+            "title": r.get("paper_title", pid),
+            "citation": f"{pid} · {r.get('paper_title', '')}",
+            "abstract": f"Research excerpt on {r.get('paper_title', '')}.",
+            "challenge_card_path": r.get("challenge_card_path"),
+        }
+
+if current is None:
+    st.header("🏆 Final Event Results & Grand Reveal")
+    st.balloons()
+    d = load()
+    summary_rows = []
+    comp_rows = []
+    for lv in team_levels:
+        rec = d["submissions"].get(f"{team['team_id']}:{lv['id']}", {})
+        gp = rec.get("graph_score", {}).get("points", 0) + rec.get("manual_adjustment", 0)
+        fp = rec.get("flag_points", 0)
+        is_demo_lv = lv["id"] == 0
+        status_str = "Unscored Demo" if is_demo_lv else ("✅ Correct" if rec.get("flag_correct") else "❌ Incorrect")
+        summary_rows.append({
+            "Level": f"Level {lv['id']}: {lv['title']}",
+            "Submitted Flag": rec.get("submitted_flag", ""),
+            "Flag Result": status_str,
+            "Flag Points (/10)": "-" if is_demo_lv else f"{fp:g}",
+            "Graph Points (/15)": "-" if is_demo_lv else f"{round(gp, 2):g}",
+            "Total (/25)": "-" if is_demo_lv else f"{round(fp + gp, 2):g}",
+            "Edges": rec.get("edge_count", 0),
+        })
+        if not is_demo_lv:
+            comp_rows.append({"fp": fp, "gp": gp, "tot": fp + gp})
+
+    st.dataframe(pd.DataFrame(summary_rows), hide_index=True, use_container_width=True)
+
+    if comp_rows:
+        tot_fp = sum(r["fp"] for r in comp_rows)
+        tot_gp = sum(r["gp"] for r in comp_rows)
+        tot_all = sum(r["tot"] for r in comp_rows)
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Total Flag Points", f"{tot_fp:g} / 40 pts")
+        c2.metric("Total Graph Points", f"{tot_gp:g} / 60 pts")
+        c3.metric("Final Score", f"{tot_all:g} / 100 pts")
+
+    final_sub = d["submissions"].get(f"{team['team_id']}:4")
+    if final_sub and final_sub.get("csv"):
+        st.subheader("Your Final Cumulative Knowledge Graph")
+        try:
+            df_final = pd.read_csv(io.StringIO(final_sub["csv"]), dtype=str, keep_default_na=False)
+            available_all = released_papers(4, team["cluster"])
+            render_graph_diagram(df_final, available=available_all, byid=byid)
+        except Exception:
+            pass
+    st.stop()
+
+# Exactly Four Tabs as per specification: Start, Papers, Knowledge Graph, Submit
+section = st.radio(
+    "Navigate",
+    ["Start", "Papers", "Knowledge Graph", "Submit"],
+    horizontal=True,
+    label_visibility="collapsed",
+    key=f"nav_{team['team_id']}_{current}",
+)
+
+available = released_papers(current, team["cluster"])
+papers = [byid[pid] for pid in available if pid in byid]
+labels = {pid: f"{pid} — {byid[pid]['title']}" for pid in byid}
+spec = next(x for x in team_levels if x["id"] == current)
+key = f"{team['team_id']}:{current}"
+
+_open = open_level()
+if current >= 1 and _open is not None and current > _open:
+    st.info(f"Level {current} has not been opened yet. Well done on finishing Level {current - 1} - "
+            "the organisers will release the next level shortly. Refresh this page when they announce it.")
+    st.stop()
 
 
 # ==============================================================================
@@ -317,7 +342,8 @@ elif section == "Papers":
     if not ladder:
         st.caption("No hints configured for this level.")
     for h in ladder:
-        label = f"Hint {h['rung']}" + (f" (costs {h['cost']:g} point)" if h["cost"] else "")
+        cost_str = f"costs {h['cost']:g} pt" if h['cost'] == 1 else f"costs {h['cost']:g} pts"
+        label = f"Hint {h['rung']} ({cost_str})"
         if h["revealed"]:
             st.markdown(f"**{label}:** {h['text']}")
         elif h["unlocked"]:
@@ -328,8 +354,7 @@ elif section == "Papers":
                     st.error(str(e))
                 st.rerun()
         else:
-            when = f"after {h['unlock_after_wrong']} wrong attempts or when released by organisers"
-            st.caption(f"🔒 {label} unlocks {when}.")
+            st.caption(f"🔒 {label} is locked (released by organisers if required).")
 
 # ==============================================================================
 # TAB 3: KNOWLEDGE GRAPH
@@ -478,11 +503,12 @@ elif section == "Submit":
             st.success("Level 0 warm-up is locked and completed (Unscored Practice).")
         else:
             st.success(f"Level {current} is locked and submitted.")
-            st.write(f"**Submitted flag:** `{rec.get('submitted_flag', '')}` ({rec.get('flag_points', 0)}/10 pts)")
-            st.write(f"**Graph score:** {rec.get('graph_score', {}).get('points', 0)}/15 pts ({rec.get('edge_count', 0)} edges)")
+            st.write(f"**Submitted flag:** `{rec.get('submitted_flag', '')}`")
+            st.write(f"**Cumulative Graph:** {rec.get('edge_count', 0)} edges")
             if rec.get("manual_adjustment"):
                 st.write(f"**Organiser adjustment:** {rec.get('manual_adjustment')} pts ({rec.get('organiser_notes', '')})")
             st.write(f"**Explanation:** {rec.get('explanation')}")
+            st.caption("ℹ️ Flag accuracy, graph scores, and total points will be revealed on the final results page after Level 4.")
         if rec.get("csv"):
             st.subheader("Submitted Graph Diagram")
             df_locked = pd.read_csv(io.StringIO(rec["csv"]), dtype=str, keep_default_na=False)
@@ -490,36 +516,39 @@ elif section == "Submit":
         st.stop()
 
     # --- 1. Flag Section ---
-    st.subheader("1. Flag Check")
+    st.subheader("1. Flag Answer")
     st.write(spec["question"])
     fs = flag_status(team["team_id"], current)
+    current_answer = fs["last"]["answer"] if fs.get("last") else ""
 
-    flag_msg_key = f"flag_feedback_{team['team_id']}_{current}"
-    last_feedback = st.session_state.get(flag_msg_key)
-    if last_feedback:
-        (st.success if last_feedback["correct"] else st.error)(last_feedback["message"])
+    flag_saved_key = f"flag_saved_msg_{team['team_id']}_{current}"
+    last_saved_msg = st.session_state.pop(flag_saved_key, None)
+    if last_saved_msg:
+        st.info(last_saved_msg)
 
-    if fs["correct"]:
-        st.success(f"✅ Solved ({fs['flag_points']:g}/10 pts)")
-    elif fs["cooldown_remaining"] > 0:
-        st.warning(f"⏳ Cooldown active: wait {fs['cooldown_remaining']}s")
-        import time
-        time.sleep(1)
-        st.rerun()
-    elif fs["last"] and not last_feedback:
-        st.error("❌ Not yet - check the papers again (hints unlock on the Papers tab).")
-
-    if not fs["correct"]:
-        with st.form(f"flag_{current}"):
-            col_inp, col_btn = st.columns([4, 1])
-            answer = col_inp.text_input("Flag answer", placeholder="A few words are enough", label_visibility="collapsed")
-            check = col_btn.form_submit_button("Check flag", use_container_width=True, disabled=bool(fs["cooldown_remaining"] > 0))
-        if check and answer.strip():
-            result = attempt_flag(team["team_id"], current, answer)
-            st.session_state[flag_msg_key] = {"correct": result["correct"], "message": result["message"]}
+    with st.form(f"flag_{current}"):
+        col_inp, col_btn = st.columns([4, 1])
+        answer = col_inp.text_input(
+            "Flag answer",
+            value=current_answer,
+            placeholder="Enter your hypothesis or answer...",
+            label_visibility="collapsed",
+        )
+        saved = col_btn.form_submit_button("Save flag answer", use_container_width=True)
+    if saved and answer.strip():
+        result = attempt_flag(team["team_id"], current, answer.strip())
+        if not result["correct"] and "message" in result and ("words" in result["message"] or "length" in result["message"] or "single paper" in result["message"]):
+            st.error(result["message"])
+        else:
+            st.session_state[flag_saved_key] = f"💾 Flag answer recorded: `{answer.strip()}`. (Graded upon final submission)"
             st.rerun()
-    st.caption(f"Attempts: {fs['attempts']} · wrong: {fs['wrong_attempts']} · penalty: {fs['penalty_points']:g}"
-               + (f" · hint cost: {fs['hint_cost']:g}" if fs.get("hint_cost") else ""))
+
+    if current_answer:
+        st.caption(f"Current saved answer: `{current_answer}` · You may update your answer anytime before locking Level {current}.")
+    else:
+        st.caption("ℹ️ Enter and save your flag answer above before locking this level.")
+    if fs.get("hint_cost"):
+        st.caption(f"Hint cost incurred on this level: {fs['hint_cost']:g} pts")
 
     st.divider()
 
@@ -560,28 +589,47 @@ elif section == "Submit":
     st.divider()
 
     # --- 3. Final Confirmation Review ---
-    st.subheader(f"3. Final Confirmation · Level {current}")
-    st.caption("Review your flag attempt and graph preview before locking your submission.")
+    final_flag_val = fs["last"]["answer"] if fs.get("last") else ""
 
-    final_flag_val = fs["last"]["answer"] if fs["last"] else ""
-    col_flag_rev, col_graph_rev = st.columns(2)
-    with col_flag_rev:
-        st.markdown(f"**Submitted Flag Attempt:** `{final_flag_val or 'No flag attempted'}`")
-        if fs["correct"]:
-            st.success(f"Flag Status: ✅ Correct ({fs['flag_points']:g}/10 pts)")
-        elif fs["last"]:
-            st.info("Flag Status: 🟡 Recorded (soft gating: advancing permitted)")
-        else:
-            st.warning("Flag Status: ⚠️ No flag attempt submitted yet")
+    if current == 4:
+        st.subheader("3. Final Competition Confirmation Review")
+        st.caption("Review all your submitted flags and final cumulative graph before the final lock & reveal.")
 
-    with col_graph_rev:
-        st.markdown(f"**Cumulative Graph Edges:** {len(valid_rows)}")
-        if errs:
-            st.error(f"Graph Status: ❌ {len(errs)} validation error(s)")
-        elif len(valid_rows) > 0:
-            st.success(f"Graph Status: ✅ Ready ({len(valid_rows)} edges)")
-        else:
-            st.warning("Graph Status: ⚠️ Cumulative graph is empty")
+        d_curr = load()
+        all_flags_summary = []
+        for lv in team_levels:
+            if lv["id"] == 0:
+                continue
+            if lv["id"] < 4:
+                prev_sub = d_curr["submissions"].get(f"{team['team_id']}:{lv['id']}", {})
+                ans_str = prev_sub.get("submitted_flag", "")
+            else:
+                ans_str = final_flag_val
+            all_flags_summary.append({
+                "Level": f"Level {lv['id']}: {lv['title']}",
+                "Submitted Flag Answer": ans_str or "(None entered)",
+            })
+        st.dataframe(pd.DataFrame(all_flags_summary), hide_index=True, use_container_width=True)
+    else:
+        st.subheader(f"3. Final Confirmation · Level {current}")
+        st.caption("Review your flag answer and cumulative graph preview before locking your submission.")
+
+        col_flag_rev, col_graph_rev = st.columns(2)
+        with col_flag_rev:
+            st.markdown(f"**Flag Answer:** `{final_flag_val or 'No flag entered yet'}`")
+            if final_flag_val:
+                st.info("Flag Status: 💾 Recorded (graded upon final submission)")
+            else:
+                st.warning("Flag Status: ⚠️ No flag answer entered yet")
+
+        with col_graph_rev:
+            st.markdown(f"**Cumulative Graph Edges:** {len(valid_rows)}")
+            if errs:
+                st.error(f"Graph Status: ❌ {len(errs)} validation error(s)")
+            elif len(valid_rows) > 0:
+                st.success(f"Graph Status: ✅ Ready ({len(valid_rows)} edges)")
+            else:
+                st.warning("Graph Status: ⚠️ Cumulative graph is empty")
 
     if draft.strip() and len(valid_rows) > 0 and not errs:
         st.markdown("**Graph Diagram Preview:**")
@@ -591,10 +639,16 @@ elif section == "Submit":
     st.markdown("---")
     is_demo = bool(current == 0 or team.get("is_demo"))
     can_submit = bool(draft.strip() and valid_rows and not errs and fs["attempts"] > 0)
-    btn_label = f"Lock & Submit Level {current}"
+    if current == 4:
+        btn_label = "🚀 Confirm Final Submission & Reveal Results"
+    elif is_demo:
+        btn_label = f"Lock & Submit Level {current} (Demo)"
+    else:
+        btn_label = f"Lock & Submit Level {current}"
+
     if not can_submit:
         if fs["attempts"] == 0:
-            st.caption("ℹ️ Submit at least one flag attempt in Section 1 above to enable level locking.")
+            st.caption("ℹ️ Save a flag answer in Section 1 above to enable level locking.")
         elif not draft.strip() or len(valid_rows) == 0:
             st.caption("ℹ️ Add at least one edge in Knowledge Graph to enable level locking.")
         elif errs:
@@ -609,8 +663,11 @@ elif section == "Submit":
             st.session_state.pop(f'graph_df_{team["team_id"]}_{current}', None)
             st.session_state.pop(explanation_key, None)
             st.session_state[f"lock_msg_{team['team_id']}_{current}"] = (
-                "Level 0 warm-up complete! You are ready for the competition."
-                if is_demo else f"Level {current} locked. Graph points: {rec['graph_score']['points']:g}/15."
+                "Final competition submission complete! Unsealing event results..."
+                if current == 4 else (
+                    "Level 0 warm-up complete! You are ready for the competition."
+                    if is_demo else f"Level {current} locked. Advancing to next level."
+                )
             )
             st.rerun()
         except (ValueError, PermissionError) as e:

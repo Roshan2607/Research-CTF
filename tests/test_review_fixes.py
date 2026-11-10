@@ -102,18 +102,16 @@ def test_override_restricted_to_current_level_and_waive(clean_env):
     assert st["penalty_points"] == 0.0
 
 
-def test_reveal_hint_blocked_after_flag_solved(clean_env):
-    """Item 10: Cannot reveal paid hints after solving the flag."""
+def test_reveal_hint_blocked_after_level_locked(clean_env):
+    """Item 10: Cannot reveal hints after the level is locked."""
     core.create_team("THNT", "Hint Block Team", "Pass12345678")
     solve_level0("THNT")
-    for _ in range(6):
-        core.attempt_flag("THNT", 1, "wrong")
-    # Solve the flag
+    core.release_hint_for_all(1, 3)
     core.attempt_flag("THNT", 1, "receivers")
-    assert core.flag_status("THNT", 1)["correct"] is True
+    core.finalise("THNT", 1, "source_id,target_id,relationship_type,evidence_reference\nP02,P05,CITES,ref\n", explanation="done")
 
-    # Attempting to reveal hint 3 now must fail
-    with pytest.raises(PermissionError, match="already solved"):
+    # Attempting to reveal hint 3 on a locked level must fail
+    with pytest.raises(PermissionError, match="already locked"):
         core.reveal_hint("THNT", 1, 3)
 
 

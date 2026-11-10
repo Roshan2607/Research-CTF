@@ -146,8 +146,11 @@ GRAPH_POINTS_PER_LEVEL = float(_RULES.get("graph_points_per_level", 15.0))
 PENALTY_PER_WRONG = float(_RULES.get("penalty_after_free", 1.0))
 MAX_PENALTY_PER_LEVEL = float(_RULES.get("max_penalty_per_level", FLAG_POINTS_PER_LEVEL))
 COOLDOWN_SCHEDULE = list(_RULES.get("cooldown_schedule") or []) or None
-HINT_UNLOCK_AFTER_WRONG = [int(x) for x in _RULES.get("hint_unlock_after_wrong", [2, 4, 6])]
+HINT_UNLOCK_AFTER_WRONG = [int(x) for x in _RULES.get("hint_unlock_after_wrong", [])]
+HINT_RUNG1_COST = float(_RULES.get("hint_rung1_cost", 1.0))
+HINT_RUNG2_COST = float(_RULES.get("hint_rung2_cost", 1.0))
 HINT_RUNG3_COST = float(_RULES.get("hint_rung3_cost", 2.0))
+HINT_COSTS = {1: HINT_RUNG1_COST, 2: HINT_RUNG2_COST, 3: HINT_RUNG3_COST}
 _DISCOVERY = _CFG.get("final_discovery_points", {}) if isinstance(_CFG, dict) else {}
 DISCOVERY_TARGET_POINTS = float(_DISCOVERY.get("target_paper", 3.0))
 DISCOVERY_APPLICATION_POINTS = float(_DISCOVERY.get("application", 2.0))
@@ -795,9 +798,9 @@ def release_hint_for_all(level: int, rung: int) -> None:
 
 
 def hint_status(team: str, level: int) -> list[dict]:
-    """For each rung: unlocked / revealed / cost. Rung N unlocks after HINT_UNLOCK_AFTER_WRONG[N-1] wrong
-    attempts or when organisers release it. Only the last rung costs points, and only if the team opens it
-    before the organisers release it."""
+    """For each rung: unlocked / revealed / cost.
+    Rungs unlock when organisers release them.
+    Costs: Rung 1 = 1.0 pt, Rung 2 = 1.0 pt, Rung 3 = 2.0 pts upon reveal."""
     tid = str(team or "").strip().upper()
     d = load()
     team_rec = d.get("teams", {}).get(tid)
@@ -806,23 +809,19 @@ def hint_status(team: str, level: int) -> list[dict]:
     spec = level_spec(team_rec.get("cluster", CLUSTER), level)
     if not spec:
         return []
-    wrong = len([a for a in d.get("attempts", {}).get(_hint_key(tid, level), []) if not a.get("correct")])
     released = set(d.get("settings", {}).get("released_hints", {}).get(str(level), []))
     revealed = set(d.get("hints", {}).get(_hint_key(tid, level), {}).get("revealed", []))
     out = []
-    n = len(spec["hints"])
     for i, text in enumerate(spec["hints"], 1):
-        threshold = HINT_UNLOCK_AFTER_WRONG[min(i, len(HINT_UNLOCK_AFTER_WRONG)) - 1] if HINT_UNLOCK_AFTER_WRONG else 0
-        by_attempts = spec.get("flag_mode") != "final_discovery" and wrong >= threshold
-        unlocked = i in released or by_attempts
-        costly = i == n and n >= 3 and i not in released
+        unlocked = i in released
+        cost = HINT_COSTS.get(i, 1.0)
         out.append({
             "rung": i,
             "unlocked": unlocked,
-            "revealed": i in revealed or i in released,
-            "cost": HINT_RUNG3_COST if costly else 0.0,
-            "unlock_after_wrong": threshold,
-            "text": text if (i in revealed or i in released) else None,
+            "revealed": i in revealed,
+            "cost": cost,
+            "unlock_after_wrong": None,
+            "text": text if i in revealed else None,
         })
     return out
 
@@ -834,15 +833,12 @@ def reveal_hint(team: str, level: int, rung: int) -> dict:
             d = load()
             if f"{tid}:{level}" in d.get("submissions", {}):
                 raise PermissionError("This level is already locked.")
-            history = d.get("attempts", {}).get(f"{tid}:{level}", [])
-            if any(a.get("correct") for a in history):
-                raise PermissionError("The flag for this level is already solved.")
             status = {h["rung"]: h for h in hint_status(tid, level)}
             h = status.get(int(rung))
             if not h:
                 raise ValueError("No such hint.")
             if not h["unlocked"]:
-                raise PermissionError(f"Hint {rung} unlocks after {h['unlock_after_wrong']} wrong attempts.")
+                raise PermissionError(f"Hint {rung} has not been released by the organisers.")
             rec = d.setdefault("hints", {}).setdefault(_hint_key(tid, level), {"revealed": [], "cost": 0.0})
             if int(rung) not in rec["revealed"]:
                 rec["revealed"].append(int(rung))
@@ -892,9 +888,6 @@ def attempt_flag(team: str, level: int, answer: str) -> dict:
                 return {"correct": False, "message": "Flag answer exceeds maximum length of 200 characters.", "cooldown_remaining": 0}
 
             history = d.get("attempts", {}).get(key, [])
-            if any(a.get("correct") for a in history):
-                return {"correct": True, "message": "Flag already solved for this level.", "cooldown_remaining": 0,
-                        "already_solved": True}
             res = _validator().evaluate_attempt(
                 team_id=tid,
                 level=level,
@@ -1218,10 +1211,16 @@ def finalise(
                 attempts = d.get("attempts", {}).get(key, [])
                 if not attempts:
                     raise ValueError("Submit at least one flag attempt before advancing to the next level.")
+                flag_recorded = submitted_flag or (attempts[-1]["answer"] if attempts else "")
+                if any(a.get("override") for a in attempts):
+                    actual_flag_correct = True
+                else:
+                    from scoring.flag_validator import answer_matches
+                    actual_flag_correct = answer_matches(flag_recorded, spec["answers"])
                 fs = flag_status(tid, level)
-                actual_flag_correct = bool(fs["correct"])
-                actual_flag_points = float(fs["flag_points"]) if fs["correct"] else 0.0
-                flag_recorded = submitted_flag or (fs["last"]["answer"] if fs.get("last") else "")
+                penalty = fs.get("penalty_points", 0.0) if fs else 0.0
+                h_cost = hint_cost(tid, level, d)
+                actual_flag_points = round(max(0.0, FLAG_POINTS_PER_LEVEL - penalty - h_cost), 2) if actual_flag_correct else 0.0
 
             if not clean_expl:
                 raise ValueError("An explanation is required to finalize this level.")

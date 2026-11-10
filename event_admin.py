@@ -384,9 +384,10 @@ with tabs[3]:
     st.subheader("Release a hint to every team")
     lv_sel = st.selectbox("Level", [lv["id"] for lv in levels_for_cluster(CLUSTER)], key="hint_level")
     rung = st.selectbox("Hint rung", [1, 2, 3], key="hint_rung")
-    if st.button("Release hint (free for all teams)"):
+    cost_pts = 2.0 if rung == 3 else 1.0
+    if st.button(f"Release Hint {rung} for Level {lv_sel} (Costs {cost_pts:g} pt{'s' if rung == 3 else ''} upon reveal)"):
         release_hint_for_all(int(lv_sel), int(rung))
-        st.success(f"Hint {rung} released for level {lv_sel}.")
+        st.success(f"Hint {rung} released for level {lv_sel} (participants can now reveal it for {cost_pts:g} pt{'s' if rung == 3 else ''}).")
 
     snap = admin_snapshot()
     team_ids = sorted(t["team_id"] for t in snap["teams"])

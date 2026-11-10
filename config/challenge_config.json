@@ -22,11 +22,9 @@
       10,
       30
     ],
-    "hint_unlock_after_wrong": [
-      2,
-      4,
-      6
-    ],
+    "hint_unlock_after_wrong": [],
+    "hint_rung1_cost": 1.0,
+    "hint_rung2_cost": 1.0,
     "hint_rung3_cost": 2.0
   },
   "demo_team": {
