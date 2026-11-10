@@ -177,6 +177,12 @@ HINT_RUNG1_COST = float(_RULES.get("hint_rung1_cost", 1.0))
 HINT_RUNG2_COST = float(_RULES.get("hint_rung2_cost", 1.0))
 HINT_RUNG3_COST = float(_RULES.get("hint_rung3_cost", 2.0))
 HINT_COSTS = {1: HINT_RUNG1_COST, 2: HINT_RUNG2_COST, 3: HINT_RUNG3_COST}
+
+
+def google_form_url() -> str:
+    cfg = _CFG if isinstance(_CFG, dict) else {}
+    return str(cfg.get("google_form_url") or "https://forms.gle/research-ctf-submissions")
+
 _DISCOVERY = _CFG.get("final_discovery_points", {}) if isinstance(_CFG, dict) else {}
 DISCOVERY_TARGET_POINTS = float(_DISCOVERY.get("target_paper", 3.0))
 DISCOVERY_APPLICATION_POINTS = float(_DISCOVERY.get("application", 2.0))

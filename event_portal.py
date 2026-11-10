@@ -56,6 +56,7 @@ from event_core import (
     parse_uploaded_graph_csv,
     safe_csv,
     level_points,
+    google_form_url,
 )
 
 st.set_page_config(page_title="Proof of Thought · Participant", page_icon="🧭", layout="wide")
@@ -280,21 +281,25 @@ if section == "Start":
     st.markdown("""
 ### Quick Guide
 1. **Explore Papers (Papers tab)**: Read paper abstracts and download challenge card PDFs released for this level.
-2. **Build Knowledge Graph (Knowledge Graph tab)**: Connect cross-paper relationships using accepted vocabulary types with supporting evidence.
-3. **Submit & Lock Level (Submit tab)**: Test your flag answer, preview your cumulative graph, and lock your submission to advance.
+2. **Build & Validate Graph (Knowledge Graph tab)**: Connect cross-paper relationships using accepted vocabulary types with supporting evidence. Use the pre-submission validator to check your CSV format.
+3. **Submit Your Level (Submit tab)**: Open the official Google Form to submit your team's flag, cumulative graph CSV, and methodology reasoning.
     """)
 
-    with st.expander("Accepted Relationship Types (Vocabulary)", expanded=False):
-        vocab_df = pd.DataFrame(vocab["relationship_types"])
-        cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
-        clean_vocab_df = vocab_df[cols].rename(
-            columns={
-                "relationship_type": "Relationship Type",
-                "meaning": "Meaning",
-                "example": "Example",
-            }
-        )
-        st.dataframe(clean_vocab_df, hide_index=True, use_container_width=True)
+    st.info("📋 **Official Submission Channel**: Submissions for each level are submitted via the official Google Form. Use the tabs above to explore papers, build/validate your graph, and access the submission link.")
+    col_gf_btn, _ = st.columns([1, 2])
+    col_gf_btn.link_button("📝 Open Google Form", google_form_url(), use_container_width=True, type="primary")
+
+    st.markdown("### Accepted Relationship Types (Vocabulary Cheat Sheet)")
+    vocab_df = pd.DataFrame(vocab["relationship_types"])
+    cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
+    clean_vocab_df = vocab_df[cols].rename(
+        columns={
+            "relationship_type": "Relationship Type",
+            "meaning": "Meaning",
+            "example": "Example",
+        }
+    )
+    st.dataframe(clean_vocab_df, hide_index=True, use_container_width=True)
 
 # ==============================================================================
 # TAB 2: PAPERS
@@ -420,6 +425,29 @@ elif section == "Knowledge Graph":
                 st.error(str(e))
             st.rerun()
 
+    with st.expander("🛠️ Pre-Submission CSV Validator (Test CSV before Google Form submission)", expanded=False):
+        st.caption("Paste your cumulative graph CSV here to check headers, paper IDs, and relationship vocabulary before pasting into your Google Form.")
+        val_csv_input = st.text_area(
+            "Paste Graph CSV to Validate",
+            height=130,
+            key=f"val_csv_input_{team['team_id']}_{current}",
+            placeholder="source_id,target_id,relationship_type,evidence_reference\nP05,P02,CITES,Sec 1 Page 2\n...",
+        )
+        if st.button("🔍 Check CSV Syntax & Vocabulary", key=f"btn_check_csv_{team['team_id']}_{current}"):
+            if not val_csv_input.strip():
+                st.warning("Please paste some CSV text to validate.")
+            else:
+                val_rows, val_errs = parse_uploaded_graph_csv(val_csv_input.strip(), available, rels)
+                if val_errs:
+                    st.error("Validation issues found:\n" + "\n".join(f"• {e}" for e in val_errs))
+                elif not val_rows:
+                    st.warning("No relationship rows found. Ensure you include a header and at least one edge.")
+                else:
+                    st.success(f"✅ Valid Graph CSV! Found {len(val_rows)} valid edge(s). Headers, paper IDs, and relationship types are strictly valid.")
+                    st.caption("Diagram preview of your validated CSV:")
+                    render_graph_diagram(pd.DataFrame(val_rows), available=available, byid=byid)
+                    st.info("✓ Ready! You can copy the validated CSV text and paste it into your Google Form.")
+
     with st.expander("Import Graph from CSV (e.g. Codex or exported CSV)"):
         uploaded_csv = st.file_uploader("Upload CSV file", type=["csv"], key=f"csv_upload_{team['team_id']}_{current}")
         if uploaded_csv is not None:
@@ -526,6 +554,14 @@ elif section == "Submit":
             df_locked = pd.read_csv(io.StringIO(rec["csv"]), dtype=str, keep_default_na=False)
             render_graph_diagram(df_locked, available=available, byid=byid)
         st.stop()
+
+    gf_url = google_form_url()
+    st.info(f"📋 **Official Submission Channel**: All competition submissions are recorded via Google Form. Use the button below to open the form for Level {current}.")
+    c_sub_btn, c_sub_note = st.columns([1, 2])
+    c_sub_btn.link_button(f"📝 Open Google Form", gf_url, use_container_width=True, type="primary")
+    c_sub_note.caption(f"Team ID: **{team['team_id']}** · Cluster: **{team['cluster']}** · Current Level: **Level {current}**")
+
+    st.markdown("---")
 
     # --- 1. Flag Section ---
     st.subheader("1. Flag Check")

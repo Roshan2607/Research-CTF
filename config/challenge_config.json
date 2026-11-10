@@ -3,6 +3,7 @@
   "workshop_title": "Proof of Thought",
   "branding": "OpenAI × IEEE CS × Research Et Al",
   "theme": "Reconstruction of Hidden Structures from Incomplete Information",
+  "google_form_url": "https://forms.gle/research-ctf-submissions",
   "num_levels": 4,
   "level_points": {
     "0": {"total": 0.0, "graph": 0.0, "flag": 0.0},

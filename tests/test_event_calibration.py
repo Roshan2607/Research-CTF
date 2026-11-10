@@ -65,7 +65,7 @@ def test_cooldown_schedule_and_penalty_cap():
 @pytest.mark.parametrize("level,good", [
     (1, ["receivers", "At the end hosts", "the leaves", "multicast receivers", "endpoints of the network"]),
     (2, ["phylogenetics", "Phylogenetic tree inference", "evolutionary biology", "evolution"]),
-    (3, ["P08", "p8", "paper P8", "Bhamidi"]),
+    (3, ["short paths", "short distances", "short path", "short", "P08", "p8", "Bhamidi"]),
 ])
 def test_live_flags_accept_reasonable_phrasings(level, good):
     for a in good:
