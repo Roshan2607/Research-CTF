@@ -9,6 +9,7 @@ import json
 import os
 import secrets
 import threading
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -169,6 +170,7 @@ def hint_cost_for_level(level: int, rung: int) -> float:
 
 
 GRAPH_POINTS_PER_LEVEL = float(_RULES.get("graph_points_per_level", 15.0))
+_GATE = (_CFG.get("graph_gate", {}) if isinstance(_CFG, dict) else {}) or {}
 PENALTY_PER_WRONG = float(_RULES.get("penalty_after_free", 1.0))
 MAX_PENALTY_PER_LEVEL = float(_RULES.get("max_penalty_per_level", FLAG_POINTS_PER_LEVEL))
 COOLDOWN_SCHEDULE = list(_RULES.get("cooldown_schedule") or []) or None
@@ -1176,8 +1178,80 @@ def review_final_discovery(team: str, review_points: float, notes: str = "", rev
             return d["finals"][tid]
 
 
+
+# ---------------------------------------------------------------------- Graph progression gate
+def graph_gate_floor(level: int) -> float | None:
+    """Minimum server-side weighted F1 to lock ``level``, or None when the gate is off for it."""
+    if os.environ.get("UL_GRAPH_GATE", "").strip().lower() == "off" or not _GATE.get("enabled", False):
+        return None  # UL_GRAPH_GATE=off is a kill switch for tests and emergencies
+    floor = (_GATE.get("floors", {}) or {}).get(str(level))
+    return float(floor) if floor is not None else None
+
+
+def waive_graph_gate(team: str, level: int, reviewer: str, note: str = "") -> dict:
+    """Organiser lets a team lock a level without reaching the graph floor (stuck-team release valve)."""
+    tid = (team or "").strip().upper()
+    reviewer = str(reviewer or "").strip()
+    if not reviewer:
+        raise ValueError("A reviewer name is required to waive the graph gate.")
+    with LOCK:
+        with _file_lock():
+            d = load()
+            if tid not in d.get("teams", {}):
+                raise ValueError(f"Team {tid!r} does not exist.")
+            rec = {"at": now(), "reviewer": reviewer, "note": note}
+            d.setdefault("gate_waivers", {})[f"{tid}:{level}"] = rec
+            d.setdefault("audit", []).append({"at": rec["at"], "action": "graph_gate_waived", "team_id": tid,
+                                              "level": level, "reviewer": reviewer})
+            save(d)
+            return rec
+
+
+def _enforce_graph_gate(d: dict, tid: str, level: int, server_score: dict) -> None:
+    """Raise ValueError when the cumulative graph is below the level's floor. Records the failed try (and
+    rate-limits retries, since the message reveals the score). Call with the state lock held; may save(d)."""
+    floor = graph_gate_floor(level)
+    key = f"{tid}:{level}"
+    if floor is None or not server_score.get("scored") or key in d.get("gate_waivers", {}):
+        return
+    fails = d.setdefault("gate_fails", {})
+    rec = fails.get(key, {"count": 0, "last_ts": 0.0})
+    wait = float(_GATE.get("retry_cooldown_seconds", 20)) - (time.time() - rec["last_ts"])
+    if rec["count"] and wait > 0:
+        raise ValueError(f"Please wait {int(wait) + 1}s before trying to lock again.")
+    f1 = float(server_score.get("weighted_f1", 0.0))
+    if f1 >= floor:
+        return
+    rec = {"count": rec["count"] + 1, "last_ts": time.time()}
+    fails[key] = rec
+    d.setdefault("audit", []).append({"at": now(), "action": "graph_gate_failed", "team_id": tid, "level": level,
+                                      "weighted_f1": f1, "floor": floor, "attempt": rec["count"]})
+    save(d)
+    raise ValueError(
+        f"Your graph is not strong enough to unlock the next level yet (score {f1:.2f}, needed {floor:.2f}). "
+        "Check your relationships and the evidence behind them, then try again. "
+        "Ask an organiser if you are stuck.")
+
+
 # ---------------------------------------------------------------------- Level lock
-def finalise(
+def finalise(*args, **kwargs) -> dict:
+    """Lock a level (see ``_finalise_locked``), then queue its novel edges for the LLM judge.
+
+    Queuing runs after the locks are released, is off unless JUDGING_ENABLED=1, and can never raise, so judging
+    cannot prevent or delay a level lock. It is not read by any gate or score.
+    """
+    rec = _finalise_locked(*args, **kwargs)
+    try:
+        from judging.service import queue_novel_edges
+
+        cluster = (load().get("teams", {}).get(rec["team_id"], {}) or {}).get("cluster", CLUSTER)
+        queue_novel_edges(rec["team_id"], rec["level"], rec["csv"], cluster, released_papers(rec["level"], cluster))
+    except Exception:  # noqa: BLE001
+        pass
+    return rec
+
+
+def _finalise_locked(
     team: str,
     level: int,
     csv_text: str,
@@ -1263,6 +1337,7 @@ def finalise(
                 raise ValueError("An explanation is required to finalize this level.")
 
             server_score = score_level_graph(cluster, level, clean_csv)
+            _enforce_graph_gate(d, tid, level, server_score)
             edge_count = len(clean_rows)
             sub_time = now()
 
