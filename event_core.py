@@ -1258,6 +1258,37 @@ def _enforce_graph_gate(d: dict, tid: str, level: int, server_score: dict) -> No
         "Ask an organiser if you are stuck.")
 
 
+def get_live_judge():
+    """Returns the configured live AI judge (Groq Cloud, xAI Grok, or OpenAI)."""
+    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    grok_key = (
+        os.environ.get("GROK_API_KEY", "").strip()
+        or os.environ.get("GROQ_API_KEY", "").strip()
+        or os.environ.get("XAI_API_KEY", "").strip()
+    )
+    provider = os.environ.get("JUDGE_PROVIDER", "").strip().lower()
+
+    try:
+        # 1. If key is a Groq key (starts with 'gsk_') or provider is grok/groq/xai:
+        if grok_key and (grok_key.startswith("gsk_") or provider in ("grok", "groq", "xai") or not openai_key):
+            from judging.openai_judge import GrokJudge
+            return GrokJudge(api_key=grok_key)
+        # 2. If provider is OpenAI and key provided:
+        elif openai_key and (provider == "openai" or not provider):
+            from judging.openai_judge import OpenAIJudge
+            return OpenAIJudge(api_key=openai_key)
+        # 3. Fallback:
+        elif grok_key:
+            from judging.openai_judge import GrokJudge
+            return GrokJudge(api_key=grok_key)
+        elif openai_key:
+            from judging.openai_judge import OpenAIJudge
+            return OpenAIJudge(api_key=openai_key)
+    except Exception:
+        pass
+    return None
+
+
 # ---------------------------------------------------------------------- Level lock
 def finalise(*args, **kwargs) -> dict:
     """Lock a level (see ``_finalise_locked``), then queue its novel edges for the LLM judge.

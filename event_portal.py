@@ -51,6 +51,7 @@ from event_core import (
     finalise,
     flag_status,
     get_draft,
+    get_live_judge,
     levels_for_cluster,
     load,
     next_available_team_id,
@@ -271,26 +272,6 @@ def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: 
 
     dot.append("}")
     st.graphviz_chart("\n".join(dot), use_container_width=True)
-
-
-def get_live_judge():
-    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
-    xai_key = os.environ.get("XAI_API_KEY", "").strip() or os.environ.get("GROK_API_KEY", "").strip()
-    provider = os.environ.get("JUDGE_PROVIDER", "").strip().lower()
-
-    try:
-        if (provider in ("grok", "xai") and xai_key) or (xai_key and not openai_key):
-            from judging.openai_judge import GrokJudge
-            return GrokJudge(api_key=xai_key)
-        elif (provider == "openai" or not provider) and openai_key:
-            from judging.openai_judge import OpenAIJudge
-            return OpenAIJudge(api_key=openai_key)
-        elif xai_key:
-            from judging.openai_judge import GrokJudge
-            return GrokJudge(api_key=xai_key)
-    except Exception:
-        pass
-    return None
 
 
 def render_live_verification_card(detail: EvaluationDetail) -> None:
