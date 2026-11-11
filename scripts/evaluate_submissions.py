@@ -65,6 +65,7 @@ class EvaluationDetail:
     max_total_score: float = 0.0
     novel_candidate_edges: list[dict[str, str]] = field(default_factory=list)
     llm_verdicts: list[dict[str, Any]] = field(default_factory=list)
+    nudges: list[str] = field(default_factory=list)
     explanation: str = ""
     judge_error: str = ""
 
@@ -266,6 +267,24 @@ def evaluate_submission(
             else:
                 judge_error_msg = f"Live AI judge error: {err_str[:120]}"
 
+    # Generate Research Mentorship Nudges for near-misses
+    nudges: list[str] = []
+    ref_edges_set = set(demo_ref if level == 0 else reference_edges)
+    ref_pairs: dict[tuple[str, str], set[str]] = {}
+    for r_src, r_dst, r_rel in ref_edges_set:
+        ref_pairs.setdefault((r_src, r_dst), set()).add(r_rel)
+
+    for e in submitted_edges:
+        if e in correct_found:
+            continue
+        src, dst, rel = e
+        if (dst, src) in ref_pairs and rel in ref_pairs[(dst, src)]:
+            nudges.append(f"Reversed Direction: You connected `{src}` → `{dst}` ({rel}), but the literature relationship points the opposite way: `{dst}` → `{src}` ({rel}). Check publication years or citation order!")
+        elif (src, dst) in ref_pairs:
+            nudges.append(f"Right Papers, Wrong Relationship: `{src}` and `{dst}` are connected in the benchmark, but not as `{rel}`. Re-read their abstracts to identify the appropriate relationship!")
+        elif (dst, src) in ref_pairs:
+            nudges.append(f"Right Papers, Reversed Direction & Relationship: `{src}` and `{dst}` are related, but with `{dst}` as the source. Check the Relationship Guide!")
+
     # Compute base graph points and accuracy percentage
     total_ref_count = len(reference_edges)
     ratio = (len(correct_found) / total_ref_count) if total_ref_count > 0 else 0.0
@@ -311,6 +330,7 @@ def evaluate_submission(
         max_total_score=total_max,
         novel_candidate_edges=novel_candidates,
         llm_verdicts=llm_verdicts,
+        nudges=nudges,
         explanation=explanation,
         judge_error=judge_error_msg,
     )

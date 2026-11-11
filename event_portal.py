@@ -69,7 +69,6 @@ from event_core import (
 )
 
 st.set_page_config(page_title="Proof of Thought · Participant", layout="wide")
-st.title("Proof of Thought")
 
 st.markdown("""
 <style>
@@ -206,7 +205,7 @@ team_levels = levels_for_cluster(team["cluster"])
 completed, current = team_progress(team["team_id"])
 
 with st.sidebar:
-    st.success(f"{team['name']} · {team['team_id']}")
+    st.markdown(f"**Proof of Thought** · `{team['name']}` ({team['team_id']})")
     if team.get("is_demo"):
         st.info("Demo Team (Level 0)")
     st.markdown("### Level progress")
@@ -228,7 +227,7 @@ with st.sidebar:
         elif lv["id"] == current:
             st.markdown(f":orange[**[Current] Level {lv['id']}: {lv['title']}**]")
         else:
-            st.markdown(f":green[[Locked] Level {lv['id']}: {lv['title']}]")
+            st.markdown(f":red[[Locked] Level {lv['id']}: {lv['title']}]")
 
     if sidebar_total_pts > 0:
         st.divider()
@@ -355,6 +354,11 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
                 st.markdown(f"• **Benchmark Literature Matches**: **{len(detail.correct_edges)} of {detail.total_reference_count}** reference relationships correctly connected.")
             else:
                 st.write("• **Benchmark Literature Matches**: 0 reference relationships matched yet.")
+
+        if getattr(detail, "nudges", None):
+            st.markdown("**Research Mentorship Nudges (Close Connections):**")
+            for nudge in detail.nudges:
+                st.info(f"💡 {nudge}")
 
         if detail.llm_verdicts:
             st.markdown("**AI Judge Verdicts on Novel Relationships:**")
@@ -557,12 +561,6 @@ elif section == "Papers":
                 meta_parts.append(f"**Domain:** {p['domain']}")
             if meta_parts:
                 st.caption(" · ".join(meta_parts))
-
-            st.markdown("**Abstract**")
-            st.write(p.get("abstract", ""))
-
-            if p.get("real_world_application"):
-                st.info(f"**Real-World Impact & Application:**\n\n{p['real_world_application']}")
 
             c_link, c_dl = st.columns([1, 1])
             url = p.get("open_access_url") or p.get("doi_url")

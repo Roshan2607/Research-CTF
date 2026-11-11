@@ -141,7 +141,7 @@ def test_portal_fcfs_claim_team_and_session_persistence(env):
     d = core.load()
     assert "TEAM02" in d["teams"]
     assert d["teams"]["TEAM02"]["name"] == "Beta Squad"
-    assert any("Beta Squad" in str(s.value) for s in at.sidebar.success)
+    assert any("Beta Squad" in str(s.value) for s in at.sidebar.markdown)
 
 
 def test_portal_submission_dialog_confirmation(env, monkeypatch):

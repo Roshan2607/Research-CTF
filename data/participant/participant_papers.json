@@ -29,7 +29,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Foundations of Probabilistic Models & AI: The Chow-Liu tree algorithm proved that complex multi-variable probability distributions can be optimally approximated as a tree of mutual information. Today, this fundamental insight is used across speech processing, computer vision, Bayesian belief networks, and modern NLP dependency parsers to capture feature dependencies efficiently without exponential compute costs."
+      "real_world_application": "Smartphone Autocorrect & Predictive Text: Ever wonder how your phone keyboard predicts the next word you want to type? This paper introduced tree approximations of probabilities, allowing algorithms to predict likely combinations of words or features in milliseconds without draining your phone's battery."
     },
     {
       "participant_id": "P02",
@@ -62,7 +62,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Akamai & Global Content Delivery Networks: In the early commercial Internet, network operators could not see inside third-party ISP routers. Duffield et al. showed that sending synchronized multicast probe packets to end receivers allows mathematically inferring the internal router tree and detecting packet-dropping bottleneck links from the outside. This became the basis for modern CDN routing telemetry."
+      "real_world_application": "Finding Where Your Wi-Fi or Game is Lagging: When your multiplayer game (Valorant, Fortnite) spikes to 300ms ping or your stream stutters, you usually cannot see which router on the internet is dropping packets. This paper showed how sending test packets to multiple friends lets you pinpoint the exact lagging router from the outside."
     },
     {
       "participant_id": "P03",
@@ -93,7 +93,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Genomic Phylogenetics & Global Virus Tracking: The Neighbor-Joining algorithm is one of the most widely cited algorithms in biological history. Implemented in NCBI BLAST, MEGA, and Nextstrain, it allows molecular biologists to construct evolutionary trees of species from DNA sequences in polynomial time. During the COVID-19 pandemic, variants of this algorithm were used daily worldwide to track emerging viral mutations in real time."
+      "real_world_application": "Tracking Virus Mutations (COVID & Flu) and 23andMe Ancestry: How do scientists figure out which new variant of a virus is spreading, or how do ancestry tests trace your family tree back generations? Neighbor-Joining takes genetic code differences and builds an evolutionary family tree in seconds."
     },
     {
       "participant_id": "P04",
@@ -125,7 +125,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Revolutionizing Medical MRI & Medical Scanners: Candes, Romberg, and Tao proved the mathematical foundation of Compressed Sensing: sparse physical signals can be reconstructed with 100% exactness from a fraction of traditional sensor measurements. This breakthrough directly enabled modern hospital MRI scanners to reduce patient imaging times from 45 minutes to under 5 minutes without losing diagnostic detail, dramatically improving patient comfort and clinical throughput."
+      "real_world_application": "5-Minute Hospital MRI Scans & Smartphone Night Photography: Traditional medical MRI scans require patients to lie completely still inside a loud, claustrophobic magnetic tube for 45 minutes. This paper proved you only need a fraction of the sensor measurements to recreate a crystal-clear image, reducing MRI scan times to under 5 minutes and enabling fast smartphone night-mode photos."
     },
     {
       "participant_id": "P05",
@@ -156,7 +156,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Early Internet Video Streaming & Telemetry: During the creation of the Multicast Backbone (MBone) for live video and audio broadcasts, network engineers had no way to pinpoint which router links were congested. Ratnasamy & McCanne invented end-to-end probing to estimate bottleneck bandwidths and routing trees, laying the technical foundation for modern adaptive video streaming (HLS, DASH)."
+      "real_world_application": "How YouTube Automatically Adjusts Video Quality: When you start watching a video, YouTube quickly switches from 480p to 1080p without buffering. This paper invented the first end-to-end probing techniques to estimate bottleneck internet speeds on the fly, laying the groundwork for modern smooth video streaming."
     },
     {
       "participant_id": "P06",
@@ -189,7 +189,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Unsupervised Discovery of Latent Structures: Modern machine learning often has to discover hidden hierarchy from observational data alone. Choi et al. developed algorithms to learn latent tree graphical models with provable sample complexity guarantees. This technique is applied in genomics to discover hidden regulatory pathways, in financial modeling to identify unseen macroeconomic drivers, and in deep learning to analyze hierarchical representations."
+      "real_world_application": "Spotify Discover Weekly & AI Recommendations: When Spotify groups songs into mood playlists or recommendation engines discover hidden music tastes without a human labeling them, they often use latent tree models that automatically learn invisible hierarchical categories from listening habits."
     },
     {
       "participant_id": "P07",
@@ -223,7 +223,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Amazon DynamoDB, Apache Cassandra & Blockchain: Demers et al. invented epidemic/gossip algorithms to maintain distributed databases without central locks or single points of failure. Today, gossip protocols are the backbone of hyper-resilient distributed systems worldwide, including Amazon DynamoDB, Apache Cassandra, and the peer-to-peer transaction broadcasting networks of Bitcoin and Ethereum."
+      "real_world_application": "How Discord & Online Games Keep Everyone in Sync: How does Discord instantly show text messages to millions of active users without a central server bottleneck? This paper used the math of how viral rumors spread on campus ('gossiping') so distributed servers synchronize updates across the globe effortlessly."
     },
     {
       "participant_id": "P08",
@@ -255,7 +255,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Cloud Data Centers & VoIP Quality Monitoring: In hyperscale cloud environments (like AWS and Microsoft Azure), transient latency jitter degrades VoIP calls and database queries. Tsang et al. demonstrated that network delays can be modeled as additive tree metrics and solved with linear algebra, allowing network monitoring tools to locate slow fiber links without deploying probes inside the core switching fabric."
+      "real_world_application": "Diagnosing Discord & FaceTime Voice Lag: Ever had your voice echo or cut out on a Discord call? This paper treated network travel delays like addition on a tree, enabling network diagnostics to pinpoint which physical internet cable is congested without opening up telecom switches."
     },
     {
       "participant_id": "P09",
@@ -285,7 +285,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "AT&T Nationwide Traffic Matrix Estimation: Managing continental telecom backbones requires knowing the volume of traffic flowing between every origin and destination city. Yehuda Vardi formulated this problem as 'network tomography', using statistical inverse problem methods (expectation-maximization) to deduce origin-destination traffic demands solely from simple link byte counters. This remains a cornerstone of ISP traffic engineering."
+      "real_world_application": "Google Maps for Internet Traffic: Think of how Google Maps estimates traffic jams across a whole city even if it only has sensors at a few intersections. This paper was the first to estimate origin-to-destination internet traffic across entire countries using only simple link counters."
     },
     {
       "participant_id": "P10",
@@ -321,7 +321,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Systems Biology & Targeted Cancer Drug Therapies: The ARACNE algorithm applied mutual information and the Data Processing Inequality to reconstruct mammalian cellular networks from gene expression arrays. Developed at Columbia University, it famously discovered the master regulator genes driving human B-cell lymphoma and has been used to design targeted combination therapies in oncology."
+      "real_world_application": "Pinpointing Disease 'Master Switch' Genes: Cancer cells hijack normal body processes. ARACNE uses information theory (mutual information) to map which genes turn other genes on or off, helping medical researchers find the 'master switch' gene behind lymphomas and develop precision drugs."
     },
     {
       "participant_id": "P11",
@@ -354,7 +354,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Scalable Tree Inference with Short Genetic Sequences: Erdos et al. proved a landmark mathematical theorem in computational biology: accurate phylogenetic trees can be reconstructed even when DNA sequence length is only logarithmic in the number of taxa. This theoretical guarantee provided the mathematical assurance needed for large-scale automated biodiversity mapping and phylogenomic pipelines."
+      "real_world_application": "Reconstructing Ancient Dinosaurs from Tiny DNA Fragments: When evolutionary biologists only have short, degraded DNA fragments, how can they accurately place an extinct species on the tree of life? This paper proved mathematically that even surprisingly short genetic sequences are enough to build accurate evolutionary trees."
     },
     {
       "participant_id": "P12",
@@ -385,7 +385,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "The Bridge Between Evolutionary Biology & Internet Mapping: Ni & Tatikonda discovered a profound mathematical duality: the packet loss and delay equations used to map Internet topologies have the exact same additive distance structure as DNA mutation rates used to reconstruct evolutionary trees. This enabled network engineers to repurpose 30+ years of computational biology algorithms directly for Internet monitoring."
+      "real_world_application": "Borrowing Biology Algorithms to Map the Internet: Ni & Tatikonda discovered a wild connection: packet lag traveling across internet cables follows the exact same mathematical rules as genetic mutations accumulating over generations. Because of this paper, internet engineers can use 40 years of evolutionary biology software to map computer networks!"
     },
     {
       "participant_id": "P13",
@@ -420,7 +420,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Deployable Unicast Internet Topology Identification: Early network tomography required IP multicast, which commercial ISPs blocked for security and billing reasons. Castro et al. made tomography practically deployable across the real Internet by formulating maximum likelihood topology identification using standard unicast packet pairs (sendable from any commodity PC or server)."
+      "real_world_application": "Mapping the Internet from Your Laptop: Early network mapping required special multicast broadcast protocols that home Wi-Fi and commercial ISPs blocked. This paper showed how standard packet pings sent from an ordinary laptop can reconstruct the shape of the internet between servers."
     },
     {
       "participant_id": "P14",
@@ -454,7 +454,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "Modern Network Observability (Datadog & ThousandEyes): This seminal IEEE Signal Processing survey synthesized a decade of research across multicast, unicast, loss, and delay tomography into a unified statistical inverse framework. It directly inspired the modern billion-dollar network observability sector, enabling enterprise monitoring platforms like Cisco ThousandEyes, Catchpoint, and Datadog to map complex multi-cloud networks."
+      "real_world_application": "Why Zoom Calls Don't Drop & Netflix Streams Smoothly: Ever wonder how Netflix, Twitch, or Zoom seamlessly reroute your traffic around internet blackouts so your video never drops? This seminal survey united 10 years of network mapping methods into a single framework, creating the blueprint for modern internet reliability monitoring."
     },
     {
       "participant_id": "P15",
@@ -485,7 +485,7 @@
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
       ],
-      "real_world_application": "The Shepp-Logan Phantom & Modern Computed Tomography: Shepp & Logan developed the mathematical Fourier reconstruction algorithms for 2D and 3D cross-sectional head scans. In doing so, they created the iconic 'Shepp-Logan Phantom'\u2014a synthetic digital model of human cranial tissue that remains the universal gold standard used to test, calibrate, and benchmark virtually every CT and PET scanner in hospitals worldwide."
+      "real_world_application": "How Hospital CT Scanners See Inside Your Brain: A CT scanner takes 2D X-ray slices around your head and uses math to rebuild a 3D picture of your brain. This paper created the algorithms and the famous 'Shepp-Logan Head' test model that every hospital scanner in the world still uses to calibrate before scanning patients."
     }
   ]
 }
