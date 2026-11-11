@@ -59,6 +59,8 @@ from event_core import (
     revoke_session,
     save_draft,
     team_progress,
+    verification_status,
+    record_verification,
     parse_uploaded_graph_csv,
     safe_csv,
     level_points,
@@ -208,9 +210,29 @@ with st.sidebar:
     if team.get("is_demo"):
         st.info("Demo Team (Level 0)")
     st.markdown("### Level progress")
+    d_sidebar = load()
+    sidebar_total_pts = 0.0
     for lv in team_levels:
-        tag = "[Completed]" if lv["id"] in completed else ("[Current]" if lv["id"] == current else "[Locked]")
-        st.write(f"{tag} Level {lv['id']}: {lv['title']}")
+        rec = d_sidebar.get("submissions", {}).get(f"{team['team_id']}:{lv['id']}")
+        if lv["id"] in completed:
+            if lv["id"] == 0:
+                st.write(f"[Completed] Level 0: {lv['title']}")
+            elif rec:
+                fp = rec.get("flag_points", 0)
+                gp = rec.get("graph_score", {}).get("points", 0) + rec.get("manual_adjustment", 0)
+                tot_lp = fp + gp
+                sidebar_total_pts += tot_lp
+                st.write(f"[Completed] Level {lv['id']}: {lv['title']} — **{tot_lp:g} pts**")
+            else:
+                st.write(f"[Completed] Level {lv['id']}: {lv['title']}")
+        elif lv["id"] == current:
+            st.write(f"[Current] Level {lv['id']}: {lv['title']}")
+        else:
+            st.write(f"[Locked] Level {lv['id']}: {lv['title']}")
+
+    if sidebar_total_pts > 0:
+        st.divider()
+        st.metric("Total Score", f"{sidebar_total_pts:g} pts")
     if st.button("Sign out"):
         token_to_revoke = (
             st.query_params.get("session")
@@ -321,12 +343,18 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
         )
 
     with st.expander("Detailed Verification Breakdown", expanded=True):
-        if detail.correct_edges:
-            st.markdown("**Verified Relationships:**")
-            for e in detail.correct_edges:
-                st.write(f"• `{e[0]}` → `{e[1]}` ({e[2]})")
+        if detail.level == 0:
+            if detail.correct_edges:
+                st.markdown("**Verified Practice Relationships:**")
+                for e in detail.correct_edges:
+                    st.write(f"• `{e[0]}` → `{e[1]}` ({e[2]})")
+            else:
+                st.write("• No practice relationships matched yet.")
         else:
-            st.write("• No reference relationships matched yet.")
+            if detail.correct_edges:
+                st.markdown(f"• **Benchmark Literature Matches**: **{len(detail.correct_edges)} of {detail.total_reference_count}** reference relationships correctly connected.")
+            else:
+                st.write("• **Benchmark Literature Matches**: 0 reference relationships matched yet.")
 
         if detail.llm_verdicts:
             st.markdown("**AI Judge Verdicts on Novel Relationships:**")
@@ -434,6 +462,17 @@ if current is None:
     st.stop()
 
 # Level 0 includes onboarding Start tab; Levels 1-4 move directly to Papers
+just_locked = st.session_state.pop(f"level_just_locked_{team['team_id']}", None)
+if just_locked:
+    if just_locked.get("is_demo"):
+        st.success("Level 0 warm-up complete! You are ready for competition Level 1.")
+    else:
+        st.success(
+            f"Level {just_locked['level']} completed & locked! "
+            f"You scored {just_locked['total_points']:g} pts on Level {just_locked['level']} "
+            f"(Flag: {just_locked['flag_points']:g} pts, Graph: {just_locked['graph_points']:g} pts · {just_locked['sim_pct']}% similarity)."
+        )
+
 tabs_options = ["Start", "Papers", "Knowledge Graph", "Submit"] if current == 0 else ["Papers", "Knowledge Graph", "Submit"]
 section = st.radio(
     "Navigate",
@@ -610,23 +649,6 @@ elif section == "Knowledge Graph":
     with c_kg_r:
         if not df.empty:
             st.download_button("Download CSV", safe_csv(df), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
-            if st.button("Verify Graph", key=f"btn_verify_kg_{team['team_id']}_{current}", type="primary", use_container_width=True):
-                if current == 0:
-                    st.info("Level 0 is an unscored onboarding warm-up. Graph verification starts on Level 1!")
-                else:
-                    with st.spinner("Analyzing graph and evaluating connections with AI..."):
-                        judge = get_live_judge()
-                        eval_detail = evaluate_submission(
-                            team_id=team["team_id"],
-                            level=current,
-                            flag_answer="",
-                            graph_csv=df.to_csv(index=False),
-                            cluster=team.get("cluster", CLUSTER),
-                            judge=judge,
-                            enforce_50pct_floor=True,
-                        )
-                        st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
-                        st.rerun()
 
     # 1. Edge Editor (Dropdowns for source, target, and relationship)
     with st.expander("Add / Remove Graph Edges", expanded=bool(df.empty)):
@@ -687,20 +709,40 @@ elif section == "Knowledge Graph":
 
     # 3. Live AI Graph Verification Section
     st.markdown("---")
-    col_v_info, col_v_btn = st.columns([3, 1.3])
+    v_stat = verification_status(team["team_id"], current)
+    col_v_info, col_v_btn = st.columns([3, 1.4])
     with col_v_info:
         st.markdown("#### Live AI Graph Verification")
-        st.caption(
-            "Click below to test your graph against reference literature and novel connections with the AI Judge. "
-            "Checks your 50% accuracy threshold and estimates your graph score live."
-        )
+        if current == 0:
+            st.caption(
+                "Click below to test your graph against reference literature and novel connections with the AI Judge. "
+                "Practice Mode: Unlimited live verifications on Level 0."
+            )
+        else:
+            st.caption(
+                f"Click below to test your graph against reference literature and novel connections with the AI Judge. "
+                f"**Allowance: {v_stat['remaining']} of {v_stat['max']} verification checks remaining for Level {current}.**"
+            )
     with col_v_btn:
-        btn_verify = st.button("Verify Graph Live", key=f"btn_verify_kg_main_{team['team_id']}_{current}", type="primary", use_container_width=True)
+        btn_label = "Verify Graph Live" if current == 0 else f"Verify Graph Live ({v_stat['remaining']}/{v_stat['max']})"
+        btn_verify = st.button(
+            btn_label,
+            key=f"btn_verify_kg_main_{team['team_id']}_{current}",
+            type="primary",
+            use_container_width=True,
+            disabled=bool(current >= 1 and not v_stat["allowed"]),
+        )
+
+    if current >= 1 and not v_stat["allowed"]:
+        st.warning(f"Verification allowance exhausted ({v_stat['max']}/{v_stat['max']} checks used for Level {current}). Review your graph carefully before final submission.")
 
     if btn_verify:
-        if df.empty:
+        if current >= 1 and not v_stat["allowed"]:
+            st.error(f"You have reached the maximum of {v_stat['max']} verification checks for Level {current}.")
+        elif df.empty:
             st.warning("Your cumulative graph is currently empty. Add at least one edge in the section above before verifying.")
         else:
+            record_verification(team["team_id"], current)
             with st.spinner("Analyzing graph and evaluating connections with AI judge..."):
                 judge = get_live_judge()
                 eval_detail = evaluate_submission(
@@ -724,7 +766,7 @@ elif section == "Knowledge Graph":
 # TAB 4: SUBMIT
 # ==============================================================================
 @st.dialog("Confirm Final Level Submission")
-def confirm_submission_dialog(team_id: str, level: int, draft: str, explanation: str, is_demo: bool):
+def confirm_submission_dialog(team_id: str, level: int, draft: str, is_demo: bool):
     st.warning(
         f"**Important Verification Notice**:\n\n"
         f"If you have filled out and submitted the official Google Form for Level {level}, only then move on. "
@@ -746,15 +788,21 @@ def confirm_submission_dialog(team_id: str, level: int, draft: str, explanation:
         if st.button("Yes, Form Submitted — Final Lock", type="primary", use_container_width=True, key=f"confirm_modal_lock_{team_id}_{level}"):
             st.session_state.pop(f"show_submit_dialog_{team_id}_{level}", None)
             try:
-                rec = finalise(team=team_id, level=level, csv_text=draft, explanation=explanation.strip())
+                rec = finalise(team=team_id, level=level, csv_text=draft, explanation="Submitted via official Google Form")
                 st.session_state.pop(f'graph_df_{team_id}_{level}', None)
-                st.session_state.pop(f"expl_input_{team_id}_{level}", None)
                 max_gp = level_points(level)["graph"]
                 sim_pct = round(rec["graph_score"].get("weighted_f1", 0) * 100, 1)
-                st.session_state[f"lock_msg_{team_id}_{level}"] = (
-                    "Level 0 warm-up complete! You are ready for the competition."
-                    if is_demo else f"Level {level} locked! Graph Score: {rec['graph_score']['points']:g} / {max_gp:g} pts ({sim_pct}% similarity) · Flag: {rec['flag_points']:g} pts."
-                )
+                fp = rec.get("flag_points", 0)
+                gp = rec.get("graph_score", {}).get("points", 0)
+                tot_pts = fp + gp
+                st.session_state[f"level_just_locked_{team_id}"] = {
+                    "level": level,
+                    "flag_points": fp,
+                    "graph_points": gp,
+                    "sim_pct": sim_pct,
+                    "total_points": tot_pts,
+                    "is_demo": is_demo,
+                }
                 st.rerun()
             except (ValueError, PermissionError) as e:
                 st.error(str(e))
@@ -784,7 +832,10 @@ if section == "Submit":
             st.write(f"**Cumulative Graph:** {rec.get('edge_count', 0)} edges ({sim_pct}% similarity to ground truth)")
             if rec.get("manual_adjustment"):
                 st.write(f"**Organiser adjustment:** {rec.get('manual_adjustment')} pts ({rec.get('organiser_notes', '')})")
-            st.write(f"**Explanation:** {rec.get('explanation')}")
+            if rec.get("explanation") and rec.get("explanation") != "Submitted via official Google Form":
+                st.write(f"**Explanation:** {rec.get('explanation')}")
+            else:
+                st.caption("Official responses and reasoning submitted via Google Form.")
         if rec.get("csv"):
             st.subheader("Submitted Graph Diagram")
             df_locked = pd.read_csv(io.StringIO(rec["csv"]), dtype=str, keep_default_na=False)
@@ -832,12 +883,12 @@ if section == "Submit":
 
     st.divider()
 
-    # --- 2. Graph & Evidence Section ---
+    # --- 2. Graph & Official Submission Section ---
     draft = get_draft(team["team_id"], current)
     allowed_rels = [r.get("relationship_type") or r.get("name") for r in vocab.get("relationship_types", [])]
     valid_rows, errs = parse_uploaded_graph_csv(draft, available, allowed_rels) if draft.strip() else ([], [])
 
-    c_g_stat, c_g_dl = st.columns([2.5, 1.5])
+    c_g_stat, c_g_dl = st.columns([3, 1])
     with c_g_stat:
         if not valid_rows:
             st.warning("Cumulative graph is empty. Add edges in the Knowledge Graph tab.")
@@ -847,35 +898,7 @@ if section == "Submit":
             st.success(f"Cumulative Graph: **{len(valid_rows)} edge(s)** ready for submission.")
     with c_g_dl:
         if valid_rows:
-            col_d1, col_d2 = st.columns([1, 1.2])
-            col_d1.download_button("Download CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
-            if col_d2.button("Verify Graph Live", key=f"btn_verify_sub_{team['team_id']}_{current}", type="secondary", use_container_width=True):
-                with st.spinner("Analyzing graph and evaluating connections with AI..."):
-                    judge = get_live_judge()
-                    eval_detail = evaluate_submission(
-                        team_id=team["team_id"],
-                        level=current,
-                        flag_answer="",
-                        graph_csv=draft,
-                        cluster=team.get("cluster", CLUSTER),
-                        judge=judge,
-                        enforce_50pct_floor=True,
-                    )
-                    st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
-                    st.rerun()
-
-    live_fb_sub = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
-    if live_fb_sub:
-        render_live_verification_card(live_fb_sub)
-
-    explanation_key = f"expl_input_{team['team_id']}_{current}"
-    explanation = st.text_area(
-        "Evidence & Reasoning",
-        value=st.session_state.get(explanation_key, ""),
-        placeholder="Cite key evidence (paper, page, section or quote) supporting your connections...",
-        key=explanation_key,
-        height=90,
-    )
+            st.download_button("Download CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
 
     st.markdown("---")
     st.markdown("#### Official Level Submission")
@@ -901,26 +924,28 @@ if section == "Submit":
             team_id=team["team_id"],
             level=current,
             draft=draft,
-            explanation=explanation.strip(),
             is_demo=is_demo,
         )
 
     if st.button(btn_label, type="primary", disabled=not can_submit):
-        if not explanation.strip():
-            st.error("Please provide an explanation before submitting.")
-            st.stop()
         in_test = bool(os.environ.get("PYTEST_CURRENT_TEST"))
         if in_test:
             try:
-                rec = finalise(team=team["team_id"], level=current, csv_text=draft, explanation=explanation.strip())
+                rec = finalise(team=team["team_id"], level=current, csv_text=draft, explanation="Submitted via official Google Form")
                 st.session_state.pop(f'graph_df_{team["team_id"]}_{current}', None)
-                st.session_state.pop(explanation_key, None)
                 max_gp = level_points(current)["graph"]
                 sim_pct = round(rec["graph_score"].get("weighted_f1", 0) * 100, 1)
-                st.session_state[f"lock_msg_{team['team_id']}_{current}"] = (
-                    "Level 0 warm-up complete! You are ready for the competition."
-                    if is_demo else f"Level {current} locked! Graph Score: {rec['graph_score']['points']:g} / {max_gp:g} pts ({sim_pct}% similarity) · Flag: {rec['flag_points']:g} pts."
-                )
+                fp = rec.get("flag_points", 0)
+                gp = rec.get("graph_score", {}).get("points", 0)
+                tot_pts = fp + gp
+                st.session_state[f"level_just_locked_{team['team_id']}"] = {
+                    "level": current,
+                    "flag_points": fp,
+                    "graph_points": gp,
+                    "sim_pct": sim_pct,
+                    "total_points": tot_pts,
+                    "is_demo": is_demo,
+                }
                 st.rerun()
             except (ValueError, PermissionError) as e:
                 st.error(str(e))

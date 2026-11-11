@@ -1289,6 +1289,41 @@ def get_live_judge():
     return None
 
 
+MAX_VERIFICATIONS_PER_LEVEL = 6
+
+
+def verification_status(team_id: str, level: int) -> dict:
+    """Returns verification budget usage for a team on a given level."""
+    if level == 0:
+        return {"used": 0, "max": 999, "remaining": 999, "allowed": True}
+    with LOCK:
+        d = load()
+        v_map = d.setdefault("verifications", {})
+        used = int(v_map.get(f"{team_id}:{level}", 0))
+        rem = max(0, MAX_VERIFICATIONS_PER_LEVEL - used)
+        return {
+            "used": used,
+            "max": MAX_VERIFICATIONS_PER_LEVEL,
+            "remaining": rem,
+            "allowed": rem > 0,
+        }
+
+
+def record_verification(team_id: str, level: int) -> int:
+    """Increments and records a verification call in event_state.json."""
+    if level == 0:
+        return 0
+    with LOCK:
+        d = load()
+        v_map = d.setdefault("verifications", {})
+        k = f"{team_id}:{level}"
+        used = int(v_map.get(k, 0)) + 1
+        v_map[k] = used
+        save(d)
+        log_event({"at": now(), "event": "graph_verification", "team_id": team_id, "level": level, "used": used})
+        return used
+
+
 # ---------------------------------------------------------------------- Level lock
 def finalise(*args, **kwargs) -> dict:
     """Lock a level (see ``_finalise_locked``), then queue its novel edges for the LLM judge.

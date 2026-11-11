@@ -61,7 +61,6 @@ def test_portal_flow_level0_to_level1(env):
     assert lock.disabled  # no graph yet
     core.save_draft("TEAM01", 0, HDR + "L0A,L0B,SHARES_PRINCIPLE,both store shared beginnings once\n")
     at.run()
-    next(t for t in at.text_area if t.label == "Evidence & Reasoning").input("shared prefixes stored once")
     next(b for b in at.button if b.label.startswith("Lock & Submit")).click()
     at.run()
     _ok(at)
@@ -78,7 +77,6 @@ def test_portal_flow_level0_to_level1(env):
     next(b for b in at.button if "flag" in b.label.lower()).click()
     at.run()
     _ok(at)
-    next(t for t in at.text_area if t.label == "Evidence & Reasoning").input("P02 and P13 cite P05 (reference lists)")
     next(b for b in at.button if b.label.startswith("Lock & Submit")).click()
     at.run()
     _ok(at)
@@ -155,7 +153,6 @@ def test_portal_submission_dialog_confirmation(env, monkeypatch):
     next(b for b in at.button if "flag" in b.label.lower()).click()
     at.run()
     _ok(at)
-    next(t for t in at.text_area if t.label == "Evidence & Reasoning").input("Reasoning")
     # In interactive mode (not in test), clicking lock button opens the modal dialog
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
     next(b for b in at.button if b.label.startswith("Lock & Submit")).click()
@@ -168,3 +165,42 @@ def test_portal_submission_dialog_confirmation(env, monkeypatch):
     at.run()
     _ok(at)
     assert core.team_progress("TEAM01")[1] == 1
+
+
+def test_portal_verification_budget_and_sidebar_scores(env):
+    # Level 0 is unlimited
+    stat0 = core.verification_status("TEAM01", 0)
+    assert stat0["allowed"] is True
+    assert stat0["remaining"] > 100
+
+    # Level 1 has a cap of 6
+    stat1 = core.verification_status("TEAM01", 1)
+    assert stat1["max"] == 6
+    assert stat1["remaining"] == 6
+    assert stat1["allowed"] is True
+
+    # Record 6 verifications
+    for i in range(1, 7):
+        used = core.record_verification("TEAM01", 1)
+        assert used == i
+
+    exhausted = core.verification_status("TEAM01", 1)
+    assert exhausted["remaining"] == 0
+    assert exhausted["allowed"] is False
+
+    # Simulate completed Level 0 and Level 1, then check sidebar display
+    core.save_draft("TEAM01", 0, HDR + "L0A,L0B,SHARES_PRINCIPLE,\n")
+    core.attempt_flag("TEAM01", 0, "prefix tree")
+    core.finalise("TEAM01", 0, HDR + "L0A,L0B,SHARES_PRINCIPLE,\n", explanation="L0 done")
+
+    core.save_draft("TEAM01", 1, L1)
+    core.attempt_flag("TEAM01", 1, "the receivers")
+    core.finalise("TEAM01", 1, L1, explanation="Submitted via official Google Form")
+
+    at = AppTest.from_file(str(core.ROOT / "event_portal.py"), default_timeout=90).run()
+    _login(at)
+    sidebar_text = " ".join(str(w.value) for w in at.sidebar.markdown)
+    assert "Level 1:" in sidebar_text
+    assert "pts" in sidebar_text
+    assert any(m.label == "Total Score" for m in at.sidebar.metric)
+
