@@ -91,7 +91,7 @@ if not st.session_state.get("event_admin") and authenticate_admin_session(admin_
 
 if not st.session_state.get("event_admin"):
     with st.form("admin_login"):
-        pw = st.text_input("Admin password", type="password", placeholder="Enter organiser password (IEEE_Etal2026)")
+        pw = st.text_input("Admin password", type="password", placeholder="Enter organiser password")
         ok = st.form_submit_button("Sign in")
     if ok:
         expected = (os.environ.get("ORGANISER_PASSWORD") or "IEEE_Etal2026").strip()
