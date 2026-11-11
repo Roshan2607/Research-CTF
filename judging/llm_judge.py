@@ -76,7 +76,16 @@ TOOL = {
 @lru_cache(maxsize=1)
 def _papers() -> dict[str, dict]:
     data = json.loads((_DATA / "participant_papers.json").read_text(encoding="utf-8"))
-    return {p["participant_id"]: p for p in data["papers"]}
+    out = {p["participant_id"]: p for p in data["papers"]}
+    demo_file = _DATA.parent / "demo_level0.json"
+    if demo_file.exists():
+        try:
+            demo_data = json.loads(demo_file.read_text(encoding="utf-8"))
+            for dp in demo_data.get("papers", []):
+                out[dp["id"]] = {"participant_id": dp["id"], "title": dp.get("title", ""), "abstract": dp.get("excerpt", "")}
+        except Exception:
+            pass
+    return out
 
 
 @lru_cache(maxsize=1)

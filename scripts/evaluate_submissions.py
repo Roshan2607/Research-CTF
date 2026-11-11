@@ -153,10 +153,27 @@ def evaluate_submission(
     accepted_set = {edge_key(*t) for t in (accepted_additions or [])}
     scorer = GraphScorer.from_answer_key(accepted_additions=list(accepted_set))
     released = set(core.released_papers(level, cluster))
-    parsed = parse_submission(graph_csv, scorer.infos, max_rows=300, allow_any_pair=True)
+
+    infos_dict = dict(scorer.infos)
+    if "L0A" in released or "L0B" in released:
+        from scoring.graph_scorer import PaperInfo
+        infos_dict["L0A"] = PaperInfo(pid="L0A", year=1983, first_public_year=1983)
+        infos_dict["L0B"] = PaperInfo(pid="L0B", year=1960, first_public_year=1960)
+
+    parsed = parse_submission(graph_csv, infos_dict, max_rows=300, allow_any_pair=True)
 
     submitted_edges = {edge_key(*e) for e in parsed.edges if e[0] in released and e[1] in released}
     reference_edges = {t for t in scorer.reference if t[0] in released and t[1] in released}
+
+    demo_ref: set[tuple[str, str, str]] = set()
+    if level == 0:
+        demo_ref = {
+            edge_key("L0A", "L0B", "SHARES_PRINCIPLE"),
+            edge_key("L0A", "L0B", "ANALOGOUS_PROBLEM"),
+            edge_key("L0B", "L0A", "SHARES_PRINCIPLE"),
+            edge_key("L0B", "L0A", "ANALOGOUS_PROBLEM"),
+        }
+        reference_edges = {edge_key("L0A", "L0B", "SHARES_PRINCIPLE")}
 
     # Reference without novel additions
     initial_reference = reference_edges - accepted_set
@@ -173,6 +190,19 @@ def evaluate_submission(
     inj_map = {edge_key(*a["induced_edge"]): a for a in inj_annotations}
 
     for e in submitted_edges:
+        if level == 0:
+            if e in demo_ref:
+                correct_found.append(e)
+            else:
+                ev = parsed.evidence.get(e, "")
+                novel_candidates.append({
+                    "source_id": e[0],
+                    "target_id": e[1],
+                    "relationship_type": e[2],
+                    "evidence": ev,
+                })
+            continue
+
         cls = scorer.classify(e)
         if e in accepted_set:
             discovery_bounties.append(e)

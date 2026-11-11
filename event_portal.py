@@ -298,7 +298,18 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
         f"{detail.final_graph_points:g} / {detail.max_graph_points:g} pts",
     )
 
-    if detail.meets_50pct_threshold:
+    if detail.level == 0:
+        if detail.meets_50pct_threshold and detail.correct_edges:
+            st.success(
+                f"Level 0 Practice Accuracy is {detail.accuracy_pct:.1f}% ({len(detail.correct_edges)} of {detail.total_reference_count} connection). "
+                f"Practice relationship verified! You understand how knowledge graph connections work."
+            )
+        else:
+            st.warning(
+                f"Level 0 Practice Accuracy is {detail.accuracy_pct:.1f}%. "
+                f"Connect L0A and L0B (e.g. SHARES_PRINCIPLE) to verify the shared trie/prefix tree structure."
+            )
+    elif detail.meets_50pct_threshold:
         st.success(
             f"Accuracy is {detail.accuracy_pct:.1f}%. The 50% accuracy standard is satisfied! "
             f"You are on track to earn {detail.final_graph_points:g} graph points for this level."
@@ -685,9 +696,7 @@ elif section == "Knowledge Graph":
         btn_verify = st.button("Verify Graph Live", key=f"btn_verify_kg_main_{team['team_id']}_{current}", type="primary", use_container_width=True)
 
     if btn_verify:
-        if current == 0:
-            st.info("Level 0 is an unscored onboarding warm-up (no graph scoring). Graph verification starts on Level 1!")
-        elif df.empty:
+        if df.empty:
             st.warning("Your cumulative graph is currently empty. Add at least one edge in the section above before verifying.")
         else:
             with st.spinner("Analyzing graph and evaluating connections with AI judge..."):
@@ -839,22 +848,19 @@ if section == "Submit":
             col_d1, col_d2 = st.columns([1, 1.2])
             col_d1.download_button("Download CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
             if col_d2.button("Verify Graph Live", key=f"btn_verify_sub_{team['team_id']}_{current}", type="secondary", use_container_width=True):
-                if current == 0:
-                    st.info("Level 0 is an unscored onboarding warm-up. Graph verification starts on Level 1!")
-                else:
-                    with st.spinner("Analyzing graph and evaluating connections with AI..."):
-                        judge = get_live_judge()
-                        eval_detail = evaluate_submission(
-                            team_id=team["team_id"],
-                            level=current,
-                            flag_answer="",
-                            graph_csv=draft,
-                            cluster=team.get("cluster", CLUSTER),
-                            judge=judge,
-                            enforce_50pct_floor=True,
-                        )
-                        st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
-                        st.rerun()
+                with st.spinner("Analyzing graph and evaluating connections with AI..."):
+                    judge = get_live_judge()
+                    eval_detail = evaluate_submission(
+                        team_id=team["team_id"],
+                        level=current,
+                        flag_answer="",
+                        graph_csv=draft,
+                        cluster=team.get("cluster", CLUSTER),
+                        judge=judge,
+                        enforce_50pct_floor=True,
+                    )
+                    st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
+                    st.rerun()
 
     live_fb_sub = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
     if live_fb_sub:
