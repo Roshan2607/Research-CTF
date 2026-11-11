@@ -635,13 +635,15 @@ elif section == "Knowledge Graph":
             src = c1.selectbox("Source paper", available, format_func=lambda x: labels.get(x, x))
             dst = c2.selectbox("Target paper", available, format_func=lambda x: labels.get(x, x))
             rel = c3.selectbox("Relationship type", rels)
+            ev = st.text_input("Evidence / Reasoning (optional)", placeholder="Cite key concepts, methods, or reason for this connection...")
             add = st.form_submit_button("Add Edge", type="primary")
 
         if add:
             if src == dst:
                 st.error("A paper cannot be connected to itself.")
             else:
-                new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": ""}])
+                clean_ev = ev.strip()
+                new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": clean_ev}])
                 clean_base, _ = parse_uploaded_graph_csv(df.to_csv(index=False), available, rels) if not df.empty else ([], [])
                 base_df = pd.DataFrame(clean_base) if clean_base else empty_df.copy()
                 candidate = pd.concat([base_df, new_row], ignore_index=True).drop_duplicates(
