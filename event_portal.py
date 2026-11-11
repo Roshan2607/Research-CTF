@@ -32,6 +32,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).with_name(".env"))
 
 from challenge.participant_data import card_pdf_path, load_corpus, load_vocabulary
+from scripts.evaluate_submissions import evaluate_submission, EvaluationDetail
 from event_core import (
     CLUSTER,
     LEVELS,
@@ -171,6 +172,91 @@ def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: 
 
     dot.append("}")
     st.graphviz_chart("\n".join(dot), use_container_width=True)
+
+
+def get_live_judge():
+    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    xai_key = os.environ.get("XAI_API_KEY", "").strip() or os.environ.get("GROK_API_KEY", "").strip()
+    provider = os.environ.get("JUDGE_PROVIDER", "").strip().lower()
+
+    try:
+        if provider in ("grok", "xai") and xai_key:
+            from judging.openai_judge import GrokJudge
+            return GrokJudge(api_key=xai_key)
+        elif openai_key:
+            from judging.openai_judge import OpenAIJudge
+            return OpenAIJudge(api_key=openai_key)
+        elif xai_key:
+            from judging.openai_judge import GrokJudge
+            return GrokJudge(api_key=xai_key)
+    except Exception:
+        pass
+    return None
+
+
+def render_live_verification_card(detail: EvaluationDetail) -> None:
+    st.markdown("---")
+    st.markdown(f"#### Live Graph Verification Result · Level {detail.level}")
+
+    c1, c2, c3 = st.columns(3)
+    c1.metric(
+        "Graph Accuracy",
+        f"{detail.accuracy_pct:.1f}%",
+        f"{len(detail.correct_edges)} of {detail.total_reference_count} edges",
+    )
+    floor_label = "PASSED (>= 50%)" if detail.meets_50pct_threshold else "BELOW FLOOR (< 50%)"
+    c2.metric(
+        "50% Accuracy Floor",
+        floor_label,
+        "Points Eligible" if detail.meets_50pct_threshold else "Graph Pts Zeroed",
+    )
+    c3.metric(
+        "Estimated Graph Points",
+        f"{detail.final_graph_points:g} / {detail.max_graph_points:g} pts",
+    )
+
+    if detail.meets_50pct_threshold:
+        st.success(
+            f"Accuracy is {detail.accuracy_pct:.1f}%. The 50% accuracy standard is satisfied! "
+            f"You are on track to earn {detail.final_graph_points:g} graph points for this level."
+        )
+    else:
+        st.warning(
+            f"Current accuracy is {detail.accuracy_pct:.1f}% (required: >= 50.0%). "
+            f"Graph points are currently zeroed. Connect more valid relationships between released papers to reach 50%."
+        )
+
+    with st.expander("Detailed Verification Breakdown", expanded=True):
+        if detail.correct_edges:
+            st.markdown("**Verified Relationships:**")
+            for e in detail.correct_edges:
+                st.write(f"• `{e[0]}` → `{e[1]}` ({e[2]})")
+        else:
+            st.write("• No reference relationships matched yet.")
+
+        if detail.llm_verdicts:
+            st.markdown("**AI Judge Verdicts on Novel Relationships:**")
+            for v in detail.llm_verdicts:
+                badge = "[SUPPORTED]" if v["verdict"] == "supported" else f"[{v['verdict'].upper()}]"
+                st.write(f"• `{v['edge'][0]}` → `{v['edge'][1]}` ({v['edge'][2]}): **{badge}** {v.get('reason', '')}")
+        elif detail.novel_candidate_edges:
+            st.markdown("**Novel Candidate Relationships (Pending Review):**")
+            for ne in detail.novel_candidate_edges:
+                st.write(f"• `{ne['source_id']}` → `{ne['target_id']}` ({ne['relationship_type']})")
+
+        if detail.injection_hits:
+            st.error(
+                f"Trap Detected: {len(detail.injection_hits)} connection(s) match misleading AI-prompt injection lures "
+                f"(-{detail.injection_penalty:g} pts). Review your sources and discard unverified recommendations."
+            )
+
+        if detail.decoy_hits:
+            st.warning(
+                f"Decoy Detected: {len(detail.decoy_hits)} connection(s) link to unhidden decoy papers "
+                f"(-{detail.decoy_penalty:g} pts)."
+            )
+        if detail.discovery_bounty_edges:
+            st.info(f"Discovery Bounties Awarded: +{detail.discovery_bounty_points:g} pts for verified novel connections.")
 
 
 corpus = load_corpus()
@@ -421,10 +507,29 @@ elif section == "Knowledge Graph":
     with c_kg_r:
         if not df.empty:
             st.download_button("Download CSV", safe_csv(df), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
+            if st.button("Verify Graph", key=f"btn_verify_kg_{team['team_id']}_{current}", type="primary", use_container_width=True):
+                with st.spinner("Analyzing graph and evaluating connections with AI..."):
+                    judge = get_live_judge()
+                    eval_detail = evaluate_submission(
+                        team_id=team["team_id"],
+                        level=current,
+                        flag_answer="",
+                        graph_csv=df.to_csv(index=False),
+                        cluster=team.get("cluster", CLUSTER),
+                        judge=judge,
+                        enforce_50pct_floor=True,
+                    )
+                    st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
+                    st.rerun()
 
     # 1. Live Graph Visual (Placed right at the top so no scrolling is needed!)
     st.markdown("#### Live Graph Visual")
     render_graph_diagram(df, available=available, byid=byid)
+
+    # Live Verification Card if evaluated
+    live_fb = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
+    if live_fb:
+        render_live_verification_card(live_fb)
 
     # 2. Quick CSV Import & Validator (Closed initially)
     with st.expander("Import / Paste Graph CSV", expanded=False):
@@ -606,7 +711,7 @@ elif section == "Submit":
     allowed_rels = [r.get("relationship_type") or r.get("name") for r in vocab.get("relationship_types", [])]
     valid_rows, errs = parse_uploaded_graph_csv(draft, available, allowed_rels) if draft.strip() else ([], [])
 
-    c_g_stat, c_g_dl = st.columns([3, 1])
+    c_g_stat, c_g_dl = st.columns([2.5, 1.5])
     with c_g_stat:
         if not valid_rows:
             st.warning("Cumulative graph is empty. Add edges in the Knowledge Graph tab.")
@@ -616,7 +721,26 @@ elif section == "Submit":
             st.success(f"Cumulative Graph: **{len(valid_rows)} edge(s)** ready for submission.")
     with c_g_dl:
         if valid_rows:
-            st.download_button("Download Graph CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
+            col_d1, col_d2 = st.columns(2)
+            col_d1.download_button("Download CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
+            if col_d2.button("Verify Graph", key=f"btn_verify_sub_{team['team_id']}_{current}", type="secondary", use_container_width=True):
+                with st.spinner("Analyzing graph and evaluating connections with AI..."):
+                    judge = get_live_judge()
+                    eval_detail = evaluate_submission(
+                        team_id=team["team_id"],
+                        level=current,
+                        flag_answer="",
+                        graph_csv=draft,
+                        cluster=team.get("cluster", CLUSTER),
+                        judge=judge,
+                        enforce_50pct_floor=True,
+                    )
+                    st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
+                    st.rerun()
+
+    live_fb_sub = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
+    if live_fb_sub:
+        render_live_verification_card(live_fb_sub)
 
     explanation_key = f"expl_input_{team['team_id']}_{current}"
     explanation = st.text_area(
