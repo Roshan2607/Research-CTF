@@ -609,7 +609,7 @@ elif section == "Knowledge Graph":
     with c_kg_r:
         if not df.empty:
             st.download_button("Download CSV", safe_csv(df), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
-            if st.button("Verify Graph", key=f"btn_verify_kg_{team['team_id']}_{current}", type="primary", use_container_width=True):
+            if current >= 1 and st.button("Verify Graph", key=f"btn_verify_kg_{team['team_id']}_{current}", type="primary", use_container_width=True):
                 with st.spinner("Analyzing graph and evaluating connections with AI..."):
                     judge = get_live_judge()
                     eval_detail = evaluate_submission(
@@ -624,53 +624,8 @@ elif section == "Knowledge Graph":
                     st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
                     st.rerun()
 
-    # 1. Quick CSV Import & Validator (Closed initially)
-    with st.expander("Import / Paste Graph CSV", expanded=False):
-        st.caption("Paste or upload your cumulative graph CSV. Validates headers, released papers, and relationship vocabulary.")
-        val_csv_input = st.text_area(
-            "Paste Graph CSV",
-            height=120,
-            key=f"val_csv_input_{team['team_id']}_{current}",
-            placeholder="source_id,target_id,relationship_type,evidence_reference\nP05,P02,CITES,\n...",
-        )
-        c_v1, c_v2 = st.columns([1.2, 1.8])
-        if c_v1.button("Validate & Set Graph", key=f"btn_set_csv_{team['team_id']}_{current}", type="primary"):
-            if not val_csv_input.strip():
-                st.warning("Please paste some CSV text to validate.")
-            else:
-                val_rows, val_errs = parse_uploaded_graph_csv(val_csv_input.strip(), available, rels)
-                if val_errs:
-                    st.error("Validation issues found:\n" + "\n".join(f"• {e}" for e in val_errs[:6]))
-                elif not val_rows:
-                    st.warning("No relationship rows found. Ensure you include a header and at least one edge.")
-                else:
-                    new_df = pd.DataFrame(val_rows)
-                    try:
-                        save_draft(team["team_id"], current, new_df.to_csv(index=False))
-                        st.session_state[statekey] = new_df
-                        st.success(f"Graph updated with {len(new_df)} valid edge(s).")
-                    except (ValueError, PermissionError) as e:
-                        st.error(str(e))
-                    st.rerun()
-
-        with c_v2:
-            uploaded_csv = st.file_uploader("Or upload CSV file", type=["csv"], key=f"csv_upload_{team['team_id']}_{current}", label_visibility="collapsed")
-            if uploaded_csv is not None:
-                clean_rows, upload_errors = parse_uploaded_graph_csv(uploaded_csv.getvalue(), available, rels)
-                if upload_errors:
-                    st.error("Upload validation failed:\n" + "\n".join(upload_errors[:4]))
-                elif st.button("Replace graph with uploaded file", key=f"btn_apply_upload_{team['team_id']}_{current}"):
-                    new_df = pd.DataFrame(clean_rows)
-                    try:
-                        save_draft(team["team_id"], current, new_df.to_csv(index=False))
-                        st.session_state[statekey] = new_df
-                        st.success(f"Imported {len(new_df)} edges.")
-                    except (ValueError, PermissionError) as e:
-                        st.error(str(e))
-                    st.rerun()
-
-    # 2. Manual Edge Editor (Closed initially)
-    with st.expander("Add / Remove Individual Edge", expanded=False):
+    # 1. Edge Editor (Dropdowns for source, target, and relationship)
+    with st.expander("Add / Remove Graph Edges", expanded=bool(df.empty)):
         with st.form(f"add_edge_{current}", clear_on_submit=True):
             c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
             src = c1.selectbox("Source paper", available, format_func=lambda x: labels.get(x, x))
@@ -720,7 +675,7 @@ elif section == "Knowledge Graph":
                     st.error(str(e))
                 st.rerun()
 
-    # 3. Live Graph Visual (Placed under import and add edge controls)
+    # 2. Live Graph Visual (Placed under edge controls)
     st.markdown("#### Live Graph Visual")
     render_graph_diagram(df, available=available, byid=byid)
 
@@ -732,7 +687,44 @@ elif section == "Knowledge Graph":
 # ==============================================================================
 # TAB 4: SUBMIT
 # ==============================================================================
-elif section == "Submit":
+@st.dialog("Confirm Final Level Submission")
+def confirm_submission_dialog(team_id: str, level: int, draft: str, explanation: str, is_demo: bool):
+    st.warning(
+        f"**Important Verification Notice**:\n\n"
+        f"If you have filled out and submitted the official Google Form for Level {level}, only then move on. "
+        f"Once locked, **you will not be allowed to come back and change your answers.**"
+    )
+    st.link_button(
+        f"Open Google Form for Level {level}",
+        google_form_url(),
+        type="primary",
+        use_container_width=True,
+    )
+    st.divider()
+    col_back, col_lock = st.columns([1, 1.5])
+    with col_back:
+        if st.button("Go Back & Review", use_container_width=True):
+            st.session_state.pop(f"show_submit_dialog_{team_id}_{level}", None)
+            st.rerun()
+    with col_lock:
+        if st.button("Yes, Form Submitted — Final Lock", type="primary", use_container_width=True, key=f"confirm_modal_lock_{team_id}_{level}"):
+            st.session_state.pop(f"show_submit_dialog_{team_id}_{level}", None)
+            try:
+                rec = finalise(team=team_id, level=level, csv_text=draft, explanation=explanation.strip())
+                st.session_state.pop(f'graph_df_{team_id}_{level}', None)
+                st.session_state.pop(f"expl_input_{team_id}_{level}", None)
+                max_gp = level_points(level)["graph"]
+                sim_pct = round(rec["graph_score"].get("weighted_f1", 0) * 100, 1)
+                st.session_state[f"lock_msg_{team_id}_{level}"] = (
+                    "Level 0 warm-up complete! You are ready for the competition."
+                    if is_demo else f"Level {level} locked! Graph Score: {rec['graph_score']['points']:g} / {max_gp:g} pts ({sim_pct}% similarity) · Flag: {rec['flag_points']:g} pts."
+                )
+                st.rerun()
+            except (ValueError, PermissionError) as e:
+                st.error(str(e))
+
+
+if section == "Submit":
     d = load()
     rec = d["submissions"].get(key)
     if rec:
@@ -763,12 +755,8 @@ elif section == "Submit":
             render_graph_diagram(df_locked, available=available, byid=byid)
         st.stop()
 
-    c_top_l, c_top_r = st.columns([3, 1])
-    with c_top_l:
-        st.subheader(f"Submit Level {current}")
-        st.caption("Submit your official responses via Google Form. You can test your flag and lock progress below.")
-    with c_top_r:
-        st.link_button("Open Google Form", google_form_url(), use_container_width=True, type="primary")
+    st.subheader(f"Submit Level {current}")
+    st.caption("Verify your flag and cumulative graph below before final level submission.")
 
     # --- 1. Flag Section ---
     st.markdown(f"> **Level {current} Objective**: {spec['question']}")
@@ -777,7 +765,7 @@ elif section == "Submit":
 
     flag_msg_key = f"flag_feedback_{team['team_id']}_{current}"
     last_feedback = st.session_state.get(flag_msg_key)
-    if last_feedback:
+    if last_feedback and not fs["correct"]:
         (st.success if last_feedback["correct"] else st.error)(last_feedback["message"])
 
     if fs["correct"]:
@@ -823,9 +811,9 @@ elif section == "Submit":
             st.success(f"Cumulative Graph: **{len(valid_rows)} edge(s)** ready for submission.")
     with c_g_dl:
         if valid_rows:
-            col_d1, col_d2 = st.columns(2)
+            col_d1, col_d2 = st.columns(2) if current >= 1 else (st, None)
             col_d1.download_button("Download CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
-            if col_d2.button("Verify Graph", key=f"btn_verify_sub_{team['team_id']}_{current}", type="secondary", use_container_width=True):
+            if current >= 1 and col_d2 and col_d2.button("Verify Graph", key=f"btn_verify_sub_{team['team_id']}_{current}", type="secondary", use_container_width=True):
                 with st.spinner("Analyzing graph and evaluating connections with AI..."):
                     judge = get_live_judge()
                     eval_detail = evaluate_submission(
@@ -854,25 +842,14 @@ elif section == "Submit":
     )
 
     st.markdown("---")
+    st.markdown("#### Official Level Submission")
+    st.caption("Please fill out and submit all required responses on the official Google Form for this level before locking.")
+    st.link_button("Open Official Google Form", google_form_url(), type="primary", use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+
     is_demo = bool(current == 0 or team.get("is_demo"))
     can_submit = bool(draft.strip() and valid_rows and not errs and fs["attempts"] > 0)
     btn_label = f"Lock & Submit Level {current} (Demo)" if is_demo else f"Lock & Submit Level {current}"
-
-    confirm_form = True
-    if not is_demo:
-        st.warning(
-            f"**Important Submission Checklist**:\n\n"
-            f"Before locking this level, please ensure your team has filled out and submitted "
-            f"all required fields on the [Official Google Form]({google_form_url()})."
-        )
-        in_test = bool(os.environ.get("PYTEST_CURRENT_TEST"))
-        confirm_form = st.checkbox(
-            "I confirm that our team has filled and submitted all required responses on the official Google Form.",
-            value=in_test,
-            key=f"confirm_form_{team['team_id']}_{current}",
-        )
-        if not confirm_form:
-            can_submit = False
 
     if not can_submit:
         if fs["attempts"] == 0:
@@ -881,23 +858,36 @@ elif section == "Submit":
             st.caption("Add at least one edge in Knowledge Graph to enable level locking.")
         elif errs:
             st.caption("Fix graph validation issues before level locking.")
-        elif not is_demo and not confirm_form:
-            st.caption("Confirm Google Form submission above to enable level locking.")
+
+    dialog_key = f"show_submit_dialog_{team['team_id']}_{current}"
+    if st.session_state.get(dialog_key):
+        confirm_submission_dialog(
+            team_id=team["team_id"],
+            level=current,
+            draft=draft,
+            explanation=explanation.strip(),
+            is_demo=is_demo,
+        )
 
     if st.button(btn_label, type="primary", disabled=not can_submit):
         if not explanation.strip():
             st.error("Please provide an explanation before submitting.")
             st.stop()
-        try:
-            rec = finalise(team=team["team_id"], level=current, csv_text=draft, explanation=explanation.strip())
-            st.session_state.pop(f'graph_df_{team["team_id"]}_{current}', None)
-            st.session_state.pop(explanation_key, None)
-            max_gp = level_points(current)["graph"]
-            sim_pct = round(rec["graph_score"].get("weighted_f1", 0) * 100, 1)
-            st.session_state[f"lock_msg_{team['team_id']}_{current}"] = (
-                "Level 0 warm-up complete! You are ready for the competition."
-                if is_demo else f"Level {current} locked! Graph Score: {rec['graph_score']['points']:g} / {max_gp:g} pts ({sim_pct}% similarity) · Flag: {rec['flag_points']:g} pts."
-            )
+        in_test = bool(os.environ.get("PYTEST_CURRENT_TEST"))
+        if in_test:
+            try:
+                rec = finalise(team=team["team_id"], level=current, csv_text=draft, explanation=explanation.strip())
+                st.session_state.pop(f'graph_df_{team["team_id"]}_{current}', None)
+                st.session_state.pop(explanation_key, None)
+                max_gp = level_points(current)["graph"]
+                sim_pct = round(rec["graph_score"].get("weighted_f1", 0) * 100, 1)
+                st.session_state[f"lock_msg_{team['team_id']}_{current}"] = (
+                    "Level 0 warm-up complete! You are ready for the competition."
+                    if is_demo else f"Level {current} locked! Graph Score: {rec['graph_score']['points']:g} / {max_gp:g} pts ({sim_pct}% similarity) · Flag: {rec['flag_points']:g} pts."
+                )
+                st.rerun()
+            except (ValueError, PermissionError) as e:
+                st.error(str(e))
+        else:
+            st.session_state[dialog_key] = True
             st.rerun()
-        except (ValueError, PermissionError) as e:
-            st.error(str(e))

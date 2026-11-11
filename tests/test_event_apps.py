@@ -144,3 +144,27 @@ def test_portal_fcfs_claim_team_and_session_persistence(env):
     assert "TEAM02" in d["teams"]
     assert d["teams"]["TEAM02"]["name"] == "Beta Squad"
     assert any("Beta Squad" in str(s.value) for s in at.sidebar.success)
+
+
+def test_portal_submission_dialog_confirmation(env, monkeypatch):
+    core.save_draft("TEAM01", 0, HDR + "L0A,L0B,SHARES_PRINCIPLE,\n")
+    at = AppTest.from_file(str(core.ROOT / "event_portal.py"), default_timeout=90).run()
+    _login(at)
+    _go(at, "Submit")
+    next(t for t in at.text_input if t.label == "Flag answer").input("prefix tree")
+    next(b for b in at.button if "flag" in b.label.lower()).click()
+    at.run()
+    _ok(at)
+    next(t for t in at.text_area if t.label == "Evidence & Reasoning").input("Reasoning")
+    # In interactive mode (not in test), clicking lock button opens the modal dialog
+    monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+    next(b for b in at.button if b.label.startswith("Lock & Submit")).click()
+    at.run()
+    _ok(at)
+    # Check that dialog warning is displayed and clicking confirm finalises the level
+    assert any("Google Form" in str(w.value) for w in at.warning)
+    modal_confirm = next(b for b in at.button if "Final Lock" in b.label)
+    modal_confirm.click()
+    at.run()
+    _ok(at)
+    assert core.team_progress("TEAM01")[1] == 1
