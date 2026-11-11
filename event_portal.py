@@ -216,23 +216,23 @@ with st.sidebar:
         rec = d_sidebar.get("submissions", {}).get(f"{team['team_id']}:{lv['id']}")
         if lv["id"] in completed:
             if lv["id"] == 0:
-                st.write(f"[Completed] Level 0: {lv['title']}")
+                st.markdown(f":gray[[Completed] Level 0: {lv['title']} (Practice)]")
             elif rec:
                 fp = rec.get("flag_points", 0)
                 gp = rec.get("graph_score", {}).get("points", 0) + rec.get("manual_adjustment", 0)
-                tot_lp = fp + gp
+                tot_lp = int(round(fp + gp))
                 sidebar_total_pts += tot_lp
-                st.write(f"[Completed] Level {lv['id']}: {lv['title']} — **{tot_lp:g} pts**")
+                st.markdown(f":gray[[Completed] Level {lv['id']}: {lv['title']} — **{tot_lp:,d} pts**]")
             else:
-                st.write(f"[Completed] Level {lv['id']}: {lv['title']}")
+                st.markdown(f":gray[[Completed] Level {lv['id']}: {lv['title']}]")
         elif lv["id"] == current:
-            st.write(f"[Current] Level {lv['id']}: {lv['title']}")
+            st.markdown(f":orange[**[Current] Level {lv['id']}: {lv['title']}**]")
         else:
-            st.write(f"[Locked] Level {lv['id']}: {lv['title']}")
+            st.markdown(f":green[[Locked] Level {lv['id']}: {lv['title']}]")
 
     if sidebar_total_pts > 0:
         st.divider()
-        st.metric("Total Score", f"{sidebar_total_pts:g} pts")
+        st.metric("Total Score", f"{int(round(sidebar_total_pts)):,d} pts")
     if st.button("Sign out"):
         token_to_revoke = (
             st.query_params.get("session")
@@ -317,7 +317,7 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
     )
     c3.metric(
         "Estimated Graph Points",
-        f"{detail.final_graph_points:g} / {detail.max_graph_points:g} pts",
+        f"{int(round(detail.final_graph_points)):,d} / {int(round(detail.max_graph_points)):,d} pts",
     )
 
     if detail.level == 0:
@@ -395,6 +395,10 @@ for dp in demo_l0_spec.get("papers", []):
         "title": dp.get("title", dpid),
         "citation": f"{dpid} · {dp.get('title', '')} ({dp.get('inspired_by', '')})",
         "abstract": dp.get("excerpt", ""),
+        "real_world_application": dp.get("real_world_application", ""),
+        "authors": ["Research CTF Onboarding Track"],
+        "venue": "Introductory Research Overview",
+        "year": "2024",
         "challenge_card_path": f"data/participant/cards/{dpid}.pdf",
     }
 for pid, r in content_map.items():
@@ -542,8 +546,24 @@ elif section == "Papers":
     cur_papers = [p for p in papers if p["participant_id"] in spec["paper_ids"]]
     for p in cur_papers:
         with st.expander(f"{p['participant_id']} — {p['title']}", expanded=False):
-            st.markdown(f"**Citation:** {p.get('citation', '')}")
+            authors_str = ", ".join(p.get("authors", [])) if p.get("authors") else ""
+            pub_info = f"{p.get('venue', '')} ({p.get('year', '')})".strip()
+            meta_parts = []
+            if authors_str:
+                meta_parts.append(f"**Authors:** {authors_str}")
+            if pub_info and pub_info != "()":
+                meta_parts.append(f"**Published:** {pub_info}")
+            if p.get("domain"):
+                meta_parts.append(f"**Domain:** {p['domain']}")
+            if meta_parts:
+                st.caption(" · ".join(meta_parts))
+
+            st.markdown("**Abstract**")
             st.write(p.get("abstract", ""))
+
+            if p.get("real_world_application"):
+                st.info(f"**Real-World Impact & Application:**\n\n{p['real_world_application']}")
+
             c_link, c_dl = st.columns([1, 1])
             url = p.get("open_access_url") or p.get("doi_url")
             if url:
@@ -652,6 +672,37 @@ elif section == "Knowledge Graph":
 
     # 1. Edge Editor (Dropdowns for source, target, and relationship)
     with st.expander("Add / Remove Graph Edges", expanded=bool(df.empty)):
+        with st.expander("Relationship Types Guide: How Papers Connect (Cheat Sheet)", expanded=False):
+            st.markdown(
+                """
+**How to choose the correct relationship:**
+
+* **`CITES` (Directional: Citing Paper → Cited Paper)**
+  * *Direction*: The arrow MUST go from the paper doing the citing to the paper being cited (`Later Paper → Earlier Paper`).
+  * *Example*: `P14 (2004)` surveys and cites `P13 (2004)`, so connect `P14 → P13`. Always check publication years!
+
+* **`SHARES_PRINCIPLE` (Symmetric: Shared Core Concept / Math)**
+  * *Definition*: Both papers independently rely on the same fundamental mathematical theory or technique (e.g., additive distance metrics, prefix tree / trie properties).
+
+* **`ANALOGOUS_PROBLEM` (Symmetric: Cross-Domain Equivalents)**
+  * *Definition*: Different scientific disciplines solving the exact same underlying structural problem (e.g., evolutionary biologists reconstructing tree lineages in genetics ↔ network engineers reconstructing routing trees on the Internet).
+
+* **`EXTENDS` (Directional: Generalization / Improvement)**
+  * *Definition*: Paper A directly builds upon, generalizes, or removes restrictive assumptions of Paper B (e.g. unicast probes extending multicast probes).
+
+* **`USES_METHOD` (Directional: Subroutine / Tool Application)**
+  * *Definition*: Paper A directly imports and executes a specific algorithm or estimator introduced by Paper B as part of its pipeline.
+                """
+            )
+            if current == 1:
+                st.info("**Level 1 Research Nudge**: Focus on internal network inference papers (`P02`, `P05`, `P13`, `P15`). Look for citations and shared measurement formulations between network tomography papers.")
+            elif current == 2:
+                st.info("**Level 2 Research Nudge**: Cross-Domain Connection! Look at how evolutionary biology connects with network tomography (`ANALOGOUS_PROBLEM` and `SHARES_PRINCIPLE`). Check which papers introduce phylogenetic ideas into networking!")
+            elif current == 3:
+                st.info("**Level 3 Research Nudge**: Focus on additive delay metrics, distance matrices, and signal recovery algorithms.")
+            elif current == 4:
+                st.info("**Level 4 Research Nudge**: Synthesis! Connect cross-domain tree reconstruction principles across biology, networks, and probability graphical models.")
+
         with st.form(f"add_edge_{current}", clear_on_submit=True):
             c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
             src = c1.selectbox("Source paper", available, format_func=lambda x: labels.get(x, x))

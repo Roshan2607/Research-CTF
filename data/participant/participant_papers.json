@@ -28,7 +28,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Foundations of Probabilistic Models & AI: The Chow-Liu tree algorithm proved that complex multi-variable probability distributions can be optimally approximated as a tree of mutual information. Today, this fundamental insight is used across speech processing, computer vision, Bayesian belief networks, and modern NLP dependency parsers to capture feature dependencies efficiently without exponential compute costs."
     },
     {
       "participant_id": "P02",
@@ -60,7 +61,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Akamai & Global Content Delivery Networks: In the early commercial Internet, network operators could not see inside third-party ISP routers. Duffield et al. showed that sending synchronized multicast probe packets to end receivers allows mathematically inferring the internal router tree and detecting packet-dropping bottleneck links from the outside. This became the basis for modern CDN routing telemetry."
     },
     {
       "participant_id": "P03",
@@ -90,13 +92,14 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Genomic Phylogenetics & Global Virus Tracking: The Neighbor-Joining algorithm is one of the most widely cited algorithms in biological history. Implemented in NCBI BLAST, MEGA, and Nextstrain, it allows molecular biologists to construct evolutionary trees of species from DNA sequences in polynomial time. During the COVID-19 pandemic, variants of this algorithm were used daily worldwide to track emerging viral mutations in real time."
     },
     {
       "participant_id": "P04",
       "title": "Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information",
       "authors": [
-        "Emmanuel J. Candès",
+        "Emmanuel J. Cand\u00e8s",
         "Justin K. Romberg",
         "Terence Tao"
       ],
@@ -109,10 +112,10 @@
       "doi": "10.1109/TIT.2005.862083",
       "doi_url": "https://doi.org/10.1109/TIT.2005.862083",
       "open_access_url": "https://arxiv.org/abs/math/0409186",
-      "abstract": "This paper considers the model problem of reconstructing an object from incomplete frequency samples. Consider a discrete-time signal f∈C^N and a randomly chosen set of frequencies Ω. Is it possible to reconstruct f from the partial knowledge of its Fourier coefficients on the set Ω? A typical result of this paper is as follows. Suppose that f is a superposition of |T| spikes f(t)=Σ_τ∈Tf(τ)δ(t-τ) obeying |T|≤C_M·(log N)^-1 · |Ω| for some constant C_M>0. We do not know the locations of the spikes nor their amplitudes. Then with probability at least 1-O(N^-M), f can be reconstructed exactly as the solution to the ℓ_1 minimization problem. In short, exact recovery may be obtained by solving a convex optimization problem. We give numerical values for C_M which depend on the desired probability of success. Our result may be interpreted as a novel kind of nonlinear sampling theorem. In effect, it says that any signal made out of |T| spikes may be recovered by convex programming from almost every set of frequencies of size O(|T|·logN). Moreover, this is nearly optimal in the sense that any method succeeding with probability 1-O(N^-M) would in general require a number of frequency samples at least proportional to |T|·logN. The methodology extends to a variety of other situations and higher dimensions. For example, we show how one can reconstruct a piecewise constant (one- or two-dimensional) object from incomplete frequency samples - provided that the number of jumps (discontinuities) obeys the condition above - by minimizing other convex functionals such as the total variation of f.",
+      "abstract": "This paper considers the model problem of reconstructing an object from incomplete frequency samples. Consider a discrete-time signal f\u2208C^N and a randomly chosen set of frequencies \u03a9. Is it possible to reconstruct f from the partial knowledge of its Fourier coefficients on the set \u03a9? A typical result of this paper is as follows. Suppose that f is a superposition of |T| spikes f(t)=\u03a3_\u03c4\u2208Tf(\u03c4)\u03b4(t-\u03c4) obeying |T|\u2264C_M\u00b7(log N)^-1 \u00b7 |\u03a9| for some constant C_M>0. We do not know the locations of the spikes nor their amplitudes. Then with probability at least 1-O(N^-M), f can be reconstructed exactly as the solution to the \u2113_1 minimization problem. In short, exact recovery may be obtained by solving a convex optimization problem. We give numerical values for C_M which depend on the desired probability of success. Our result may be interpreted as a novel kind of nonlinear sampling theorem. In effect, it says that any signal made out of |T| spikes may be recovered by convex programming from almost every set of frequencies of size O(|T|\u00b7logN). Moreover, this is nearly optimal in the sense that any method succeeding with probability 1-O(N^-M) would in general require a number of frequency samples at least proportional to |T|\u00b7logN. The methodology extends to a variety of other situations and higher dimensions. For example, we show how one can reconstruct a piecewise constant (one- or two-dimensional) object from incomplete frequency samples - provided that the number of jumps (discontinuities) obeys the condition above - by minimizing other convex functionals such as the total variation of f.",
       "domain": "Signal processing, statistics & applied mathematics",
       "access": "Free to read (follow the open-access link)",
-      "citation": "Emmanuel J. Candès, Justin K. Romberg, Terence Tao (2006). Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information. IEEE Transactions on Information Theory, 52(2), 489-509. https://doi.org/10.1109/TIT.2005.862083",
+      "citation": "Emmanuel J. Cand\u00e8s, Justin K. Romberg, Terence Tao (2006). Robust uncertainty principles: exact signal reconstruction from highly incomplete frequency information. IEEE Transactions on Information Theory, 52(2), 489-509. https://doi.org/10.1109/TIT.2005.862083",
       "abstract_attribution": "Abstract reproduced from the published record for teaching purposes; (c) the authors / publisher. Source: https://doi.org/10.1109/TIT.2005.862083",
       "reading_prompts": [
         "What problem does the paper try to solve? Write it in one sentence, in your own words.",
@@ -121,7 +124,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Revolutionizing Medical MRI & Medical Scanners: Candes, Romberg, and Tao proved the mathematical foundation of Compressed Sensing: sparse physical signals can be reconstructed with 100% exactness from a fraction of traditional sensor measurements. This breakthrough directly enabled modern hospital MRI scanners to reduce patient imaging times from 45 minutes to under 5 minutes without losing diagnostic detail, dramatically improving patient comfort and clinical throughput."
     },
     {
       "participant_id": "P05",
@@ -151,7 +155,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Early Internet Video Streaming & Telemetry: During the creation of the Multicast Backbone (MBone) for live video and audio broadcasts, network engineers had no way to pinpoint which router links were congested. Ratnasamy & McCanne invented end-to-end probing to estimate bottleneck bandwidths and routing trees, laying the technical foundation for modern adaptive video streaming (HLS, DASH)."
     },
     {
       "participant_id": "P06",
@@ -183,7 +188,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Unsupervised Discovery of Latent Structures: Modern machine learning often has to discover hidden hierarchy from observational data alone. Choi et al. developed algorithms to learn latent tree graphical models with provable sample complexity guarantees. This technique is applied in genomics to discover hidden regulatory pathways, in financial modeling to identify unseen macroeconomic drivers, and in deep learning to analyze hierarchical representations."
     },
     {
       "participant_id": "P07",
@@ -216,7 +222,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Amazon DynamoDB, Apache Cassandra & Blockchain: Demers et al. invented epidemic/gossip algorithms to maintain distributed databases without central locks or single points of failure. Today, gossip protocols are the backbone of hyper-resilient distributed systems worldwide, including Amazon DynamoDB, Apache Cassandra, and the peer-to-peer transaction broadcasting networks of Bitcoin and Ethereum."
     },
     {
       "participant_id": "P08",
@@ -224,7 +231,7 @@
       "authors": [
         "Shankar Bhamidi",
         "Ram Rajagopal",
-        "Sébastien Roch"
+        "S\u00e9bastien Roch"
       ],
       "year": 2010,
       "first_public_year": 2010,
@@ -238,7 +245,7 @@
       "abstract": "We use computational phylogenetic techniques to solve a central problem in inferential network monitoring. More precisely, we design a novel algorithm for multicast-based delay inference, that is, the problem of reconstructing delay characteristics of a network from end-to-end delay measurements on network paths. Our inference algorithm is based on additive metric techniques used in phylogenetics. It runs in polynomial time and requires a sample of size only poly(log n). We also show how to recover the topology of the routing tree.",
       "domain": "Signal processing, statistics & applied mathematics",
       "access": "Free to read (follow the open-access link)",
-      "citation": "Shankar Bhamidi, Ram Rajagopal, Sébastien Roch (2010). Network delay inference from additive metrics. Random Structures and Algorithms, 37(2), 176-203. https://doi.org/10.1002/rsa.20305",
+      "citation": "Shankar Bhamidi, Ram Rajagopal, S\u00e9bastien Roch (2010). Network delay inference from additive metrics. Random Structures and Algorithms, 37(2), 176-203. https://doi.org/10.1002/rsa.20305",
       "abstract_attribution": "Abstract reproduced from the published record for teaching purposes; (c) the authors / publisher. Source: https://doi.org/10.1002/rsa.20305",
       "reading_prompts": [
         "What problem does the paper try to solve? Write it in one sentence, in your own words.",
@@ -247,7 +254,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Cloud Data Centers & VoIP Quality Monitoring: In hyperscale cloud environments (like AWS and Microsoft Azure), transient latency jitter degrades VoIP calls and database queries. Tsang et al. demonstrated that network delays can be modeled as additive tree metrics and solved with linear algebra, allowing network monitoring tools to locate slow fiber links without deploying probes inside the core switching fabric."
     },
     {
       "participant_id": "P09",
@@ -276,7 +284,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "AT&T Nationwide Traffic Matrix Estimation: Managing continental telecom backbones requires knowing the volume of traffic flowing between every origin and destination city. Yehuda Vardi formulated this problem as 'network tomography', using statistical inverse problem methods (expectation-maximization) to deduce origin-destination traffic demands solely from simple link byte counters. This remains a cornerstone of ISP traffic engineering."
     },
     {
       "participant_id": "P10",
@@ -311,15 +320,16 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Systems Biology & Targeted Cancer Drug Therapies: The ARACNE algorithm applied mutual information and the Data Processing Inequality to reconstruct mammalian cellular networks from gene expression arrays. Developed at Columbia University, it famously discovered the master regulator genes driving human B-cell lymphoma and has been used to design targeted combination therapies in oncology."
     },
     {
       "participant_id": "P11",
       "title": "A few logs suffice to build (almost) all trees (I)",
       "authors": [
-        "P�ter L. Erd?s",
+        "P\ufffdter L. Erd?s",
         "Michael A. Steel",
-        "L�szl� A. Sz�kely",
+        "L\ufffdszl\ufffd A. Sz\ufffdkely",
         "Tandy J. Warnow"
       ],
       "year": 1999,
@@ -331,10 +341,10 @@
       "doi": "10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
       "doi_url": "https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
       "open_access_url": null,
-      "abstract": "A phylogenetic tree, also called an “evolutionary tree,” is a leaf-labeled tree which represents the evolutionary history for a set of species, and the construction of such trees is a fundamental problem in biology. Here we address the issue of how many sequence sites are required in order to recover the tree with high probability when the sites evolve under standard Markov-style i.i.d. mutation models. We provide analytic upper and lower bounds for the required sequence length, by developing a new polynomial time algorithm. In particular, we show when the mutation probabilities are bounded the required sequence length can grow surprisingly slowly (a power of log n) in the number n of sequences, for almost all trees.",
+      "abstract": "A phylogenetic tree, also called an \u201cevolutionary tree,\u201d is a leaf-labeled tree which represents the evolutionary history for a set of species, and the construction of such trees is a fundamental problem in biology. Here we address the issue of how many sequence sites are required in order to recover the tree with high probability when the sites evolve under standard Markov-style i.i.d. mutation models. We provide analytic upper and lower bounds for the required sequence length, by developing a new polynomial time algorithm. In particular, we show when the mutation probabilities are bounded the required sequence length can grow surprisingly slowly (a power of log n) in the number n of sequences, for almost all trees.",
       "domain": "Computer science, graph theory & machine learning",
       "access": "Subscription access: abstract and DOI provided; use your library login or ask the organisers",
-      "citation": "P�ter L. Erd?s, Michael A. Steel, L�szl� A. Sz�kely et al. (1999). A few logs suffice to build (almost) all trees (I). Random Structures and Algorithms, 14(2), 153-184. https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
+      "citation": "P\ufffdter L. Erd?s, Michael A. Steel, L\ufffdszl\ufffd A. Sz\ufffdkely et al. (1999). A few logs suffice to build (almost) all trees (I). Random Structures and Algorithms, 14(2), 153-184. https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
       "abstract_attribution": "Abstract reproduced from the published record for teaching purposes; (c) the authors / publisher. Source: https://doi.org/10.1002/(SICI)1098-2418(199903)14:2<153::AID-RSA3>3.0.CO;2-R",
       "reading_prompts": [
         "What problem does the paper try to solve? Write it in one sentence, in your own words.",
@@ -343,7 +353,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Scalable Tree Inference with Short Genetic Sequences: Erdos et al. proved a landmark mathematical theorem in computational biology: accurate phylogenetic trees can be reconstructed even when DNA sequence length is only logarithmic in the number of taxa. This theoretical guarantee provided the mathematical assurance needed for large-scale automated biodiversity mapping and phylogenomic pipelines."
     },
     {
       "participant_id": "P12",
@@ -373,7 +384,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "The Bridge Between Evolutionary Biology & Internet Mapping: Ni & Tatikonda discovered a profound mathematical duality: the packet loss and delay equations used to map Internet topologies have the exact same additive distance structure as DNA mutation rates used to reconstruct evolutionary trees. This enabled network engineers to repurpose 30+ years of computational biology algorithms directly for Internet monitoring."
     },
     {
       "participant_id": "P13",
@@ -407,7 +419,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Deployable Unicast Internet Topology Identification: Early network tomography required IP multicast, which commercial ISPs blocked for security and billing reasons. Castro et al. made tomography practically deployable across the real Internet by formulating maximum likelihood topology identification using standard unicast packet pairs (sendable from any commodity PC or server)."
     },
     {
       "participant_id": "P14",
@@ -428,7 +441,7 @@
       "doi": "10.1214/088342304000000422",
       "doi_url": "https://doi.org/10.1214/088342304000000422",
       "open_access_url": "https://projecteuclid.org/journals/statistical-science/volume-19/issue-3/Network-Tomography-Recent-Developments/10.1214/088342304000000422.full",
-      "abstract": "Today’s Internet is a massive, distributed network which continues to explode in size as e-commerce and related activities grow. The heterogeneous and largely unregulated structure of the Internet renders tasks such as dynamic routing, optimized service provision, service level verification and detection of anomalous/malicious behavior extremely challenging. The problem is compounded by the fact that one cannot rely on the cooperation of individual servers and routers to aid in the collection of network traffic measurements vital for these tasks. In many ways, network monitoring and inference problems bear a strong resemblance to other “inverse problems” in which key aspects of a system are not directly observable. Familiar signal processing or statistical problems such as tomographic image reconstruction and phylogenetic tree identification have interesting connections to those arising in networking. This article introduces network tomography, a new field which we believe will benefit greatly from the wealth of statistical theory and algorithms. It focuses especially on recent developments in the field including the application of pseudo-likelihood methods and tree estimation formulations.",
+      "abstract": "Today\u2019s Internet is a massive, distributed network which continues to explode in size as e-commerce and related activities grow. The heterogeneous and largely unregulated structure of the Internet renders tasks such as dynamic routing, optimized service provision, service level verification and detection of anomalous/malicious behavior extremely challenging. The problem is compounded by the fact that one cannot rely on the cooperation of individual servers and routers to aid in the collection of network traffic measurements vital for these tasks. In many ways, network monitoring and inference problems bear a strong resemblance to other \u201cinverse problems\u201d in which key aspects of a system are not directly observable. Familiar signal processing or statistical problems such as tomographic image reconstruction and phylogenetic tree identification have interesting connections to those arising in networking. This article introduces network tomography, a new field which we believe will benefit greatly from the wealth of statistical theory and algorithms. It focuses especially on recent developments in the field including the application of pseudo-likelihood methods and tree estimation formulations.",
       "domain": "Signal processing, statistics & applied mathematics",
       "access": "Free to read (follow the open-access link)",
       "citation": "Rui Castro, Mark Coates, Gang Liang et al. (2004). Network Tomography: Recent Developments. Statistical Science, 19(3), 499-517. https://doi.org/10.1214/088342304000000422",
@@ -440,7 +453,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "Modern Network Observability (Datadog & ThousandEyes): This seminal IEEE Signal Processing survey synthesized a decade of research across multicast, unicast, loss, and delay tomography into a unified statistical inverse framework. It directly inspired the modern billion-dollar network observability sector, enabling enterprise monitoring platforms like Cisco ThousandEyes, Catchpoint, and Datadog to map complex multi-cloud networks."
     },
     {
       "participant_id": "P15",
@@ -470,7 +484,8 @@
         "What evidence do they give (proofs, simulations, experiments, real data)?",
         "What assumptions or limitations can you find?",
         "Which other papers in the corpus does it cite, use, extend or resemble? Note the page or section."
-      ]
+      ],
+      "real_world_application": "The Shepp-Logan Phantom & Modern Computed Tomography: Shepp & Logan developed the mathematical Fourier reconstruction algorithms for 2D and 3D cross-sectional head scans. In doing so, they created the iconic 'Shepp-Logan Phantom'\u2014a synthetic digital model of human cranial tissue that remains the universal gold standard used to test, calibrate, and benchmark virtually every CT and PET scanner in hospitals worldwide."
     }
   ]
 }

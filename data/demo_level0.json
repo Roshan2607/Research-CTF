@@ -17,14 +17,16 @@
       "title": "Storing Cell Lineages Efficiently",
       "inspired_by": "Sulston, Schierenberg, White & Thomson (1983), The embryonic cell lineage of the nematode Caenorhabditis elegans, Developmental Biology 100(1):64-119",
       "doi": "10.1016/0012-1606(83)90201-4",
-      "excerpt": "Imagine recording the full ancestry of every cell in a developing embryo: every cell's record repeats the same early divisions shared with its relatives. Storing each lineage separately wastes space on identical shared beginnings."
+      "excerpt": "Imagine recording the full ancestry of every cell in a developing embryo: every cell's record repeats the same early divisions shared with its relatives. Storing each lineage separately wastes space on identical shared beginnings.",
+      "real_world_application": "Developmental Biology & Nematode Cell Lineages: John Sulston mapped the entire embryonic cell lineage of C. elegans (959 cells), which won the 2002 Nobel Prize in Physiology or Medicine. Tracing shared cell divisions as branching lineages is the biological equivalent of prefix trees."
     },
     {
       "id": "L0B",
       "title": "Sharing Common Prefixes",
       "inspired_by": "Fredkin (1960), Trie Memory, Communications of the ACM 3(9):490-499",
       "doi": "10.1145/367390.367400",
-      "excerpt": "A dictionary of words can be stored as a tree in which words that begin with the same letters share the same path from the root, so each shared beginning is stored only once."
+      "excerpt": "A dictionary of words can be stored as a tree in which words that begin with the same letters share the same path from the root, so each shared beginning is stored only once.",
+      "real_world_application": "Search Engine Autocomplete & Router Lookups: Edward Fredkin invented Trie Memory in 1960. Today, prefix trees power instantaneous search autocompletion across the web and high-speed IP routing tables in core Internet routers."
     }
   ],
   "teaching_points": [

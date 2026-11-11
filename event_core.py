@@ -1081,7 +1081,7 @@ def score_level_graph(cluster: str, level: int, csv_text: str) -> dict:
     m = compute(counts, scorer.weights)
     return {
         "scored": True,
-        "points": round(m.weighted_f1 * level_points(level)["graph"], 2),
+        "points": int(round(m.weighted_f1 * level_points(level)["graph"])),
         "weighted_f1": round(m.weighted_f1, 4),
         "weighted_precision": round(m.weighted_precision, 4),
         "recall": round(m.recall, 4),
@@ -1422,7 +1422,7 @@ def _finalise_locked(
                 penalty = fs.get("penalty_points", 0.0) if fs else 0.0
                 h_cost = hint_cost(tid, level, d)
                 max_fp = level_points(level)["flag"]
-                actual_flag_points = round(max(0.0, max_fp - penalty - h_cost), 2) if actual_flag_correct else 0.0
+                actual_flag_points = int(round(max(0.0, max_fp - penalty - h_cost))) if actual_flag_correct else 0
 
             if not clean_expl:
                 raise ValueError("An explanation is required to finalize this level.")

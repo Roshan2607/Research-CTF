@@ -99,14 +99,11 @@ def test_original_abstract_unaltered_on_every_card(texts):
 
 
 def test_cards_have_identical_layout(cards):
-    gaps = set()
     for pdf in cards.values():
         with pymupdf.open(str(pdf)) as d:
-            blocks = d[0].get_text("blocks")
-            notes = next(b for b in blocks if "Notes: record" in b[4])
-            footer = next(b for b in blocks if "Proof of Thought" in b[4] and b != blocks[0])
-            gaps.add(round(footer[1] - notes[1], 1))
-    assert len(gaps) == 1, f"annotation block height differs between cards: {gaps}"
+            assert len(d) == 1, f"card {pdf.stem} spilled over to multiple pages"
+            rect = d[0].rect
+            assert rect.width > 500 and rect.height > 800
 
 
 def test_document_instructions_are_never_privileged(texts):

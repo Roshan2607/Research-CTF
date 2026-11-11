@@ -67,7 +67,7 @@ CARD_FOOTER = (
 
 def _annotation_block(text: str | None, st) -> Table:
     """Fixed-height block: exactly the same size on every card; holds the hidden text when given."""
-    flow = [Paragraph("Notes: record the page or section for every claim you make about this paper.", st["visible_note"])]
+    flow = []
     if text:
         flow.append(Paragraph(escape(text), st["hidden"]))
     inner = KeepInFrame(170 * mm, ANNOTATION_BLOCK_HEIGHT, flow, mode="truncate")
@@ -110,16 +110,18 @@ def render_card(card: dict, out_path: Path, branding: str, injection_text: str |
         Paragraph(card["participant_id"], st["pid"]),
         Paragraph(escape(card["title"]), st["title"]),
         meta,
-        Spacer(1, 1 * mm),
-        Paragraph(escape(card.get("abstract_heading") or "Abstract (quoted verbatim from the publication)"), st["h"]),
+        Spacer(1, 2 * mm),
+        Paragraph("<b>Abstract</b>", st["h"]),
         Paragraph(escape(card["abstract"]), st["body"]),
-        Spacer(1, 1.5 * mm),
-        Paragraph(escape(card["abstract_attribution"]), st["small"]),
-        Spacer(1, 3 * mm),
-        _annotation_block(injection_text, st),
-        Spacer(1, 4 * mm),
-        Paragraph(escape(card.get("footer") or CARD_FOOTER), st["small"]),
+        Spacer(1, 2.5 * mm),
     ]
+    if card.get("real_world_application"):
+        story.extend([
+            Paragraph("<b>Real-World Impact & Application</b>", st["h"]),
+            Paragraph(escape(card["real_world_application"]), st["body"]),
+            Spacer(1, 2 * mm),
+        ])
+    story.append(_annotation_block(injection_text, st))
     doc.build(story)
     return out_path
 
