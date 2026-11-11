@@ -125,6 +125,8 @@ def ensure_worker() -> None:
             from .chatgpt_judge import ChatGPTJudge as J
         elif provider == "openai":
             from .openai_judge import OpenAIJudge as J
+        elif provider in ("grok", "xai"):
+            from .openai_judge import GrokJudge as J
         elif provider == "anthropic":
             from .llm_judge import AnthropicJudge as J
         else:

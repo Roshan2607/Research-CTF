@@ -3,7 +3,7 @@
   "workshop_title": "Proof of Thought",
   "branding": "OpenAI × IEEE CS × Research Et Al",
   "theme": "Reconstruction of Hidden Structures from Incomplete Information",
-  "google_form_url": "https://forms.gle/research-ctf-submissions",
+  "google_form_url": "https://forms.gle/UDybkkH4fDAuejFh9",
   "num_levels": 4,
   "level_points": {
     "0": {"total": 0.0, "graph": 0.0, "flag": 0.0},
@@ -77,7 +77,7 @@
   },
   "graph_gate": {
     "_comment": "Level completion needs a correct flag AND server-side weighted F1 >= the floor for that level. Floors are provisional (see simulation: L1 has only 5 reference edges, so it is lower). Organisers can waive per team/level.",
-    "enabled": true,
+    "enabled": false,
     "floors": {
       "1": 0.4,
       "2": 0.5,
