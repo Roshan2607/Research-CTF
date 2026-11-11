@@ -33,6 +33,12 @@ except ImportError:
     msvcrt = None
 
 ROOT = Path(__file__).resolve().parent
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv(ROOT / ".env", override=False)
+except ImportError:
+    pass
 CONFIG_PATH = ROOT / "config" / "challenge_config.json"
 STATE = Path(os.environ.get("UL_EVENT_STATE") or ROOT / "data/submissions/event_state.json")
 LOCK = threading.RLock()

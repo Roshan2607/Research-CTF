@@ -49,6 +49,41 @@ def test_evaluate_submission_discovery_bounty():
     assert res.total_score == 2750.0
 
 
+def test_evaluate_submission_50pct_accuracy_floor():
+    # Only 1 correct edge out of 5 reference edges in Level 1 = 20% accuracy (< 50% floor)
+    graph_weak = "source_id,target_id,relationship_type\nP02,P05,CITES\n"
+    res_weak = evaluate_submission("TEAM_WEAK", level=1, flag_answer="receivers", graph_csv=graph_weak, enforce_50pct_floor=True)
+    assert res_weak.accuracy_pct == 20.0
+    assert res_weak.meets_50pct_threshold is False
+    assert res_weak.final_graph_points == 0.0  # Zeroed because < 50%
+    assert res_weak.flag_points == 1000.0  # Flag points preserved!
+    assert res_weak.total_score == 1000.0
+
+    # 3 correct edges out of 5 reference edges in Level 1 = 60% accuracy (>= 50% floor)
+    graph_strong = "source_id,target_id,relationship_type\nP02,P05,CITES\nP13,P05,CITES\nP13,P02,CITES\n"
+    res_strong = evaluate_submission("TEAM_STRONG", level=1, flag_answer="receivers", graph_csv=graph_strong, enforce_50pct_floor=True)
+    assert res_strong.accuracy_pct == 60.0
+    assert res_strong.meets_50pct_threshold is True
+    assert res_strong.final_graph_points == 900.0  # 1500 * 0.60
+    assert res_strong.total_score == 1900.0
+
+
+def test_evaluate_submission_with_mock_judge():
+    from judging.judge import Verdict
+
+    class MockJudge:
+        def judge_batch(self, edges):
+            return {e.edge_hash: Verdict("supported", "Verified citation") for e in edges}
+
+    # P05 -> P02 SHARES_PRINCIPLE is ordinary / novel candidate
+    graph = "source_id,target_id,relationship_type,evidence_reference\nP02,P05,CITES,ev1\nP05,P02,SHARES_PRINCIPLE,Strong proof\n"
+    res = evaluate_submission("TEAM_JUDGE", level=1, flag_answer="receivers", graph_csv=graph, judge=MockJudge())
+    assert len(res.llm_verdicts) == 1
+    assert res.llm_verdicts[0]["verdict"] == "supported"
+    assert ("P02", "P05", "SHARES_PRINCIPLE") in res.discovery_bounty_edges
+    assert ("P02", "P05", "SHARES_PRINCIPLE") in res.correct_edges
+
+
 def test_evaluate_google_form_csv_parsing(tmp_path):
     csv_file = tmp_path / "mock_google_form.csv"
     csv_file.write_text(

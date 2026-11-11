@@ -188,6 +188,7 @@ def test_json_parser_tolerates_fences_and_rejects_junk():
 def test_default_model_is_terra_when_available_else_first_listed(monkeypatch):
     from judging import chatgpt_judge as cj
 
+    monkeypatch.delenv("JUDGE_MODEL", raising=False)
     j = ChatGPTJudge(token_provider=lambda: "T")
     monkeypatch.setattr(j, "list_models", lambda: [{"slug": "other"}, {"slug": cj.DEFAULT_MODEL}])
     assert j._resolve_model() == "gpt-6.1-terra"

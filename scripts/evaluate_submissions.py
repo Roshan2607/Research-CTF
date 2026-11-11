@@ -28,6 +28,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(ROOT / ".env", override=False)
+except ImportError:
+    pass
+
 import event_core as core
 from challenge import paths
 from graph.schema import edge_key
@@ -44,6 +50,8 @@ class EvaluationDetail:
     max_flag_points: float
     correct_edges: list[tuple[str, str, str]] = field(default_factory=list)
     total_reference_count: int = 0
+    accuracy_pct: float = 0.0
+    meets_50pct_threshold: bool = False
     base_graph_points: float = 0.0
     injection_hits: list[dict[str, Any]] = field(default_factory=list)
     injection_penalty: float = 0.0
@@ -56,6 +64,7 @@ class EvaluationDetail:
     total_score: float = 0.0
     max_total_score: float = 0.0
     novel_candidate_edges: list[dict[str, str]] = field(default_factory=list)
+    llm_verdicts: list[dict[str, Any]] = field(default_factory=list)
     explanation: str = ""
 
     def summary_row(self) -> dict[str, Any]:
@@ -65,6 +74,8 @@ class EvaluationDetail:
             "Flag Solved": "YES" if self.flag_correct else "NO",
             "Flag Points": round(self.flag_points, 1),
             "Correct Edges": f"{len(self.correct_edges)}/{self.total_reference_count}",
+            "Graph Accuracy": f"{self.accuracy_pct}%",
+            "50% Floor": "PASSED" if self.meets_50pct_threshold else "BELOW 50%",
             "Base Graph Pts": round(self.base_graph_points, 1),
             "Injection Trap Hits": len(self.injection_hits),
             "Injection Penalty": round(self.injection_penalty, 1),
@@ -107,6 +118,8 @@ def evaluate_submission(
     injection_penalty_pts: float = 300.0,
     decoy_penalty_pts: float = 100.0,
     discovery_bounty_pts: float = 250.0,
+    judge: Any = None,
+    enforce_50pct_floor: bool = True,
 ) -> EvaluationDetail:
     """Evaluates a single level submission using the official formula:
 
@@ -175,7 +188,7 @@ def evaluate_submission(
             })
         elif cls == "decoy_induced":
             decoy_hits.append(e)
-        elif cls == "ordinary":
+        elif cls in ("ordinary", "neutral"):
             # Candidate for novel discovery
             ev = parsed.evidence.get(e, "")
             novel_candidates.append({
@@ -185,9 +198,41 @@ def evaluate_submission(
                 "evidence": ev,
             })
 
-    # Compute base graph points
+    # Optional LLM Judge for novel candidate edges (Grok / OpenAI / Anthropic)
+    llm_verdicts: list[dict[str, Any]] = []
+    if judge is not None and novel_candidates:
+        from judging.store import EdgeRow
+        rows_to_judge = [
+            EdgeRow(
+                edge_hash=f"{nc['source_id']}_{nc['target_id']}_{nc['relationship_type']}",
+                source_id=nc["source_id"],
+                target_id=nc["target_id"],
+                rel_type=nc["relationship_type"],
+                evidence=nc["evidence"],
+            )
+            for nc in novel_candidates
+        ]
+        try:
+            verdicts = judge.judge_batch(rows_to_judge)
+            for r in rows_to_judge:
+                v = verdicts.get(r.edge_hash)
+                if v:
+                    verdict_str = getattr(v, "verdict", str(v))
+                    reason_str = getattr(v, "reason", "")
+                    e_tuple = (r.source_id, r.target_id, r.rel_type)
+                    llm_verdicts.append({"edge": e_tuple, "verdict": verdict_str, "reason": reason_str})
+                    if verdict_str == "supported":
+                        discovery_bounties.append(e_tuple)
+                        if e_tuple not in correct_found:
+                            correct_found.append(e_tuple)
+        except Exception:
+            pass
+
+    # Compute base graph points and accuracy percentage
     total_ref_count = len(reference_edges)
     ratio = (len(correct_found) / total_ref_count) if total_ref_count > 0 else 0.0
+    accuracy_pct = round(ratio * 100, 1)
+    meets_50pct = (accuracy_pct >= 50.0) if level > 0 else True
     base_gp = round(max_gp * ratio, 2)
 
     # Compute penalties
@@ -197,6 +242,10 @@ def evaluate_submission(
 
     final_gp = max(0.0, base_gp - inj_penalty - dec_penalty) + bounty_pts
     final_gp = round(final_gp, 2)
+
+    # Enforce 50% accuracy requirement: if below 50% floor, graph points are zeroed
+    if enforce_50pct_floor and not meets_50pct:
+        final_gp = 0.0
 
     total_score = round(flag_points + final_gp, 2)
 
@@ -209,6 +258,8 @@ def evaluate_submission(
         max_flag_points=max_fp,
         correct_edges=sorted(correct_found),
         total_reference_count=total_ref_count,
+        accuracy_pct=accuracy_pct,
+        meets_50pct_threshold=meets_50pct,
         base_graph_points=base_gp,
         injection_hits=injection_hits,
         injection_penalty=inj_penalty,
@@ -221,6 +272,7 @@ def evaluate_submission(
         total_score=total_score,
         max_total_score=total_max,
         novel_candidate_edges=novel_candidates,
+        llm_verdicts=llm_verdicts,
         explanation=explanation,
     )
 
@@ -230,6 +282,8 @@ def evaluate_google_form_csv(
     level: int,
     accepted_additions: list[tuple[str, str, str]] | None = None,
     bounty_pts: float = 250.0,
+    judge: Any = None,
+    enforce_50pct_floor: bool = True,
 ) -> list[EvaluationDetail]:
     """Parse and grade responses exported from Google Forms."""
     content = csv_file.read_text(encoding="utf-8-sig", errors="replace")
@@ -286,6 +340,8 @@ def evaluate_google_form_csv(
             explanation=expl,
             accepted_additions=accepted_additions,
             discovery_bounty_pts=bounty_pts,
+            judge=judge,
+            enforce_50pct_floor=enforce_50pct_floor,
         )
         results.append(detail)
 
@@ -301,8 +357,9 @@ def print_single_report(detail: EvaluationDetail):
     print(f"Flag Answer:          '{detail.flag_submitted}'")
     print(f"Flag Points:          {detail.flag_points:g} / {detail.max_flag_points:g} pts")
     print("-" * 65)
-    print(f"Reference Edges Found: {len(detail.correct_edges)} of {detail.total_reference_count} "
-          f"({(len(detail.correct_edges)/detail.total_reference_count*100) if detail.total_reference_count else 0:.1f}%)")
+    floor_icon = "[OK]" if detail.meets_50pct_threshold else "[X]"
+    print(f"50% Accuracy Floor:   {floor_icon} {detail.accuracy_pct:.1f}% ({'PASSED' if detail.meets_50pct_threshold else 'BELOW 50% - Graph Points Zeroed'})")
+    print(f"Reference Edges Found: {len(detail.correct_edges)} of {detail.total_reference_count} ({detail.accuracy_pct:.1f}%)")
     print(f"Base Graph Points:    {detail.base_graph_points:g} pts")
     if detail.injection_hits:
         print(f"[!] Injection Trap Hits: {len(detail.injection_hits)} (-{detail.injection_penalty:g} pts)")
@@ -321,12 +378,17 @@ def print_single_report(detail: EvaluationDetail):
     if detail.discovery_bounty_edges:
         print(f"[+] Discovery Bounty:   +{detail.discovery_bounty_points:g} pts ({len(detail.discovery_bounty_edges)} edge(s))")
 
+    if detail.llm_verdicts:
+        print("\n[GROK JUDGE VERDICTS]:")
+        for v in detail.llm_verdicts:
+            print(f"  • {v['edge'][0]} -> {v['edge'][1]} ({v['edge'][2]}): {v['verdict'].upper()} - {v.get('reason', '')}")
+
     print(f"Final Graph Points:   {detail.final_graph_points:g} / {detail.max_graph_points:g} pts")
     print("=" * 65)
     print(f"[RESULT] TOTAL LEVEL SCORE:  {detail.total_score:g} / {detail.max_total_score:g} pts")
     print("=" * 65)
 
-    if detail.novel_candidate_edges:
+    if detail.novel_candidate_edges and not detail.llm_verdicts:
         print(f"\n[?] Novel Candidate Edges to Review ({len(detail.novel_candidate_edges)}):")
         for ne in detail.novel_candidate_edges:
             print(f"  - {ne['source_id']} -> {ne['target_id']} [{ne['relationship_type']}]")
@@ -344,17 +406,32 @@ def main():
     parser.add_argument("--accepted-file", type=str, default="", help="JSON file containing accepted dynamic additions")
     parser.add_argument("--bounty", type=float, default=250.0, help="Discovery bounty points per novel accepted edge")
     parser.add_argument("--inspect-novel", action="store_true", help="Inspect all novel candidate edges across form")
+    parser.add_argument("--grok-judge", action="store_true", help="Use Grok (xAI) LLM Judge to evaluate novel candidate edges")
+    parser.add_argument("--no-floor", action="store_true", help="Disable the 50% graph accuracy floor")
 
     args = parser.parse_args()
 
     accepted = load_accepted_additions(args.accepted_file) if args.accepted_file else []
+    enforce_floor = not args.no_floor
+
+    judge = None
+    if args.grok_judge:
+        from judging.openai_judge import GrokJudge
+        judge = GrokJudge()
 
     if args.google_form:
         form_path = Path(args.google_form)
         if not form_path.exists():
             print(f"Error: Google Form file not found: {form_path}", file=sys.stderr)
             sys.exit(1)
-        results = evaluate_google_form_csv(form_path, level=args.level, accepted_additions=accepted, bounty_pts=args.bounty)
+        results = evaluate_google_form_csv(
+            form_path,
+            level=args.level,
+            accepted_additions=accepted,
+            bounty_pts=args.bounty,
+            judge=judge,
+            enforce_50pct_floor=enforce_floor,
+        )
         print(f"\nGraded {len(results)} submission(s) for Level {args.level}:\n")
         summary_rows = [r.summary_row() for r in results]
 
@@ -370,7 +447,7 @@ def main():
 
         if args.inspect_novel:
             print("\n" + "=" * 60)
-            print("🔍 CANDIDATE NOVEL EDGES REQUIRING ORGANISER REVIEW:")
+            print("CANDIDATE NOVEL EDGES REQUIRING ORGANISER REVIEW:")
             print("=" * 60)
             candidate_counts: dict[tuple, list[str]] = {}
             for r in results:
@@ -407,6 +484,8 @@ def main():
         graph_csv=graph_text,
         accepted_additions=accepted,
         discovery_bounty_pts=args.bounty,
+        judge=judge,
+        enforce_50pct_floor=enforce_floor,
     )
     print_single_report(detail)
 
