@@ -45,12 +45,15 @@ from event_core import (
     reveal_hint,
     authenticate,
     authenticate_session,
+    clusters,
     create_session,
+    create_team,
     finalise,
     flag_status,
     get_draft,
     levels_for_cluster,
     load,
+    next_available_team_id,
     released_papers,
     revoke_session,
     save_draft,
@@ -99,14 +102,17 @@ def login():
             user = authenticate(tid, pw)
             if user:
                 token = create_session(user["team_id"])
-                cookie_manager.set("ul_team_session", token, expires_at=datetime.now() + timedelta(days=14))
+                try:
+                    cookie_manager.set("ul_team_session", token, expires_at=datetime.now() + timedelta(days=14))
+                except Exception:
+                    pass
+                st.query_params["session"] = token
                 st.session_state["event_team"] = user
                 st.rerun()
             else:
                 st.error("Invalid team ID or password.")
 
     with tab_register:
-        from event_core import next_available_team_id, create_team
         suggested_id = next_available_team_id()
         st.info(f"Assigned Team ID: **{suggested_id}** (First-Come, First-Served)")
         with st.form("claim_team"):
@@ -135,7 +141,11 @@ def login():
                     user = authenticate(assigned_id, new_pw)
                     if user:
                         token = create_session(user["team_id"])
-                        cookie_manager.set("ul_team_session", token, expires_at=datetime.now() + timedelta(days=14))
+                        try:
+                            cookie_manager.set("ul_team_session", token, expires_at=datetime.now() + timedelta(days=14))
+                        except Exception:
+                            pass
+                        st.query_params["session"] = token
                         st.session_state["event_team"] = user
                         st.session_state["created_team_alert"] = {
                             "id": assigned_id,
@@ -149,14 +159,29 @@ def login():
 
 team = st.session_state.get("event_team")
 if not team:
-    token = (cookies.get("ul_team_session") if isinstance(cookies, dict) else None) or cookie_manager.get("ul_team_session")
+    token = (
+        st.query_params.get("session")
+        or (cookies.get("ul_team_session") if isinstance(cookies, dict) else None)
+        or cookie_manager.get("ul_team_session")
+    )
     if token:
         team = authenticate_session(token)
-        st.session_state["event_team"] = team if team else None
+        if team:
+            st.session_state["event_team"] = team
+            st.query_params["session"] = token
 
 if not team:
     login()
     st.stop()
+else:
+    # Keep session query parameter in sync so page refreshes and new tabs stay logged in
+    curr_token = (
+        st.query_params.get("session")
+        or (cookies.get("ul_team_session") if isinstance(cookies, dict) else None)
+        or cookie_manager.get("ul_team_session")
+    )
+    if curr_token and st.query_params.get("session") != curr_token:
+        st.query_params["session"] = curr_token
 
 # Persistent registration confirmation notice for participants
 created_alert = st.session_state.get("created_team_alert")
@@ -186,12 +211,18 @@ with st.sidebar:
         tag = "[Completed]" if lv["id"] in completed else ("[Current]" if lv["id"] == current else "[Locked]")
         st.write(f"{tag} Level {lv['id']}: {lv['title']}")
     if st.button("Sign out"):
-        token_to_revoke = (cookies.get("ul_team_session") if isinstance(cookies, dict) else None) or cookie_manager.get("ul_team_session")
-        revoke_session(token_to_revoke)
+        token_to_revoke = (
+            st.query_params.get("session")
+            or (cookies.get("ul_team_session") if isinstance(cookies, dict) else None)
+            or cookie_manager.get("ul_team_session")
+        )
+        if token_to_revoke:
+            revoke_session(token_to_revoke)
         try:
             cookie_manager.delete("ul_team_session")
-        except KeyError:
+        except (KeyError, Exception):
             pass
+        st.query_params.clear()
         st.session_state.pop("event_team", None)
         st.rerun()
 

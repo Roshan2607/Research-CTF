@@ -126,3 +126,21 @@ def test_admin_requires_strong_uncompromised_password(env, monkeypatch):
     _ok(at)
     assert len(at.tabs) == 5
     assert "DemoPass123" in " ".join(str(c.value) for c in at.caption)
+
+
+def test_portal_fcfs_claim_team_and_session_persistence(env):
+    at = AppTest.from_file(str(core.ROOT / "event_portal.py"), default_timeout=90).run()
+    _ok(at)
+    assert len(at.text_input) >= 5
+    # Claim team form fields
+    at.text_input[2].input("Beta Squad")
+    at.text_input[3].input("ValidPass123")
+    at.text_input[4].input("ValidPass123")
+    at.button[1].click()
+    at.run()
+    _ok(at)
+    # Check that TEAM02 was auto-assigned, created, and immediately logged in
+    d = core.load()
+    assert "TEAM02" in d["teams"]
+    assert d["teams"]["TEAM02"]["name"] == "Beta Squad"
+    assert any("Beta Squad" in str(s.value) for s in at.sidebar.success)
