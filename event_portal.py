@@ -599,20 +599,23 @@ elif section == "Knowledge Graph":
     with c_kg_r:
         if not df.empty:
             st.download_button("Download CSV", safe_csv(df), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
-            if current >= 1 and st.button("Verify Graph", key=f"btn_verify_kg_{team['team_id']}_{current}", type="primary", use_container_width=True):
-                with st.spinner("Analyzing graph and evaluating connections with AI..."):
-                    judge = get_live_judge()
-                    eval_detail = evaluate_submission(
-                        team_id=team["team_id"],
-                        level=current,
-                        flag_answer="",
-                        graph_csv=df.to_csv(index=False),
-                        cluster=team.get("cluster", CLUSTER),
-                        judge=judge,
-                        enforce_50pct_floor=True,
-                    )
-                    st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
-                    st.rerun()
+            if st.button("Verify Graph", key=f"btn_verify_kg_{team['team_id']}_{current}", type="primary", use_container_width=True):
+                if current == 0:
+                    st.info("Level 0 is an unscored onboarding warm-up. Graph verification starts on Level 1!")
+                else:
+                    with st.spinner("Analyzing graph and evaluating connections with AI..."):
+                        judge = get_live_judge()
+                        eval_detail = evaluate_submission(
+                            team_id=team["team_id"],
+                            level=current,
+                            flag_answer="",
+                            graph_csv=df.to_csv(index=False),
+                            cluster=team.get("cluster", CLUSTER),
+                            judge=judge,
+                            enforce_50pct_floor=True,
+                        )
+                        st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
+                        st.rerun()
 
     # 1. Edge Editor (Dropdowns for source, target, and relationship)
     with st.expander("Add / Remove Graph Edges", expanded=bool(df.empty)):
@@ -668,6 +671,38 @@ elif section == "Knowledge Graph":
     # 2. Live Graph Visual (Placed under edge controls)
     st.markdown("#### Live Graph Visual")
     render_graph_diagram(df, available=available, byid=byid)
+
+    # 3. Live AI Graph Verification Section
+    st.markdown("---")
+    col_v_info, col_v_btn = st.columns([3, 1.3])
+    with col_v_info:
+        st.markdown("#### Live AI Graph Verification")
+        st.caption(
+            "Click below to test your graph against reference literature and novel connections with the AI Judge. "
+            "Checks your 50% accuracy threshold and estimates your graph score live."
+        )
+    with col_v_btn:
+        btn_verify = st.button("Verify Graph Live", key=f"btn_verify_kg_main_{team['team_id']}_{current}", type="primary", use_container_width=True)
+
+    if btn_verify:
+        if current == 0:
+            st.info("Level 0 is an unscored onboarding warm-up (no graph scoring). Graph verification starts on Level 1!")
+        elif df.empty:
+            st.warning("Your cumulative graph is currently empty. Add at least one edge in the section above before verifying.")
+        else:
+            with st.spinner("Analyzing graph and evaluating connections with AI judge..."):
+                judge = get_live_judge()
+                eval_detail = evaluate_submission(
+                    team_id=team["team_id"],
+                    level=current,
+                    flag_answer="",
+                    graph_csv=df.to_csv(index=False),
+                    cluster=team.get("cluster", CLUSTER),
+                    judge=judge,
+                    enforce_50pct_floor=True,
+                )
+                st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
+                st.rerun()
 
     # Live Verification Card if evaluated
     live_fb = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
@@ -801,22 +836,25 @@ if section == "Submit":
             st.success(f"Cumulative Graph: **{len(valid_rows)} edge(s)** ready for submission.")
     with c_g_dl:
         if valid_rows:
-            col_d1, col_d2 = st.columns(2) if current >= 1 else (st, None)
+            col_d1, col_d2 = st.columns([1, 1.2])
             col_d1.download_button("Download CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
-            if current >= 1 and col_d2 and col_d2.button("Verify Graph", key=f"btn_verify_sub_{team['team_id']}_{current}", type="secondary", use_container_width=True):
-                with st.spinner("Analyzing graph and evaluating connections with AI..."):
-                    judge = get_live_judge()
-                    eval_detail = evaluate_submission(
-                        team_id=team["team_id"],
-                        level=current,
-                        flag_answer="",
-                        graph_csv=draft,
-                        cluster=team.get("cluster", CLUSTER),
-                        judge=judge,
-                        enforce_50pct_floor=True,
-                    )
-                    st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
-                    st.rerun()
+            if col_d2.button("Verify Graph Live", key=f"btn_verify_sub_{team['team_id']}_{current}", type="secondary", use_container_width=True):
+                if current == 0:
+                    st.info("Level 0 is an unscored onboarding warm-up. Graph verification starts on Level 1!")
+                else:
+                    with st.spinner("Analyzing graph and evaluating connections with AI..."):
+                        judge = get_live_judge()
+                        eval_detail = evaluate_submission(
+                            team_id=team["team_id"],
+                            level=current,
+                            flag_answer="",
+                            graph_csv=draft,
+                            cluster=team.get("cluster", CLUSTER),
+                            judge=judge,
+                            enforce_50pct_floor=True,
+                        )
+                        st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
+                        st.rerun()
 
     live_fb_sub = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
     if live_fb_sub:
