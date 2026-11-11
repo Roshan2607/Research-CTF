@@ -247,11 +247,17 @@ def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: 
         'edge [color="#2563EB", fontcolor="#173F7A", fontname="Arial", fontsize=9, penwidth=2, arrowsize=0.8];'
     ]
 
+    import textwrap
     for pid in node_set:
         clean_pid = re.sub(r'[^A-Za-z0-9_]', '', str(pid).strip().upper())
         title = byid.get(pid, {}).get("title", "") if pid in byid else ""
-        clean_title = re.sub(r'["\\\r\n]', ' ', str(title[:35])).strip()
-        lbl = f"{clean_pid}\\n{clean_title}" if clean_title else clean_pid
+        clean_title = re.sub(r'["\\\r\n]', ' ', str(title)).strip()
+        if clean_title:
+            wrapped = textwrap.wrap(clean_title, width=22, max_lines=3, placeholder="...")
+            wrapped_str = "\\n".join(wrapped)
+            lbl = f"{clean_pid}\\n{wrapped_str}"
+        else:
+            lbl = clean_pid
         dot.append(f'"{clean_pid}" [label="{lbl}"];')
 
     if df is not None and not df.empty:
@@ -273,10 +279,10 @@ def get_live_judge():
     provider = os.environ.get("JUDGE_PROVIDER", "").strip().lower()
 
     try:
-        if provider in ("grok", "xai") and xai_key:
+        if (provider in ("grok", "xai") and xai_key) or (xai_key and not openai_key):
             from judging.openai_judge import GrokJudge
             return GrokJudge(api_key=xai_key)
-        elif openai_key:
+        elif (provider == "openai" or not provider) and openai_key:
             from judging.openai_judge import OpenAIJudge
             return OpenAIJudge(api_key=openai_key)
         elif xai_key:
@@ -290,6 +296,9 @@ def get_live_judge():
 def render_live_verification_card(detail: EvaluationDetail) -> None:
     st.markdown("---")
     st.markdown(f"#### Live Graph Verification Result · Level {detail.level}")
+
+    if getattr(detail, "judge_error", ""):
+        st.warning(f"• **AI Judge Notice**: {detail.judge_error}")
 
     c1, c2, c3 = st.columns(3)
     c1.metric(

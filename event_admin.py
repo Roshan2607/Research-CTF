@@ -243,7 +243,7 @@ with tabs[1]:
 def submissions_view():
     snap = admin_snapshot()
     teams = {t["team_id"]: t for t in snap["teams"] + snap.get("demo_teams", [])}
-    cluster_list = clusters(include_demo=True)
+    cluster_list = clusters(include_demo=False)
     selected = "All clusters"
     if len(cluster_list) > 1:
         options = ["All clusters"] + cluster_list
@@ -259,8 +259,10 @@ def submissions_view():
     if not records:
         st.info("No submissions yet for this selection.")
 
+    has_multi = len(cluster_list) > 1
     for sub_key, rec, team in sorted(records, key=lambda x: (x[1]["team_id"], x[1]["level"])):
-        with st.expander(f"{rec['team_id']} · Level {rec['level']} · {team.get('name', '')} ({team.get('cluster', '')}) · {rec['submitted_at']}"):
+        c_tag = f" ({team.get('cluster', '')})" if has_multi else ""
+        with st.expander(f"{rec['team_id']} · Level {rec['level']} · {team.get('name', '')}{c_tag} · {rec['submitted_at']}"):
             c1, c2, c3 = st.columns(3)
             lvl_p = level_points(rec.get("level", 1))
             c1.metric("Flag Solved", "Yes" if rec.get("flag_correct") else "No")

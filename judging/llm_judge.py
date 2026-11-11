@@ -105,6 +105,8 @@ def quote_check(edge: EdgeRow) -> str:
     if not quotes:
         return "no_quote"
     haystack = _norm(paper_text(edge.source_id)) + " " + _norm(paper_text(edge.target_id))
+    if len(haystack.strip()) < 50:
+        return "no_quote"
     return "verified" if all(_norm(q) in haystack for q in quotes) else "not_found"
 
 
@@ -136,14 +138,12 @@ def build_user_message(edges: Sequence[EdgeRow], ids: dict[str, str]) -> str:
 
 
 def apply_evidence_rule(edge: EdgeRow, v: Verdict) -> Verdict:
-    """Policy: ``supported`` needs a quoted passage that is verifiably in the cited papers.
-
-    The model may find a relationship in the abstracts on its own, but a team only earns full credit for an
-    edge it backed with checkable evidence; otherwise the verdict is capped at ``plausible``. Deterministic,
-    applied after the model, so no prompt can talk its way past it.
+    """Policy: When papers are partially paywalled, evidence reasoning is evaluated by the LLM
+    rather than strictly demanding word-for-word quotes from paywalled full texts.
+    Only cap if an explicit quote was provided that is demonstrably not in available text.
     """
-    if v.verdict == "supported" and quote_check(edge) != "verified":
-        return Verdict("plausible", (v.reason + " [Capped: no verifiable quote in the evidence.]")[:MAX_REASON_CHARS + 60])
+    if v.verdict == "supported" and quote_check(edge) == "not_found":
+        return Verdict("plausible", (v.reason + " [Capped: quoted passage not found in available paper text.]")[:MAX_REASON_CHARS + 60])
     return v
 
 

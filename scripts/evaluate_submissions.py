@@ -66,6 +66,7 @@ class EvaluationDetail:
     novel_candidate_edges: list[dict[str, str]] = field(default_factory=list)
     llm_verdicts: list[dict[str, Any]] = field(default_factory=list)
     explanation: str = ""
+    judge_error: str = ""
 
     def summary_row(self) -> dict[str, Any]:
         return {
@@ -200,6 +201,7 @@ def evaluate_submission(
 
     # Optional LLM Judge for novel candidate edges (Grok / OpenAI / Anthropic)
     llm_verdicts: list[dict[str, Any]] = []
+    judge_error_msg = ""
     if judge is not None and novel_candidates:
         from judging.store import EdgeRow
         rows_to_judge = [
@@ -225,8 +227,14 @@ def evaluate_submission(
                         discovery_bounties.append(e_tuple)
                         if e_tuple not in correct_found:
                             correct_found.append(e_tuple)
-        except Exception:
-            pass
+        except Exception as e:
+            err_str = str(e)
+            if "insufficient_quota" in err_str or "credit_balance_exhausted" in err_str or "429" in err_str:
+                judge_error_msg = "Live AI judge could not evaluate novel edge: API quota/credits exhausted (429). Please add credits to your API account or switch to Grok in .env."
+            elif "authentication" in err_str.lower() or "api_key" in err_str.lower() or "401" in err_str:
+                judge_error_msg = "Live AI judge could not evaluate novel edge: Invalid API key (401). Please check .env."
+            else:
+                judge_error_msg = f"Live AI judge error: {err_str[:120]}"
 
     # Compute base graph points and accuracy percentage
     total_ref_count = len(reference_edges)
@@ -274,6 +282,7 @@ def evaluate_submission(
         novel_candidate_edges=novel_candidates,
         llm_verdicts=llm_verdicts,
         explanation=explanation,
+        judge_error=judge_error_msg,
     )
 
 
