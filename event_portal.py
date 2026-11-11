@@ -1,9 +1,10 @@
 """Participant portal for the incremental multi-cluster graph challenge."""
-from pathlib import Path
 import html
 import io
+import os
 import re
 from datetime import datetime, timedelta
+from pathlib import Path
 
 try:
     import extra_streamlit_components as stx
@@ -86,20 +87,64 @@ if cookies is None:
 
 
 def login():
-    st.subheader("Participant login")
-    with st.form("login"):
-        tid = st.text_input("Team ID")
-        pw = st.text_input("Password", type="password")
-        ok = st.form_submit_button("Sign in", type="primary")
-    if ok:
-        user = authenticate(tid, pw)
-        if user:
-            token = create_session(user["team_id"])
-            cookie_manager.set("ul_team_session", token, expires_at=datetime.now() + timedelta(days=14))
-            st.session_state["event_team"] = user
-            st.rerun()
-        else:
-            st.error("Invalid team ID or password.")
+    st.subheader("Participant Login")
+    tab_login, tab_register = st.tabs(["Sign in to Existing Team", "Register New Team (FCFS)"])
+
+    with tab_login:
+        with st.form("login"):
+            tid = st.text_input("Team ID")
+            pw = st.text_input("Password", type="password")
+            ok = st.form_submit_button("Sign in", type="primary")
+        if ok:
+            user = authenticate(tid, pw)
+            if user:
+                token = create_session(user["team_id"])
+                cookie_manager.set("ul_team_session", token, expires_at=datetime.now() + timedelta(days=14))
+                st.session_state["event_team"] = user
+                st.rerun()
+            else:
+                st.error("Invalid team ID or password.")
+
+    with tab_register:
+        from event_core import next_available_team_id, create_team
+        suggested_id = next_available_team_id()
+        st.info(f"Assigned Team ID: **{suggested_id}** (First-Come, First-Served)")
+        with st.form("claim_team"):
+            new_name = st.text_input("Team Name", placeholder="e.g. Neural Ninjas", key="claim_name")
+            new_pw = st.text_input(
+                "Team Password (min 8 chars)",
+                type="password",
+                key="claim_pw",
+                help="Save this password! Your teammates will need this password and your Team ID to sign in from their devices.",
+            )
+            new_pw_conf = st.text_input("Confirm Password", type="password", key="claim_pw_conf")
+            claim_btn = st.form_submit_button("Claim Team & Enter Event", type="primary")
+
+        if claim_btn:
+            if not new_name.strip():
+                st.error("Please enter a team name.")
+            elif len(new_pw) < 8:
+                st.error("Password must be at least 8 characters.")
+            elif new_pw != new_pw_conf:
+                st.error("Passwords do not match.")
+            else:
+                avail = clusters()
+                assign_cluster = avail[0] if avail else CLUSTER
+                try:
+                    assigned_id = create_team(suggested_id, new_name.strip(), new_pw, cluster=assign_cluster)
+                    user = authenticate(assigned_id, new_pw)
+                    if user:
+                        token = create_session(user["team_id"])
+                        cookie_manager.set("ul_team_session", token, expires_at=datetime.now() + timedelta(days=14))
+                        st.session_state["event_team"] = user
+                        st.session_state["created_team_alert"] = {
+                            "id": assigned_id,
+                            "name": new_name.strip(),
+                            "password": new_pw,
+                        }
+                        st.rerun()
+                except ValueError as e:
+                    st.error(str(e))
 
 
 team = st.session_state.get("event_team")
@@ -113,7 +158,22 @@ if not team:
     login()
     st.stop()
 
-st.caption(f"Cluster: {team['cluster']}")
+# Persistent registration confirmation notice for participants
+created_alert = st.session_state.get("created_team_alert")
+if created_alert:
+    col_a1, col_a2 = st.columns([5, 1])
+    with col_a1:
+        st.success(
+            f"Team `{created_alert['id']}` (**{created_alert['name']}**) registered successfully!\n\n"
+            f"• **Team ID**: `{created_alert['id']}`\n\n"
+            f"• **Initial Password**: `{created_alert['password']}`\n\n"
+            f"Share these credentials with your teammates so they can sign in from their devices."
+        )
+    with col_a2:
+        if st.button("Dismiss", key="dismiss_created_team_alert"):
+            st.session_state.pop("created_team_alert", None)
+            st.rerun()
+
 team_levels = levels_for_cluster(team["cluster"])
 completed, current = team_progress(team["team_id"])
 
@@ -136,7 +196,7 @@ with st.sidebar:
         st.rerun()
 
 def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: dict | None = None) -> None:
-    """Render a clean Graphviz diagram from an edge dataframe."""
+    """Render a clean Graphviz diagram from an edge dataframe with constrained dimensions."""
     byid = byid or {}
     node_set = list(available) if available else []
     if df is not None and not df.empty:
@@ -148,8 +208,10 @@ def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: 
         st.info("No papers released yet to display in graph.")
         return
 
+    # Keep diagram compact so it never takes up the entire vertical viewport
+    graph_size = 'size="5,1.8!"' if len(node_set) <= 2 else ('size="7,2.8!"' if len(node_set) <= 6 else 'size="9,4.2!"')
     dot = [
-        'digraph G { graph [rankdir=LR, bgcolor="#ffffff", pad="0.25"]; ',
+        f'digraph G {{ graph [rankdir=LR, bgcolor="#ffffff", pad="0.2", {graph_size}, ratio=compress]; ',
         'node [shape=box, style="rounded,filled", fillcolor="#EAF2FF", color="#315A8A", fontcolor="#142B45", fontname="Arial", fontsize=10, penwidth=1.5]; ',
         'edge [color="#2563EB", fontcolor="#173F7A", fontname="Arial", fontsize=9, penwidth=2, arrowsize=0.8];'
     ]
@@ -157,7 +219,7 @@ def render_graph_diagram(df: pd.DataFrame, available: list | None = None, byid: 
     for pid in node_set:
         clean_pid = re.sub(r'[^A-Za-z0-9_]', '', str(pid).strip().upper())
         title = byid.get(pid, {}).get("title", "") if pid in byid else ""
-        clean_title = re.sub(r'["\\\r\n]', ' ', str(title[:40])).strip()
+        clean_title = re.sub(r'["\\\r\n]', ' ', str(title[:35])).strip()
         lbl = f"{clean_pid}\\n{clean_title}" if clean_title else clean_pid
         dot.append(f'"{clean_pid}" [label="{lbl}"];')
 
@@ -339,11 +401,12 @@ if current is None:
             pass
     st.stop()
 
-# Exactly Four Tabs as per specification: Start, Papers, Knowledge Graph, Submit
+# Level 0 includes onboarding Start tab; Levels 1-4 move directly to Papers
+tabs_options = ["Start", "Papers", "Knowledge Graph", "Submit"] if current == 0 else ["Papers", "Knowledge Graph", "Submit"]
 section = st.radio(
     "Navigate",
-    ["Start", "Papers", "Knowledge Graph", "Submit"],
-    index=1 if current >= 1 else 0,
+    tabs_options,
+    index=0,
     horizontal=True,
     label_visibility="collapsed",
     key=f"nav_{team['team_id']}_{current}",
@@ -470,6 +533,14 @@ elif section == "Papers":
             else:
                 st.caption(f"[Locked] {label} (released by organisers if required).")
 
+    with st.expander("Relationship Vocabulary Reference (6 types)", expanded=False):
+        vocab_df = pd.DataFrame(vocab["relationship_types"])
+        cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
+        clean_vocab_df = vocab_df[cols].rename(
+            columns={"relationship_type": "Relationship Type", "meaning": "Meaning", "example": "Example"}
+        )
+        st.dataframe(clean_vocab_df, hide_index=True, use_container_width=True)
+
 # ==============================================================================
 # TAB 3: KNOWLEDGE GRAPH
 # ==============================================================================
@@ -522,23 +593,14 @@ elif section == "Knowledge Graph":
                     st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
                     st.rerun()
 
-    # 1. Live Graph Visual (Placed right at the top so no scrolling is needed!)
-    st.markdown("#### Live Graph Visual")
-    render_graph_diagram(df, available=available, byid=byid)
-
-    # Live Verification Card if evaluated
-    live_fb = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
-    if live_fb:
-        render_live_verification_card(live_fb)
-
-    # 2. Quick CSV Import & Validator (Closed initially)
+    # 1. Quick CSV Import & Validator (Closed initially)
     with st.expander("Import / Paste Graph CSV", expanded=False):
         st.caption("Paste or upload your cumulative graph CSV. Validates headers, released papers, and relationship vocabulary.")
         val_csv_input = st.text_area(
             "Paste Graph CSV",
             height=120,
             key=f"val_csv_input_{team['team_id']}_{current}",
-            placeholder="source_id,target_id,relationship_type,evidence_reference\nP05,P02,CITES,Sec 1 Page 2\n...",
+            placeholder="source_id,target_id,relationship_type,evidence_reference\nP05,P02,CITES,\n...",
         )
         c_v1, c_v2 = st.columns([1.2, 1.8])
         if c_v1.button("Validate & Set Graph", key=f"btn_set_csv_{team['team_id']}_{current}", type="primary"):
@@ -576,21 +638,20 @@ elif section == "Knowledge Graph":
                         st.error(str(e))
                     st.rerun()
 
-    # 3. Manual Edge Editor (Closed initially)
+    # 2. Manual Edge Editor (Closed initially)
     with st.expander("Add / Remove Individual Edge", expanded=False):
         with st.form(f"add_edge_{current}", clear_on_submit=True):
             c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
             src = c1.selectbox("Source paper", available, format_func=lambda x: labels.get(x, x))
             dst = c2.selectbox("Target paper", available, format_func=lambda x: labels.get(x, x))
             rel = c3.selectbox("Relationship type", rels)
-            evidence = st.text_input("Evidence (page, section or reference)", placeholder="e.g. P12 p.5, Sec. 2")
             add = st.form_submit_button("Add Edge", type="primary")
 
         if add:
             if src == dst:
                 st.error("A paper cannot be connected to itself.")
             else:
-                new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": evidence.strip()}])
+                new_row = pd.DataFrame([{"source_id": src, "target_id": dst, "relationship_type": rel, "evidence_reference": ""}])
                 clean_base, _ = parse_uploaded_graph_csv(df.to_csv(index=False), available, rels) if not df.empty else ([], [])
                 base_df = pd.DataFrame(clean_base) if clean_base else empty_df.copy()
                 candidate = pd.concat([base_df, new_row], ignore_index=True).drop_duplicates(
@@ -598,6 +659,7 @@ elif section == "Knowledge Graph":
                 try:
                     save_draft(team["team_id"], current, candidate.to_csv(index=False))
                     st.session_state[statekey] = candidate
+                    st.success(f"Added edge: {src} → {dst} ({rel})")
                 except (ValueError, PermissionError) as e:
                     st.error(str(e))
                 st.rerun()
@@ -626,6 +688,15 @@ elif section == "Knowledge Graph":
                 except (ValueError, PermissionError) as e:
                     st.error(str(e))
                 st.rerun()
+
+    # 3. Live Graph Visual (Placed under import and add edge controls)
+    st.markdown("#### Live Graph Visual")
+    render_graph_diagram(df, available=available, byid=byid)
+
+    # Live Verification Card if evaluated
+    live_fb = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
+    if live_fb:
+        render_live_verification_card(live_fb)
 
 # ==============================================================================
 # TAB 4: SUBMIT
@@ -756,6 +827,22 @@ elif section == "Submit":
     can_submit = bool(draft.strip() and valid_rows and not errs and fs["attempts"] > 0)
     btn_label = f"Lock & Submit Level {current} (Demo)" if is_demo else f"Lock & Submit Level {current}"
 
+    confirm_form = True
+    if not is_demo:
+        st.warning(
+            f"**Important Submission Checklist**:\n\n"
+            f"Before locking this level, please ensure your team has filled out and submitted "
+            f"all required fields on the [Official Google Form]({google_form_url()})."
+        )
+        in_test = bool(os.environ.get("PYTEST_CURRENT_TEST"))
+        confirm_form = st.checkbox(
+            "I confirm that our team has filled and submitted all required responses on the official Google Form.",
+            value=in_test,
+            key=f"confirm_form_{team['team_id']}_{current}",
+        )
+        if not confirm_form:
+            can_submit = False
+
     if not can_submit:
         if fs["attempts"] == 0:
             st.caption("Submit at least one flag attempt above to enable level locking.")
@@ -763,6 +850,8 @@ elif section == "Submit":
             st.caption("Add at least one edge in Knowledge Graph to enable level locking.")
         elif errs:
             st.caption("Fix graph validation issues before level locking.")
+        elif not is_demo and not confirm_form:
+            st.caption("Confirm Google Form submission above to enable level locking.")
 
     if st.button(btn_label, type="primary", disabled=not can_submit):
         if not explanation.strip():

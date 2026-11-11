@@ -521,6 +521,20 @@ def _hash(password: str, salt: str | None = None) -> tuple[str, str]:
     return salt, hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt), 180000).hex()
 
 
+def next_available_team_id() -> str:
+    """Return the next available sequential team ID (TEAM01, TEAM02, etc.)."""
+    with LOCK:
+        with _file_lock():
+            d = load()
+            existing = set(d.get("teams", {}).keys())
+            idx = 1
+            while True:
+                candidate = f"TEAM{idx:02d}"
+                if candidate not in existing:
+                    return candidate
+                idx += 1
+
+
 def create_team(team_id: str, name: str, password: str, cluster: str = CLUSTER, is_demo: bool = False) -> str:
     team_id = (team_id or "").strip().upper()
     name = (name or "").strip()
@@ -556,7 +570,12 @@ SESSION_EXPIRY_DAYS = 14
 
 
 def authenticate(team_id: str, password: str) -> dict | None:
-    t = load()["teams"].get((team_id or "").strip().upper())
+    tid = (team_id or "").strip().upper()
+    d = load()
+    if tid == "DEMO00" and tid not in d.get("teams", {}):
+        ensure_demo_team("DEMO00", "Level 0 Demo Team", "DemoPass123!")
+        d = load()
+    t = d.get("teams", {}).get(tid)
     if not t:
         _hash(password or "", _DUMMY_SALT)
         return None

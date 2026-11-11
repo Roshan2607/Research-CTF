@@ -138,8 +138,11 @@ tabs = st.tabs([
 @st.fragment(run_every="3s")
 def live_dashboard():
     snap = admin_snapshot()
-    cluster_options = ["All clusters"] + clusters()
-    selected = st.selectbox("Filter leaderboard by cluster", cluster_options, key="admin_dashboard_cluster")
+    avail_clusters = clusters()
+    selected = "All clusters"
+    if len(avail_clusters) > 1:
+        cluster_options = ["All clusters"] + avail_clusters
+        selected = st.selectbox("Filter leaderboard by cluster", cluster_options, key="admin_dashboard_cluster")
 
     teams = [t for t in snap["teams"] if selected == "All clusters" or t["cluster"] == selected]
     team_ids = {t["team_id"] for t in teams}
@@ -149,36 +152,31 @@ def live_dashboard():
     a, b, c = st.columns(3)
     a.metric("Registered Teams", len(teams))
     b.metric("Completed All 4 Levels", finished)
+    b.caption(f"{finished} of {len(teams)} teams finished")
     c.metric("Locked Submissions", len(subs))
 
     scores = []
+    has_multiple_clusters = len(avail_clusters) > 1
     for row in team_scores():
         if row["team_id"] not in team_ids:
             continue
-        scores.append({
+        entry = {
             "Team ID": row["team_id"],
             "Team": row["name"],
-            "Cluster": row["cluster"],
             "Levels Locked": f"{row['levels_locked']}/4",
             "Flag Points (/40)": row["flag_points"],
             "Graph Points (/60)": row["graph_points"],
             "Total Score (/100)": row["total"],
-        })
+        }
+        if has_multiple_clusters:
+            entry["Cluster"] = row["cluster"]
+        scores.append(entry)
+
     st.subheader("Official Team Leaderboard")
     if scores:
         st.dataframe(pd.DataFrame(scores).sort_values("Total Score (/100)", ascending=False), hide_index=True, use_container_width=True)
     else:
-        st.info("No participant teams registered yet for this selection.")
-
-    st.subheader("Team Progress Overview")
-    if teams:
-        st.dataframe(pd.DataFrame(teams), hide_index=True, use_container_width=True)
-
-    st.subheader("Latest Activity Log")
-    audit = [x for x in snap["audit"] if selected == "All clusters" or x.get("team_id") in team_ids]
-    audit = audit[-20:]
-    if audit:
-        st.dataframe(pd.DataFrame(audit[::-1]), hide_index=True, use_container_width=True)
+        st.info("No participant teams registered yet.")
 
 
 with tabs[0]:
@@ -190,36 +188,44 @@ with tabs[1]:
     if not available_clusters:
         st.error("No competition clusters configured.")
     else:
-        with st.expander("Create a new cluster from a template (verified papers only)"):
-            st.warning("Only add clusters whose papers, DOIs and abstracts have been verified against the publisher "
-                       "record (see docs/DATA_PROVENANCE.md). Never invent paper metadata or abstracts.")
-            template = st.selectbox("Template cluster", available_clusters, key="cluster_template")
-            new_cluster_name = st.text_input("New cluster name", key="new_cluster_name")
-            if st.button("Create cluster"):
-                try:
-                    created = create_cluster_from_template(new_cluster_name, template)
-                    st.success(f"Created cluster: {created}")
+        # Persistent notice when a team was just created
+        notice = st.session_state.get("created_team_notice")
+        if notice:
+            col_not, col_dis = st.columns([4, 1])
+            with col_not:
+                st.success(
+                    f"Team Created Successfully!\n\n"
+                    f"• **Team ID**: `{notice['id']}`\n\n"
+                    f"• **Team Name**: **{notice['name']}**\n\n"
+                    f"• **Initial Password**: `{notice['password']}`"
+                )
+            with col_dis:
+                if st.button("Dismiss", key="dismiss_created_notice"):
+                    st.session_state.pop("created_team_notice", None)
                     st.rerun()
-                except ValueError as e:
-                    st.error(str(e))
 
         st.markdown("**Create Team**")
         with st.form("create_team"):
-            tid = st.text_input("Team ID (e.g. TEAM01)")
-            name = st.text_input("Team Name")
+            from event_core import next_available_team_id
+            suggested_id = next_available_team_id()
+            tid = st.text_input("Team ID (e.g. TEAM01)", value=suggested_id)
+            name = st.text_input("Team Name", placeholder="e.g. Alpha Researchers")
             password = st.text_input("Initial Password (min 8 chars)", type="password")
             avail_clusters = clusters()
-            if len(avail_clusters) == 1:
-                selected_cluster = avail_clusters[0]
-                st.caption(f"Cluster: **{selected_cluster}**")
-            else:
+            selected_cluster = avail_clusters[0] if avail_clusters else CLUSTER
+            if len(avail_clusters) > 1:
                 selected_cluster = st.selectbox("Assigned Cluster", avail_clusters, key="team_cluster_select")
             ok = st.form_submit_button("Create team", type="primary")
 
         if ok:
             try:
                 created_id = create_team(tid, name, password, selected_cluster, is_demo=False)
-                st.success(f"Created team {created_id} in {selected_cluster}.")
+                st.session_state["created_team_notice"] = {
+                    "id": created_id,
+                    "name": name,
+                    "password": password,
+                    "at": time.time(),
+                }
                 st.rerun()
             except ValueError as e:
                 st.error(str(e))
@@ -237,8 +243,11 @@ with tabs[1]:
 def submissions_view():
     snap = admin_snapshot()
     teams = {t["team_id"]: t for t in snap["teams"] + snap.get("demo_teams", [])}
-    options = ["All clusters"] + clusters(include_demo=True)
-    selected = st.selectbox("Filter submissions by cluster", options, key="admin_submissions_cluster")
+    cluster_list = clusters(include_demo=True)
+    selected = "All clusters"
+    if len(cluster_list) > 1:
+        options = ["All clusters"] + cluster_list
+        selected = st.selectbox("Filter submissions by cluster", options, key="admin_submissions_cluster")
 
     records = []
     for k, rec in snap["submissions"].items():
@@ -325,9 +334,27 @@ with tabs[2]:
 def logs_view():
     snap = admin_snapshot()
     teams = {t["team_id"]: t for t in snap["teams"]}
-    options = ["All clusters"] + clusters()
-    selected = st.selectbox("Filter activity by cluster", options, key="admin_logs_cluster")
+    cluster_list = clusters()
+    selected = "All clusters"
+    if len(cluster_list) > 1:
+        options = ["All clusters"] + cluster_list
+        selected = st.selectbox("Filter activity by cluster", options, key="admin_logs_cluster")
 
+    st.subheader("Team Progress Overview")
+    active_teams = [t for t in snap["teams"] if selected == "All clusters" or t["cluster"] == selected]
+    if active_teams:
+        st.dataframe(pd.DataFrame(active_teams), hide_index=True, use_container_width=True)
+    else:
+        st.info("No active teams.")
+
+    st.subheader("Latest Activity Log")
+    recent_audit = [x for x in snap["audit"] if selected == "All clusters" or (x.get("team_id") in teams and teams[x.get("team_id")].get("cluster") == selected)]
+    if recent_audit:
+        st.dataframe(pd.DataFrame(recent_audit[-25:][::-1]), hide_index=True, use_container_width=True)
+    else:
+        st.info("No recent activity.")
+
+    st.subheader("All Flag Attempts")
     attempts = []
     for key, items in snap["attempts"].items():
         team_id = key.split(":", 1)[0]
@@ -335,15 +362,16 @@ def logs_view():
         if selected != "All clusters" and team.get("cluster") != selected:
             continue
         for item in items:
-            attempts.append({
+            row_dict = {
                 "Team / Level": key,
-                "Cluster": team.get("cluster", ""),
                 "At": item["at"],
                 "Answer": item["answer"],
                 "Correct": item["correct"],
-            })
+            }
+            if len(cluster_list) > 1:
+                row_dict["Cluster"] = team.get("cluster", "")
+            attempts.append(row_dict)
 
-    st.subheader("All Flag Attempts")
     if attempts:
         st.dataframe(pd.DataFrame(attempts), hide_index=True, use_container_width=True)
     else:
