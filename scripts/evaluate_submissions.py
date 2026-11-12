@@ -121,7 +121,7 @@ def evaluate_submission(
     decoy_penalty_pts: float = 100.0,
     discovery_bounty_pts: float = 250.0,
     judge: Any = None,
-    enforce_50pct_floor: bool = True,
+    enforce_50pct_floor: bool = False,
 ) -> EvaluationDetail:
     """Evaluates a single level submission using the official formula:
 
@@ -255,7 +255,7 @@ def evaluate_submission(
                     e_tuple = (r.source_id, r.target_id, r.rel_type)
                     llm_verdicts.append({"edge": e_tuple, "verdict": verdict_str, "reason": reason_str})
                     if verdict_str == "supported":
-                        if level > 0:
+                        if level > 0 and discovery_bounty_pts > 0:
                             discovery_bounties.append(e_tuple)
                         if e_tuple not in correct_found:
                             correct_found.append(e_tuple)
@@ -297,7 +297,7 @@ def evaluate_submission(
     # Compute penalties
     inj_penalty = round(len(injection_hits) * injection_penalty_pts, 2)
     dec_penalty = round(len(decoy_hits) * decoy_penalty_pts, 2)
-    bounty_pts = round(len(discovery_bounties) * discovery_bounty_pts, 2) if level > 0 else 0.0
+    bounty_pts = round(len(discovery_bounties) * discovery_bounty_pts, 2) if (level > 0 and discovery_bounty_pts > 0) else 0.0
 
     final_gp = max(0.0, base_gp - inj_penalty - dec_penalty) + bounty_pts
     final_gp = round(final_gp, 2)

@@ -97,115 +97,126 @@ header[data-testid="stHeader"] {
     z-index: 1;
 }
 
-/* Full-Width Modern Top Navbar */
+/* Full-Width Modern Top Segmented Control Navbar */
+div[data-testid="stElementContainer"],
+div.element-container,
+div[data-testid="stElementContainer"]:has(div[data-testid="stRadio"]),
+div.element-container:has(div.stRadio) {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+div.stRadio,
 div[data-testid="stRadio"] {
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
+    display: block !important;
     box-sizing: border-box !important;
     margin-top: 0 !important;
     margin-bottom: 1.5rem !important;
 }
 
-div[data-testid="stRadio"] > div {
-    width: 100% !important;
-    min-width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-div[data-testid="stRadioGroup"] {
-    width: 100% !important;
-    min-width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-div[data-testid="stRadio"] div[role="radiogroup"],
+div[data-testid="stRadioGroup"],
 div[role="radiogroup"] {
     display: flex !important;
     flex-direction: row !important;
-    align-items: stretch !important;
-    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: stretch !important;
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
-    box-sizing: border-box !important;
-    gap: 8px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
     background: #0d1117 !important;
-    padding: 6px 8px !important;
-    border-radius: 12px !important;
+    padding: 4px !important;
+    border-radius: 10px !important;
     border: 1px solid #30363d !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+    box-sizing: border-box !important;
+    gap: 6px !important;
+    overflow: hidden !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"],
-div[role="radiogroup"] label[data-baseweb="radio"] {
-    flex: 1 1 0% !important;
+div[role="radiogroup"] label[data-baseweb="radio"],
+div[data-testid="stRadio"] label[data-baseweb="radio"] {
+    flex: 1 1 0px !important;
     min-width: 0 !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     background-color: transparent !important;
-    padding: 12px 16px !important;
-    border-radius: 8px !important;
+    padding: 0 12px !important;
     margin: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    border-radius: 6px !important;
     cursor: pointer !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     border: 1px solid transparent !important;
-    text-align: center !important;
-    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    transition: all 0.15s ease-in-out !important;
+    overflow: hidden !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover,
-div[role="radiogroup"] label[data-baseweb="radio"]:hover {
+div[role="radiogroup"] label[data-baseweb="radio"]:hover,
+div[data-testid="stRadio"] label[data-baseweb="radio"]:hover {
     background-color: #21262d !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
+div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked),
+div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) {
     background-color: #1f6feb !important;
     border: 1px solid #388bfd !important;
-    box-shadow: 0 2px 10px rgba(31, 111, 235, 0.45) !important;
+    box-shadow: 0 1px 4px rgba(31, 111, 235, 0.45) !important;
 }
 
-div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
-    background-color: #1f6feb !important;
-    border: 1px solid #388bfd !important;
-    box-shadow: 0 2px 10px rgba(31, 111, 235, 0.45) !important;
-}
-
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] > div:first-of-type,
-div[role="radiogroup"] label[data-baseweb="radio"] > div:first-of-type {
+div[role="radiogroup"] label[data-baseweb="radio"] > div:first-of-type,
+div[role="radiogroup"] label[data-baseweb="radio"] input[type="radio"],
+div[data-testid="stRadio"] label[data-baseweb="radio"] > div:first-of-type,
+div[data-testid="stRadio"] label[data-baseweb="radio"] input[type="radio"] {
     display: none !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] div:last-child,
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] p,
 div[role="radiogroup"] label[data-baseweb="radio"] div:last-child,
-div[role="radiogroup"] label[data-baseweb="radio"] p {
-    font-size: 1rem !important;
+div[role="radiogroup"] label[data-baseweb="radio"] p,
+div[role="radiogroup"] label[data-baseweb="radio"] span,
+div[data-testid="stRadio"] label[data-baseweb="radio"] div:last-child,
+div[data-testid="stRadio"] label[data-baseweb="radio"] p,
+div[data-testid="stRadio"] label[data-baseweb="radio"] span {
+    font-size: 0.95rem !important;
     font-weight: 500 !important;
     color: #8b949e !important;
     margin: 0 !important;
-    line-height: 1.4 !important;
+    padding: 0 !important;
+    line-height: normal !important;
     transition: color 0.15s ease !important;
     text-align: center !important;
-    width: 100% !important;
+    width: auto !important;
     white-space: nowrap !important;
-    word-break: keep-all !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover div:last-child,
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover p,
 div[role="radiogroup"] label[data-baseweb="radio"]:hover div:last-child,
-div[role="radiogroup"] label[data-baseweb="radio"]:hover p {
+div[role="radiogroup"] label[data-baseweb="radio"]:hover p,
+div[data-testid="stRadio"] label[data-baseweb="radio"]:hover div:last-child,
+div[data-testid="stRadio"] label[data-baseweb="radio"]:hover p {
     color: #e6edf3 !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) div:last-child,
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) p,
 div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) div:last-child,
-div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) p {
+div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) p,
+div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) div:last-child,
+div[data-testid="stRadio"] label[data-baseweb="radio"]:has(input:checked) p {
     color: #ffffff !important;
     font-weight: 600 !important;
 }
@@ -430,42 +441,41 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
     if getattr(detail, "judge_error", ""):
         st.warning(f"• **Notice**: {detail.judge_error}")
 
-    c1, c2, c3 = st.columns(3)
-    c1.metric(
-        "Graph Accuracy",
-        f"{detail.accuracy_pct:.1f}%",
-    )
-    floor_label = "PASSED (>= 30%)" if detail.meets_50pct_threshold else "BELOW FLOOR (< 30%)"
-    c2.metric(
-        "30% Accuracy Floor",
-        floor_label,
-    )
-    c3.metric(
-        "Estimated Graph Points",
-        f"{int(round(detail.final_graph_points)):,d} / {int(round(detail.max_graph_points)):,d} pts",
-    )
-
     if detail.level == 0:
-        if detail.meets_50pct_threshold and detail.correct_edges:
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Practice Connection", f"{len(detail.correct_edges)} of {detail.total_reference_count} verified")
+        c2.metric("Practice Status", "Passed" if detail.correct_edges else "Needs Connection")
+        c3.metric("Warm-Up Points", "Unscored", "Practice Level")
+
+        if detail.correct_edges:
             st.success(
-                f"Level 0 Practice Accuracy is {detail.accuracy_pct:.1f}% ({len(detail.correct_edges)} of {detail.total_reference_count} connection). "
-                f"Practice relationship verified! You understand how knowledge graph connections work."
+                f"Practice relationship verified! ({detail.accuracy_pct:.0f}% match). "
+                f"L0A and L0B share prefix/trie structures. Head to the Submit tab to complete the warm-up and unlock Level 1."
             )
         else:
-            st.warning(
-                f"Level 0 Practice Accuracy is {detail.accuracy_pct:.1f}%. "
-                f"Connect L0A and L0B (e.g. SHARES_PRINCIPLE) to verify the shared trie/prefix tree structure."
-            )
-    elif detail.meets_50pct_threshold:
-        st.success(
-            f"Accuracy is {detail.accuracy_pct:.1f}%. The 30% accuracy standard is satisfied! "
-            f"You are on track to earn {detail.final_graph_points:g} graph points for this level."
-        )
+            st.warning("Connect L0A and L0B (e.g. SHARES_PRINCIPLE) to verify the shared trie/prefix tree structure.")
     else:
-        st.warning(
-            f"Current accuracy is {detail.accuracy_pct:.1f}% (required: >= 30.0%). "
-            f"Graph points are currently zeroed. Connect more valid relationships between released papers to reach 30%."
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Benchmark Matches", f"{len(detail.correct_edges)} of {detail.total_reference_count} edges")
+        c2.metric("Graph Accuracy", f"{detail.accuracy_pct:.1f}%")
+        c3.metric(
+            "Estimated Graph Points",
+            f"{int(round(detail.final_graph_points)):,d} / {int(round(detail.max_graph_points)):,d} pts",
         )
+
+        if detail.final_graph_points > 0:
+            st.success(
+                f"Verified! You have correctly connected {len(detail.correct_edges)} benchmark literature relationship(s) "
+                f"and are on track to earn {detail.final_graph_points:g} graph points for this level."
+            )
+        elif detail.correct_edges and detail.final_graph_points == 0:
+            st.warning(
+                f"You matched {len(detail.correct_edges)} benchmark relationship(s), but penalties "
+                f"(-{detail.decoy_penalty:g} decoy, -{detail.injection_penalty:g} injection) reduced graph points to 0. "
+                "Remove decoy connections to restore your points."
+            )
+        else:
+            st.warning("No benchmark relationships matched yet. Review the released papers and connect valid relationships to earn graph points.")
 
     with st.expander("Detailed Verification Breakdown", expanded=True):
         llm_edge_tuples = {tuple(v["edge"]) for v in detail.llm_verdicts}
@@ -509,8 +519,6 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
                 f"Decoy Detected: {len(detail.decoy_hits)} connection(s) link to decoy papers "
                 f"(-{detail.decoy_penalty:g} pts)."
             )
-        if detail.level > 0 and detail.discovery_bounty_edges:
-            st.info(f"Discovery Bounties Awarded: +{detail.discovery_bounty_points:g} pts for verified novel connections.")
 
 
 corpus = load_corpus()
@@ -928,8 +936,9 @@ elif section == "Knowledge Graph":
                     flag_answer="",
                     graph_csv=df.to_csv(index=False),
                     cluster=team.get("cluster", CLUSTER),
+                    discovery_bounty_pts=0.0,
                     judge=judge,
-                    enforce_50pct_floor=True,
+                    enforce_50pct_floor=False,
                 )
                 st.session_state[f"live_graph_feedback_{team['team_id']}_{current}"] = eval_detail
                 st.rerun()
@@ -938,16 +947,6 @@ elif section == "Knowledge Graph":
     live_fb = st.session_state.get(f"live_graph_feedback_{team['team_id']}_{current}")
     if live_fb:
         render_live_verification_card(live_fb)
-
-    # Research hint placed after graph verification (no "Level X Research Nudge:" prefix)
-    nudges_by_level = {
-        1: "Focus on internal network inference papers (`P02`, `P05`, `P13`, `P15`). Look for citations and shared measurement formulations between network tomography papers.",
-        2: "Cross-Domain Connection! Look at how evolutionary biology connects with network tomography (`ANALOGOUS_PROBLEM` and `SHARES_PRINCIPLE`). Check which papers introduce phylogenetic ideas into networking!",
-        3: "Focus on additive delay metrics, distance matrices, and signal recovery algorithms.",
-        4: "Synthesis! Connect cross-domain tree reconstruction principles across biology, networks, and probability graphical models.",
-    }
-    if current in nudges_by_level:
-        st.info(nudges_by_level[current])
 
 # ==============================================================================
 # TAB 4: SUBMIT

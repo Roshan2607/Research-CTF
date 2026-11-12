@@ -91,48 +91,88 @@ header[data-testid="stHeader"] {
 }
 
 /* Modern Full-Width Top Navbar for Admin Tabs */
+div[data-testid="stTabs"] {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
 div[data-baseweb="tab-list"] {
     display: flex !important;
     flex-direction: row !important;
-    gap: 8px !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: stretch !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
     background: #0d1117 !important;
-    padding: 6px 8px !important;
-    border-radius: 12px !important;
+    padding: 4px !important;
+    border-radius: 10px !important;
     border: 1px solid #30363d !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
-    width: 100% !important;
     box-sizing: border-box !important;
+    gap: 6px !important;
     margin-bottom: 1.5rem !important;
+    overflow: hidden !important;
 }
 
+div[data-baseweb="tab-list"] button[data-baseweb="tab"],
 div[data-baseweb="tab-list"] button[role="tab"] {
-    flex: 1 1 0% !important;
+    flex: 1 1 0px !important;
     min-width: 0 !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     background-color: transparent !important;
-    padding: 12px 16px !important;
-    border-radius: 8px !important;
+    padding: 0 10px !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    border-radius: 6px !important;
     border: 1px solid transparent !important;
     color: #8b949e !important;
-    font-size: 0.95rem !important;
+    font-size: 0.92rem !important;
     font-weight: 500 !important;
     white-space: nowrap !important;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-sizing: border-box !important;
+    transition: all 0.15s ease-in-out !important;
 }
 
+div[data-baseweb="tab-list"] button[data-baseweb="tab"]:hover,
 div[data-baseweb="tab-list"] button[role="tab"]:hover {
     background-color: #21262d !important;
     color: #e6edf3 !important;
 }
 
+div[data-baseweb="tab-list"] button[data-baseweb="tab"][aria-selected="true"],
 div[data-baseweb="tab-list"] button[role="tab"][aria-selected="true"] {
     background-color: #1f6feb !important;
     border: 1px solid #388bfd !important;
     color: #ffffff !important;
     font-weight: 600 !important;
-    box-shadow: 0 2px 10px rgba(31, 111, 235, 0.45) !important;
+    box-shadow: 0 1px 4px rgba(31, 111, 235, 0.45) !important;
+}
+
+div[data-baseweb="tab-list"] button div,
+div[data-baseweb="tab-list"] button p {
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    font-size: 0.92rem !important;
+    line-height: normal !important;
+    text-align: center !important;
 }
 
 div[data-baseweb="tab-border"] {
@@ -196,7 +236,7 @@ for r in _content():
     if r.get("paper_id") and r.get("paper_title"):
         labels[r["paper_id"]] = f"{r['paper_id']} — {r['paper_title']}"
 tabs = st.tabs([
-    "Official Leaderboard & Dashboard",
+    "Leaderboard & Dashboard",
     "Register Teams",
     "Submissions & Review",
     "Event Controls",
@@ -349,8 +389,8 @@ def submissions_view():
             else:
                 st.caption("No evidence or reasoning submitted.")
 
-            # --- Manual Graph Score Adjustment (Bounty & Corrections) ---
-            st.markdown("#### Organiser Score Adjustment (Discovery Bounty & Corrections)")
+            # --- Manual Graph Score Adjustment (Corrections) ---
+            st.markdown("#### Organiser Score Adjustment (Corrections & Custom Scoring)")
             with st.form(f"adjust_{sub_key}"):
                 col_adj, col_notes = st.columns([1, 2])
                 adj_val = col_adj.number_input(
@@ -359,9 +399,9 @@ def submissions_view():
                     max_value=10000.0,
                     value=float(rec.get("manual_adjustment", 0.0)),
                     step=50.0,
-                    help="Award discovery bounties (e.g. +250 or +500 pts) for novel valid connections, or apply custom penalties.",
+                    help="Apply custom score adjustments or manual corrections.",
                 )
-                notes_val = col_notes.text_input("Reviewer Notes / Bounty Reason", value=rec.get("organiser_notes", ""))
+                notes_val = col_notes.text_input("Reviewer Notes / Adjustment Reason", value=rec.get("organiser_notes", ""))
                 save_adj = st.form_submit_button("Save score adjustment")
             if save_adj:
                 adjust_submission_score(rec["team_id"], rec["level"], adj_val, notes_val)
