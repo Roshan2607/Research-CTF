@@ -82,25 +82,48 @@ st.markdown("""
     word-break: break-word !important;
 }
 
+/* Eliminate top dead space so page and navbar start immediately at top next to sidebar */
+.block-container {
+    padding-top: 1rem !important;
+    padding-bottom: 2rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    max-width: 96% !important;
+}
+
+header[data-testid="stHeader"] {
+    background-color: transparent !important;
+    height: 1.5rem !important;
+    z-index: 1;
+}
+
 /* Modern Segmented Top Navbar for Participant Navigation */
+div[data-testid="stRadio"] {
+    margin-top: 0 !important;
+    margin-bottom: 1.25rem !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.75rem;
+}
+
 div[data-testid="stRadio"] > div[role="radiogroup"] {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     background: #0d1117;
     padding: 6px 8px;
     border-radius: 12px;
     border: 1px solid #30363d;
-    margin-top: 0.25rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
     width: fit-content;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background-color: transparent !important;
-    padding: 8px 20px !important;
+    padding: 9px 24px !important;
     border-radius: 8px !important;
     margin: 0 !important;
     cursor: pointer;
@@ -436,7 +459,7 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
 
         if detail.decoy_hits:
             st.warning(
-                f"Decoy Detected: {len(detail.decoy_hits)} connection(s) link to unhidden decoy papers "
+                f"Decoy Detected: {len(detail.decoy_hits)} connection(s) link to decoy papers "
                 f"(-{detail.decoy_penalty:g} pts)."
             )
         if detail.discovery_bounty_edges:
@@ -696,14 +719,6 @@ elif section == "Papers":
   * *Definition*: Paper A directly imports and executes a specific algorithm or estimator introduced by Paper B as part of its pipeline.
             """
         )
-        if current == 1:
-            st.info("**Level 1 Research Nudge**: Focus on internal network inference papers (`P02`, `P05`, `P13`, `P15`). Look for citations and shared measurement formulations between network tomography papers.")
-        elif current == 2:
-            st.info("**Level 2 Research Nudge**: Cross-Domain Connection! Look at how evolutionary biology connects with network tomography (`ANALOGOUS_PROBLEM` and `SHARES_PRINCIPLE`). Check which papers introduce phylogenetic ideas into networking!")
-        elif current == 3:
-            st.info("**Level 3 Research Nudge**: Focus on additive delay metrics, distance matrices, and signal recovery algorithms.")
-        elif current == 4:
-            st.info("**Level 4 Research Nudge**: Synthesis! Connect cross-domain tree reconstruction principles across biology, networks, and probability graphical models.")
 
     # Hints Ladder (Placed at the very end of the Papers tab, styled yellow)
     ladder = hint_status(team["team_id"], current)
@@ -877,6 +892,16 @@ elif section == "Knowledge Graph":
     if live_fb:
         render_live_verification_card(live_fb)
 
+    # Research hint placed after graph verification (no "Level X Research Nudge:" prefix)
+    nudges_by_level = {
+        1: "Focus on internal network inference papers (`P02`, `P05`, `P13`, `P15`). Look for citations and shared measurement formulations between network tomography papers.",
+        2: "Cross-Domain Connection! Look at how evolutionary biology connects with network tomography (`ANALOGOUS_PROBLEM` and `SHARES_PRINCIPLE`). Check which papers introduce phylogenetic ideas into networking!",
+        3: "Focus on additive delay metrics, distance matrices, and signal recovery algorithms.",
+        4: "Synthesis! Connect cross-domain tree reconstruction principles across biology, networks, and probability graphical models.",
+    }
+    if current in nudges_by_level:
+        st.info(nudges_by_level[current])
+
 # ==============================================================================
 # TAB 4: SUBMIT
 # ==============================================================================
@@ -961,7 +986,6 @@ if section == "Submit":
     st.caption("Verify your flag and cumulative graph below before final level submission.")
 
     # --- 1. Flag Section ---
-    st.markdown(f"> **Level {current} Objective**: {spec['question']}")
     fs = flag_status(team["team_id"], current)
     max_fp = level_points(current)["flag"]
 
@@ -985,13 +1009,16 @@ if section == "Submit":
             col_inp, col_btn = st.columns([3.5, 1.5])
             answer = col_inp.text_input("Flag answer", placeholder="Enter your answer...", label_visibility="collapsed")
             check = col_btn.form_submit_button("Check flag", use_container_width=True, disabled=bool(fs["cooldown_remaining"] > 0))
-        if check and answer.strip():
-            result = attempt_flag(team["team_id"], current, answer.strip())
-            if result["correct"]:
-                st.session_state[flag_msg_key] = {"correct": True, "message": f"Solved! ({result.get('earned_points', max_fp):g} / {max_fp:g} pts)"}
+        if check:
+            if not answer.strip():
+                st.warning("Please fill the flag field to move on.")
             else:
-                st.session_state[flag_msg_key] = {"correct": False, "message": result.get("message") or "Not yet — check the papers again."}
-            st.rerun()
+                result = attempt_flag(team["team_id"], current, answer.strip())
+                if result["correct"]:
+                    st.session_state[flag_msg_key] = {"correct": True, "message": f"Solved! ({result.get('earned_points', max_fp):g} / {max_fp:g} pts)"}
+                else:
+                    st.session_state[flag_msg_key] = {"correct": False, "message": result.get("message") or "Not yet — check the papers again."}
+                st.rerun()
 
     if fs.get("hint_cost"):
         st.caption(f"Hint deductions on this level: -{fs['hint_cost']:g} pts")
@@ -1027,7 +1054,7 @@ if section == "Submit":
 
     if not can_submit:
         if fs["attempts"] == 0:
-            st.caption("Submit at least one flag attempt above to enable level locking.")
+            st.warning("Please fill the flag field and check your answer above to move on.")
         elif not draft.strip() or len(valid_rows) == 0:
             st.caption("Add at least one edge in Knowledge Graph to enable level locking.")
         elif errs:
