@@ -72,6 +72,18 @@ st.set_page_config(page_title="Proof of Thought · Participant", layout="wide")
 
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+html, body, [class*="css"], [class*="st-"], div, span, button, input, textarea, select, p, h1, h2, h3, h4, h5, h6, label {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    letter-spacing: -0.01em;
+}
+
+code, pre, kbd, samp, .stCode, [data-testid="stCode"], code * {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+    letter-spacing: normal !important;
+}
+
 [data-testid="stMetricValue"] {
     white-space: normal !important;
     word-break: break-word !important;
