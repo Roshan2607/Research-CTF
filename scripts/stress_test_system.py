@@ -377,19 +377,19 @@ class SystemStressTester:
         self.setup()
 
         try:
-            print("\n[Phase 1] Simulating 40 teams logging in simultaneously...")
+            print(f"\n[Phase 1] Simulating {self.num_teams} teams logging in simultaneously...")
             p1 = self.test_simultaneous_logins()
             print(f"   Done: {p1.success_ops}/{p1.total_ops} succeeded (avg: {p1.avg_ms:.1f}ms, p95: {p1.percentile_ms(0.95):.1f}ms)")
 
-            print("\n[Phase 2] Simulating 40 teams submitting flag answers simultaneously...")
+            print(f"\n[Phase 2] Simulating {self.num_teams} teams submitting flag answers simultaneously...")
             p2 = self.test_simultaneous_flags()
             print(f"   Done: {p2.success_ops}/{p2.total_ops} succeeded (avg: {p2.avg_ms:.1f}ms, p95: {p2.percentile_ms(0.95):.1f}ms)")
 
-            print("\n[Phase 3] Simulating 40 teams submitting & locking graphs simultaneously...")
+            print(f"\n[Phase 3] Simulating {self.num_teams} teams submitting & locking graphs simultaneously...")
             p3 = self.test_simultaneous_final_submissions()
             print(f"   Done: {p3.success_ops}/{p3.total_ops} succeeded (avg: {p3.avg_ms:.1f}ms, p95: {p3.percentile_ms(0.95):.1f}ms)")
             if p3.extra_stats.get("state_integrity_intact"):
-                print("   State Integrity: PASS (All 40 submissions cleanly persisted in JSON storage without corruption)")
+                print(f"   State Integrity: PASS (All {self.num_teams} submissions cleanly persisted in JSON storage without corruption)")
 
             print("\n[Phase 4] Testing Grok / AI Judge concurrency & rate limit resilience...")
             p4 = self.test_grok_access_limits()
@@ -404,9 +404,9 @@ class SystemStressTester:
             # Health Verdict
             all_successful = all(r.success_rate >= 95.0 for r in self.results)
             if all_successful:
-                print("\n[VERDICT] SYSTEM HEALTH: EXCELLENT (100% concurrency safety under 40 simultaneous teams)")
+                print(f"\n[VERDICT] SYSTEM HEALTH: EXCELLENT (100% concurrency safety under {self.num_teams} simultaneous teams)")
             else:
-                print("\n[VERDICT] SYSTEM HEALTH: WARNING (Some operations experienced concurrency errors or timeouts)")
+                print(f"\n[VERDICT] SYSTEM HEALTH: WARNING (Some operations experienced concurrency errors or timeouts under {self.num_teams} teams)")
 
         finally:
             self.teardown()

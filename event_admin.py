@@ -1,9 +1,9 @@
 """Local-only admin dashboard with periodic live refresh."""
 from pathlib import Path
-import os, io, html, secrets
+import os, io, html, secrets, json
 import pandas as pd
 import streamlit as st
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().with_name(".env"), override=True)
@@ -58,6 +58,9 @@ from event_core import (
     set_open_level,
     team_scores,
     DISCOVERY_REVIEW_MAX_POINTS,
+    create_backup,
+    list_backups,
+    restore_backup,
 )
 from challenge.participant_data import load_corpus
 
@@ -501,6 +504,46 @@ def logs_view():
     log_file = Path(__file__).parent / "data/realtime_events.jsonl"
     if log_file.exists():
         st.download_button("Download real-time event log (JSONL)", log_file.read_text(encoding="utf-8"), "realtime_events.jsonl", "application/json")
+
+    st.divider()
+    st.subheader("Event State Backups & Disaster Recovery")
+    st.caption("Point-in-time snapshots of all registered teams, submissions, graph snapshots, and scores.")
+
+    col_bk1, col_bk2 = st.columns([1, 1])
+    with col_bk1:
+        if st.button("Create Instant Snapshot Now", use_container_width=True):
+            p = create_backup(tag="admin_ui")
+            st.success(f"Snapshot created: `{p.name}`")
+            st.rerun()
+    with col_bk2:
+        state_json_str = json.dumps(load(), indent=2)
+        st.download_button(
+            "Download Full Event State (JSON)",
+            state_json_str,
+            f"event_state_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json",
+            "application/json",
+            use_container_width=True,
+        )
+
+    bk_list = list_backups()
+    if bk_list:
+        st.markdown("##### Available Backups on Disk")
+        df_bk = pd.DataFrame(bk_list)[["filename", "created_at", "teams", "submissions", "size_kb"]]
+        df_bk.columns = ["Filename", "Created (UTC)", "Teams", "Submissions", "Size (KB)"]
+        st.dataframe(df_bk, hide_index=True, use_container_width=True)
+
+        with st.expander("Disaster Recovery: Restore State from Snapshot"):
+            st.warning("Restoring will overwrite current event state. A safety backup of current state will be archived first.")
+            options = {b["filename"]: b["path"] for b in bk_list}
+            sel_bk = st.selectbox("Select backup to restore", list(options.keys()))
+            confirm_text = st.text_input("Type 'RESTORE' to confirm", key="restore_confirm")
+            if st.button("Restore Selected Backup", type="primary") and sel_bk:
+                if confirm_text.strip().upper() == "RESTORE":
+                    restore_backup(options[sel_bk])
+                    st.success(f"State successfully restored from {sel_bk}!")
+                    st.rerun()
+                else:
+                    st.error("Please type 'RESTORE' to confirm restoration.")
 
 
 with tabs[4]:

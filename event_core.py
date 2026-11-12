@@ -1333,6 +1333,11 @@ def finalise(*args, **kwargs) -> dict:
     """
     rec = _finalise_locked(*args, **kwargs)
     try:
+        # Automated rotating milestone snapshot upon submission
+        create_backup(tag=f"lvl_{rec.get('level', 0)}_submit")
+    except Exception:
+        pass
+    try:
         from judging.service import queue_novel_edges
 
         cluster = (load().get("teams", {}).get(rec["team_id"], {}) or {}).get("cluster", CLUSTER)
@@ -1718,3 +1723,73 @@ def parse_uploaded_graph_csv(
             deduped.append(r)
 
     return deduped, errors
+
+
+# ---------------------------------------------------------------------- State Backup & Recovery
+def create_backup(tag: str = "manual") -> Path:
+    """Creates a timestamped snapshot of event_state.json in data/backups/."""
+    from datetime import datetime, timezone
+    with LOCK:
+        with _file_lock():
+            d = load()
+            backup_dir = ROOT / "data" / "backups"
+            backup_dir.mkdir(parents=True, exist_ok=True)
+            ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+            backup_path = backup_dir / f"event_state_{ts}_{tag}.json"
+            backup_path.write_text(json.dumps(d, indent=2), encoding="utf-8")
+
+            # Prune oldest backups if more than 50 exist
+            all_backups = sorted(backup_dir.glob("event_state_*.json"), key=os.path.getmtime)
+            if len(all_backups) > 50:
+                for old in all_backups[:-50]:
+                    try:
+                        old.unlink()
+                    except Exception:
+                        pass
+            return backup_path
+
+
+def list_backups() -> list[dict]:
+    """Lists available state backups in data/backups/ sorted newest first."""
+    from datetime import datetime, timezone
+    backup_dir = ROOT / "data" / "backups"
+    if not backup_dir.exists():
+        return []
+    out = []
+    for p in sorted(backup_dir.glob("event_state_*.json"), key=os.path.getmtime, reverse=True):
+        try:
+            sz = p.stat().st_size
+            mtime = datetime.fromtimestamp(p.stat().st_mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+            with p.open(encoding="utf-8") as f:
+                data = json.load(f)
+            t_cnt = len(data.get("teams", {}))
+            s_cnt = len(data.get("submissions", {}))
+            out.append({
+                "path": str(p),
+                "filename": p.name,
+                "created_at": mtime,
+                "size_kb": round(sz / 1024, 1),
+                "teams": t_cnt,
+                "submissions": s_cnt,
+            })
+        except Exception:
+            pass
+    return out
+
+
+def restore_backup(backup_path: Path | str) -> dict:
+    """Restores event_state.json from a backup snapshot, archiving the current state first."""
+    p = Path(backup_path)
+    if not p.exists():
+        raise FileNotFoundError(f"Backup file {p} does not exist.")
+    with p.open(encoding="utf-8") as f:
+        new_data = json.load(f)
+    if not isinstance(new_data, dict) or "teams" not in new_data:
+        raise ValueError("Selected file is not a valid event state backup.")
+
+    with LOCK:
+        with _file_lock():
+            # Create a safety pre-restore backup first
+            create_backup(tag="pre_restore_safety")
+            save(new_data)
+            return new_data

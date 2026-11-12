@@ -12,6 +12,7 @@ venv/
 # Runtime submission data (team codes, submissions, final flags, review queue)
 data/submissions/*
 !data/submissions/.gitkeep
+data/backups/
 data/realtime_events.jsonl
 data/*backup*.json*
 data/submissions.csv
