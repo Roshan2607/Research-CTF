@@ -9,26 +9,6 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().with_name(".env"), override=True)
 load_dotenv(override=True)
 
-try:
-    import extra_streamlit_components as stx
-except ImportError:
-    class DummyCookieManager:
-        def __init__(self, key=None):
-            pass
-        def get_all(self):
-            return {}
-        def get(self, key):
-            return None
-        def set(self, key, value, expires_at=None):
-            pass
-        def delete(self, key):
-            pass
-
-    class _MockStx:
-        CookieManager = DummyCookieManager
-
-    stx = _MockStx()
-
 from event_core import (
     CLUSTER,
     LEVELS,
@@ -188,23 +168,10 @@ div[data-baseweb="tab-highlight"] {
 </style>
 """, unsafe_allow_html=True)
 
-cookie_manager = stx.CookieManager(key="ul_admin_cookie")
-cookies = {}
-try:
-    cookies = cookie_manager.get_all() or {}
-except Exception:
-    cookies = {}
-
-admin_token = (
-    st.query_params.get("session")
-    or (cookies.get("ul_admin_session") if isinstance(cookies, dict) else None)
-    or (cookie_manager.get("ul_admin_session") if hasattr(cookie_manager, "get") else None)
-)
+admin_token = st.query_params.get("session")
 if not st.session_state.get("event_admin") and admin_token:
     if authenticate_admin_session(admin_token):
         st.session_state["event_admin"] = True
-        if st.query_params.get("session") != admin_token:
-            st.query_params["session"] = admin_token
 
 if not st.session_state.get("event_admin"):
     with st.form("admin_login"):
@@ -219,10 +186,6 @@ if not st.session_state.get("event_admin"):
             or candidate.lower() == expected.lower()
         ):
             token = create_admin_session()
-            try:
-                cookie_manager.set("ul_admin_session", token, expires_at=datetime.now() + timedelta(days=14))
-            except Exception:
-                pass
             st.query_params["session"] = token
             st.session_state["event_admin"] = True
             st.rerun()
@@ -234,13 +197,8 @@ with st.sidebar:
     st.markdown("**Proof of Thought** · Organiser Console")
     st.divider()
     if st.button("Sign out"):
-        token = admin_token
-        if token:
-            revoke_admin_session(token)
-            try:
-                cookie_manager.delete("ul_admin_session")
-            except (KeyError, Exception):
-                pass
+        if admin_token:
+            revoke_admin_session(admin_token)
         st.query_params.clear()
         st.session_state.pop("event_admin", None)
         st.rerun()
