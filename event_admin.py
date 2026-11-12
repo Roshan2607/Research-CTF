@@ -189,14 +189,22 @@ div[data-baseweb="tab-highlight"] {
 """, unsafe_allow_html=True)
 
 cookie_manager = stx.CookieManager(key="ul_admin_cookie")
-cookies = cookie_manager.get_all()
-if cookies is None:
-    st.info("Restoring admin session…")
-    st.stop()
+cookies = {}
+try:
+    cookies = cookie_manager.get_all() or {}
+except Exception:
+    cookies = {}
 
-admin_token = (cookies.get("ul_admin_session") if isinstance(cookies, dict) else None) or cookie_manager.get("ul_admin_session")
-if not st.session_state.get("event_admin") and authenticate_admin_session(admin_token):
-    st.session_state["event_admin"] = True
+admin_token = (
+    st.query_params.get("session")
+    or (cookies.get("ul_admin_session") if isinstance(cookies, dict) else None)
+    or (cookie_manager.get("ul_admin_session") if hasattr(cookie_manager, "get") else None)
+)
+if not st.session_state.get("event_admin") and admin_token:
+    if authenticate_admin_session(admin_token):
+        st.session_state["event_admin"] = True
+        if st.query_params.get("session") != admin_token:
+            st.query_params["session"] = admin_token
 
 if not st.session_state.get("event_admin"):
     with st.form("admin_login"):
@@ -211,7 +219,11 @@ if not st.session_state.get("event_admin"):
             or candidate.lower() == expected.lower()
         ):
             token = create_admin_session()
-            cookie_manager.set("ul_admin_session", token, expires_at=datetime.now() + timedelta(days=14))
+            try:
+                cookie_manager.set("ul_admin_session", token, expires_at=datetime.now() + timedelta(days=14))
+            except Exception:
+                pass
+            st.query_params["session"] = token
             st.session_state["event_admin"] = True
             st.rerun()
         else:
@@ -227,8 +239,9 @@ with st.sidebar:
             revoke_admin_session(token)
             try:
                 cookie_manager.delete("ul_admin_session")
-            except KeyError:
+            except (KeyError, Exception):
                 pass
+        st.query_params.clear()
         st.session_state.pop("event_admin", None)
         st.rerun()
 

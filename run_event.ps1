@@ -1,4 +1,4 @@
-# Start all Research-CTF event services
+﻿# Start all Research-CTF event services
 Write-Host "=========================================================" -ForegroundColor Cyan
 Write-Host "       STARTING RESEARCH-CTF EVENT PLATFORM               " -ForegroundColor Cyan
 Write-Host "=========================================================" -ForegroundColor Cyan
@@ -7,14 +7,14 @@ Write-Host "=========================================================" -Foregrou
 Write-Host "[1/3] Starting Participant Portal on http://localhost:8503..." -ForegroundColor Green
 $portalJob = Start-Job -ScriptBlock {
     Set-Location $using:PWD
-    python -m streamlit run event_portal.py --server.port 8503 --server.headless true
+    python -m streamlit run event_portal.py --server.port 8503 --server.address 0.0.0.0 --server.headless true --server.enableCORS false --server.enableXsrfProtection false
 }
 
 # 2. Start Admin Console on Port 8504
 Write-Host "[2/3] Starting Organiser Admin Console on http://localhost:8504..." -ForegroundColor Green
 $adminJob = Start-Job -ScriptBlock {
     Set-Location $using:PWD
-    python -m streamlit run event_admin.py --server.port 8504 --server.headless true
+    python -m streamlit run event_admin.py --server.port 8504 --server.address 0.0.0.0 --server.headless true --server.enableCORS false --server.enableXsrfProtection false
 }
 
 # 3. Start Automatic 5-Minute Backup Daemon
