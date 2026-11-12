@@ -835,8 +835,6 @@ elif section == "Knowledge Graph":
 
     # 1. Edge Editor (Dropdowns for source, target, and relationship)
     with st.expander("Add / Remove Graph Edges", expanded=bool(df.empty)):
-        st.caption("Tip: Consult the :blue[Relationship Guide] on the Papers tab for connection rules and research nudges.")
-
         with st.form(f"add_edge_{current}", clear_on_submit=True):
             c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
             src = c1.selectbox("Source paper", available, format_func=lambda x: labels.get(x, x))
