@@ -232,7 +232,7 @@ if cookies is None:
 
 def login():
     st.subheader("Participant Login")
-    tab_login, tab_register = st.tabs(["Sign in to Existing Team", "Register New Team (FCFS)"])
+    tab_login, tab_register = st.tabs(["Sign in to Existing Team", "Register New Team"])
 
     with tab_login:
         with st.form("login"):
@@ -255,9 +255,9 @@ def login():
 
     with tab_register:
         suggested_id = next_available_team_id()
-        st.info(f"Assigned Team ID: **{suggested_id}** (First-Come, First-Served)")
+        st.info(f"Assigned Team ID: **{suggested_id}**")
         with st.form("claim_team"):
-            new_name = st.text_input("Team Name", placeholder="e.g. Neural Ninjas", key="claim_name")
+            new_name = st.text_input("Team Name", placeholder="e.g. basavangudi baddies", key="claim_name")
             new_pw = st.text_input(
                 "Team Password (min 8 chars)",
                 type="password",
