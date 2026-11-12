@@ -98,26 +98,39 @@ header[data-testid="stHeader"] {
 }
 
 /* Full-Width Modern Top Navbar */
-div[data-testid="stElementContainer"]:has(div[data-testid="stRadio"]),
-div[data-testid="stRadio"],
-div[data-testid="stRadio"] > div,
-div[data-testid="stRadio"] div[data-testid="stRadioGroup"],
-div[data-testid="stRadio"] div[role="radiogroup"] {
+div[data-testid="stRadio"] {
     width: 100% !important;
+    min-width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-}
-
-div[data-testid="stRadio"] {
     margin-top: 0 !important;
     margin-bottom: 1.5rem !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] {
+div[data-testid="stRadio"] > div {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+div[data-testid="stRadioGroup"] {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"],
+div[role="radiogroup"] {
     display: flex !important;
     flex-direction: row !important;
     align-items: stretch !important;
     justify-content: space-between !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     gap: 8px !important;
     background: #0d1117 !important;
     padding: 6px 8px !important;
@@ -126,18 +139,23 @@ div[data-testid="stRadio"] div[role="radiogroup"] {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] {
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"],
+div[role="radiogroup"] label[data-baseweb="radio"] {
     flex: 1 1 0% !important;
     min-width: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     background-color: transparent !important;
-    padding: 10px 16px !important;
+    padding: 12px 16px !important;
     border-radius: 8px !important;
     margin: 0 !important;
     cursor: pointer !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 1px solid transparent !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+}
     border: 1px solid transparent !important;
     text-align: center !important;
     white-space: nowrap !important;
@@ -440,17 +458,20 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
         )
 
     with st.expander("Detailed Verification Breakdown", expanded=True):
+        llm_edge_tuples = {tuple(v["edge"]) for v in detail.llm_verdicts}
+        baseline_matches = [e for e in detail.correct_edges if e not in llm_edge_tuples]
+
         if detail.level == 0:
-            if detail.correct_edges:
+            if baseline_matches:
                 st.markdown("**Verified Practice Relationships:**")
-                for e in detail.correct_edges:
+                for e in baseline_matches:
                     st.write(f"• `{e[0]}` → `{e[1]}` ({e[2]})")
-            else:
+            elif not detail.llm_verdicts:
                 st.write("• No practice relationships matched yet.")
         else:
-            if detail.correct_edges:
-                st.markdown(f"• **Benchmark Literature Matches**: **{len(detail.correct_edges)} of {detail.total_reference_count}** reference relationships correctly connected.")
-            else:
+            if baseline_matches:
+                st.markdown(f"• **Benchmark Literature Matches**: **{len(baseline_matches)} of {detail.total_reference_count}** reference relationships correctly connected.")
+            elif not detail.llm_verdicts:
                 st.write("• **Benchmark Literature Matches**: 0 reference relationships matched yet.")
 
         if getattr(detail, "nudges", None):
@@ -478,7 +499,7 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
                 f"Decoy Detected: {len(detail.decoy_hits)} connection(s) link to decoy papers "
                 f"(-{detail.decoy_penalty:g} pts)."
             )
-        if detail.discovery_bounty_edges:
+        if detail.level > 0 and detail.discovery_bounty_edges:
             st.info(f"Discovery Bounties Awarded: +{detail.discovery_bounty_points:g} pts for verified novel connections.")
 
 
@@ -923,17 +944,24 @@ elif section == "Knowledge Graph":
 # ==============================================================================
 @st.dialog("Confirm Final Level Submission")
 def confirm_submission_dialog(team_id: str, level: int, draft: str, is_demo: bool):
-    st.warning(
-        f"**Important Verification Notice**:\n\n"
-        f"If you have filled out and submitted the official Google Form for Level {level}, only then move on. "
-        f"Once locked, **you will not be allowed to come back and change your answers.**"
-    )
-    st.link_button(
-        f"Open Google Form for Level {level}",
-        google_form_url(),
-        type="primary",
-        use_container_width=True,
-    )
+    if is_demo or level == 0:
+        st.info(
+            "**Level 0 Practice Warm-Up**:\n\n"
+            "Level 0 is an unscored practice exercise designed to familiarize your team with research cards and knowledge graph validation.\n\n"
+            "Confirming will lock your practice answers and advance your team to competition Level 1."
+        )
+    else:
+        st.warning(
+            f"**Important Verification Notice**:\n\n"
+            f"If you have filled out and submitted the official Google Form for Level {level}, only then move on. "
+            f"Once locked, **you will not be allowed to come back and change your answers.**"
+        )
+        st.link_button(
+            f"Open Google Form for Level {level}",
+            google_form_url(),
+            type="primary",
+            use_container_width=True,
+        )
     st.divider()
     col_back, col_lock = st.columns([1, 1.5])
     with col_back:
@@ -941,7 +969,8 @@ def confirm_submission_dialog(team_id: str, level: int, draft: str, is_demo: boo
             st.session_state.pop(f"show_submit_dialog_{team_id}_{level}", None)
             st.rerun()
     with col_lock:
-        if st.button("Yes, Form Submitted — Final Lock", type="primary", use_container_width=True, key=f"confirm_modal_lock_{team_id}_{level}"):
+        lock_label = "Complete Warm-Up — Final Lock" if (is_demo or level == 0) else "Yes, Form Submitted — Final Lock"
+        if st.button(lock_label, type="primary", use_container_width=True, key=f"confirm_modal_lock_{team_id}_{level}"):
             st.session_state.pop(f"show_submit_dialog_{team_id}_{level}", None)
             try:
                 rec = finalise(team=team_id, level=level, csv_text=draft, explanation="Submitted via official Google Form")
@@ -998,10 +1027,13 @@ if section == "Submit":
             render_graph_diagram(df_locked, available=available, byid=byid)
         st.stop()
 
-    st.subheader(f"Submit Level {current}")
-    st.caption("Verify your flag and cumulative graph below before final level submission.")
+    is_demo = bool(current == 0 or team.get("is_demo"))
+    page_title = "Level 0 Practice Review" if is_demo else f"Level {current} Review & Verification"
+    st.subheader(page_title)
+    st.caption("Review your flag answer and cumulative graph connections before completing this level.")
 
     # --- 1. Flag Section ---
+    st.markdown("##### 1. Flag Challenge")
     fs = flag_status(team["team_id"], current)
     max_fp = level_points(current)["flag"]
 
@@ -1013,9 +1045,9 @@ if section == "Submit":
     if fs["correct"]:
         st.success(f"Flag Solved ({fs['flag_points']:g} / {max_fp:g} pts)")
     elif fs["cooldown_remaining"] > 0:
-        st.warning(f"Cooldown active: wait {fs['cooldown_remaining']}s")
+        st.warning(f"Cooldown active: please wait {fs['cooldown_remaining']} seconds...")
         import time
-        time.sleep(1)
+        time.sleep(fs["cooldown_remaining"])
         st.rerun()
     elif fs["last"] and not last_feedback:
         st.error("Not yet — check the papers again (hints available on the Papers tab).")
@@ -1023,8 +1055,17 @@ if section == "Submit":
     if not fs["correct"]:
         with st.form(f"flag_{current}"):
             col_inp, col_btn = st.columns([3.5, 1.5])
-            answer = col_inp.text_input("Flag answer", placeholder="Enter your answer...", label_visibility="collapsed")
-            check = col_btn.form_submit_button("Check flag", use_container_width=True, disabled=bool(fs["cooldown_remaining"] > 0))
+            answer = col_inp.text_input(
+                "Flag answer",
+                placeholder="Enter your answer...",
+                label_visibility="collapsed",
+                disabled=bool(fs["cooldown_remaining"] > 0),
+            )
+            check = col_btn.form_submit_button(
+                "Check flag",
+                use_container_width=True,
+                disabled=bool(fs["cooldown_remaining"] > 0),
+            )
         if check:
             if not answer.strip():
                 st.warning("Please enter a flag answer before checking.")
@@ -1041,7 +1082,8 @@ if section == "Submit":
 
     st.divider()
 
-    # --- 2. Graph & Official Submission Section ---
+    # --- 2. Graph Section ---
+    st.markdown("##### 2. Knowledge Graph Status")
     draft = get_draft(team["team_id"], current)
     allowed_rels = [r.get("relationship_type") or r.get("name") for r in vocab.get("relationship_types", [])]
     valid_rows, errs = parse_uploaded_graph_csv(draft, available, allowed_rels) if draft.strip() else ([], [])
@@ -1059,12 +1101,17 @@ if section == "Submit":
             st.download_button("Download CSV", safe_csv(pd.DataFrame(valid_rows)), f"{team['team_id']}_level{current}.csv", "text/csv", use_container_width=True)
 
     st.markdown("---")
-    st.markdown("#### Official Level Submission")
-    st.caption("Please fill out and submit all required responses on the official Google Form for this level before locking.")
-    st.link_button("Open Official Google Form", google_form_url(), type="primary", use_container_width=True)
-    st.markdown("<br>", unsafe_allow_html=True)
 
-    is_demo = bool(current == 0 or team.get("is_demo"))
+    # --- 3. Completion Section ---
+    if is_demo or current == 0:
+        st.markdown("##### 3. Complete Warm-Up")
+        st.caption("Ready for the competition? Lock your practice answers above to proceed to Level 1.")
+    else:
+        st.markdown("##### 3. Official Form & Level Lock")
+        st.caption("Please fill out and submit all required responses on the official Google Form for this level before locking.")
+        st.link_button("Open Official Google Form", google_form_url(), type="primary", use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
     can_submit = bool(draft.strip() and valid_rows and not errs and fs["attempts"] > 0)
     btn_label = f"Lock & Submit Level {current} (Demo)" if is_demo else f"Lock & Submit Level {current}"
 

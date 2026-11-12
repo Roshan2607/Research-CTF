@@ -127,11 +127,11 @@ def test_openai_malformed_json_leaves_edge_unjudged():
 
 
 # ---------------------------------------------------------------- evidence rule
-def test_supported_without_a_verifiable_quote_is_capped_at_plausible():
+def test_supported_without_quote_stands_when_paywall_cap_removed():
     c = FakeClient([{"id": "e1", "verdict": "supported", "reason": "found in abstracts"}])
     for ev in ("", "team 9 reasoning 1", "P02 reference list [23]"):
         out = AnthropicJudge(client=c).judge_batch([edge(1, ev)])
-        assert out["hash1"].verdict == "plausible" and "Capped" in out["hash1"].reason
+        assert out["hash1"].verdict == "supported"
 
 
 def test_supported_with_a_verifiable_quote_stands():

@@ -255,7 +255,8 @@ def evaluate_submission(
                     e_tuple = (r.source_id, r.target_id, r.rel_type)
                     llm_verdicts.append({"edge": e_tuple, "verdict": verdict_str, "reason": reason_str})
                     if verdict_str == "supported":
-                        discovery_bounties.append(e_tuple)
+                        if level > 0:
+                            discovery_bounties.append(e_tuple)
                         if e_tuple not in correct_found:
                             correct_found.append(e_tuple)
         except Exception as e:
@@ -296,7 +297,7 @@ def evaluate_submission(
     # Compute penalties
     inj_penalty = round(len(injection_hits) * injection_penalty_pts, 2)
     dec_penalty = round(len(decoy_hits) * decoy_penalty_pts, 2)
-    bounty_pts = round(len(discovery_bounties) * discovery_bounty_pts, 2)
+    bounty_pts = round(len(discovery_bounties) * discovery_bounty_pts, 2) if level > 0 else 0.0
 
     final_gp = max(0.0, base_gp - inj_penalty - dec_penalty) + bounty_pts
     final_gp = round(final_gp, 2)

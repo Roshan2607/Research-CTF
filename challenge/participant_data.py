@@ -33,6 +33,7 @@ PARTICIPANT_PAPER_FIELDS = (
     "doi_url",
     "open_access_url",
     "abstract",
+    "real_world_application",
 )
 
 READING_PROMPTS = [

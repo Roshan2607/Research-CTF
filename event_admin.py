@@ -62,8 +62,6 @@ from event_core import (
 from challenge.participant_data import load_corpus
 
 st.set_page_config(page_title="Proof of Thought · Admin", layout="wide")
-st.title("Proof of Thought · Admin")
-st.caption("Live organiser console and challenge supervisor")
 
 st.markdown("""
 <style>
@@ -75,6 +73,74 @@ st.markdown("""
 [data-testid="stMetricDelta"] {
     white-space: normal !important;
     word-break: break-word !important;
+}
+
+/* Eliminate top dead space so page starts right at the top */
+.block-container {
+    padding-top: 1rem !important;
+    padding-bottom: 2rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    max-width: 96% !important;
+}
+
+header[data-testid="stHeader"] {
+    background-color: transparent !important;
+    height: 1.5rem !important;
+    z-index: 1;
+}
+
+/* Modern Full-Width Top Navbar for Admin Tabs */
+div[data-baseweb="tab-list"] {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    background: #0d1117 !important;
+    padding: 6px 8px !important;
+    border-radius: 12px !important;
+    border: 1px solid #30363d !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 1.5rem !important;
+}
+
+div[data-baseweb="tab-list"] button[role="tab"] {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: transparent !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid transparent !important;
+    color: #8b949e !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+div[data-baseweb="tab-list"] button[role="tab"]:hover {
+    background-color: #21262d !important;
+    color: #e6edf3 !important;
+}
+
+div[data-baseweb="tab-list"] button[role="tab"][aria-selected="true"] {
+    background-color: #1f6feb !important;
+    border: 1px solid #388bfd !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 10px rgba(31, 111, 235, 0.45) !important;
+}
+
+div[data-baseweb="tab-border"] {
+    display: none !important;
+}
+
+div[data-baseweb="tab-highlight"] {
+    display: none !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -109,16 +175,19 @@ if not st.session_state.get("event_admin"):
             st.error("Incorrect password or ORGANISER_PASSWORD is not securely configured (min 12 chars).")
     st.stop()
 
-if st.sidebar.button("Sign out"):
-    token = admin_token
-    if token:
-        revoke_admin_session(token)
-        try:
-            cookie_manager.delete("ul_admin_session")
-        except KeyError:
-            pass
-    st.session_state.pop("event_admin", None)
-    st.rerun()
+with st.sidebar:
+    st.markdown("**Proof of Thought** · Organiser Console")
+    st.divider()
+    if st.button("Sign out"):
+        token = admin_token
+        if token:
+            revoke_admin_session(token)
+            try:
+                cookie_manager.delete("ul_admin_session")
+            except KeyError:
+                pass
+        st.session_state.pop("event_admin", None)
+        st.rerun()
 
 corpus = load_corpus()
 labels = {p["participant_id"]: f"{p['participant_id']} — {p['title']}" for p in corpus}
@@ -345,7 +414,10 @@ def logs_view():
     st.subheader("Team Progress Overview")
     active_teams = [t for t in snap["teams"] if selected == "All clusters" or t["cluster"] == selected]
     if active_teams:
-        st.dataframe(pd.DataFrame(active_teams), hide_index=True, use_container_width=True)
+        df_teams = pd.DataFrame(active_teams)
+        if len(cluster_list) <= 1 and "cluster" in df_teams.columns:
+            df_teams = df_teams.drop(columns=["cluster"])
+        st.dataframe(df_teams, hide_index=True, use_container_width=True)
     else:
         st.info("No active teams.")
 

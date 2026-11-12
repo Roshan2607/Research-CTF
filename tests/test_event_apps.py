@@ -158,8 +158,8 @@ def test_portal_submission_dialog_confirmation(env, monkeypatch):
     next(b for b in at.button if b.label.startswith("Lock & Submit")).click()
     at.run()
     _ok(at)
-    # Check that dialog warning is displayed and clicking confirm finalises the level
-    assert any("Google Form" in str(w.value) for w in at.warning)
+    # Check that dialog notice is displayed and clicking confirm finalises the level
+    assert any("Google Form" in str(w.value) for w in at.warning) or any("Warm-Up" in str(i.value) for i in at.info)
     modal_confirm = next(b for b in at.button if "Final Lock" in b.label)
     modal_confirm.click()
     at.run()
