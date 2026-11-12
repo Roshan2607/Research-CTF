@@ -50,7 +50,11 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-html, body, [class*="css"], [class*="st-"], div, span, button, input, textarea, select, p, h1, h2, h3, h4, h5, h6, label {
+html, body, .stApp {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+p, h1, h2, h3, h4, h5, h6, label, input, textarea, select, .stMarkdown, [data-testid="stMarkdownContainer"] p, [data-testid="stText"] {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
     letter-spacing: -0.01em;
 }
@@ -58,6 +62,29 @@ html, body, [class*="css"], [class*="st-"], div, span, button, input, textarea, 
 code, pre, kbd, samp, .stCode, [data-testid="stCode"], code * {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
     letter-spacing: normal !important;
+}
+
+/* Strictly preserve Streamlit Material Symbols & Icons */
+[data-testid*="stIcon"],
+[data-testid*="stIcon"] *,
+[data-testid="stExpanderToggleIcon"],
+[data-testid="stExpanderToggleIcon"] *,
+[data-testid="collapsedControl"],
+[data-testid="collapsedControl"] *,
+span[class*="material-symbols"],
+span[class*="material-icons"],
+.material-symbols-rounded,
+.material-symbols-outlined,
+.material-icons {
+    font-family: "Material Symbols Rounded", "Material Symbols Outlined", "Material Icons" !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    direction: ltr !important;
 }
 
 [data-testid="stMetricValue"] {
