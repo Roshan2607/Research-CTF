@@ -156,12 +156,9 @@ div[role="radiogroup"] label[data-baseweb="radio"] {
     text-align: center !important;
     white-space: nowrap !important;
 }
-    border: 1px solid transparent !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-}
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover {
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover,
+div[role="radiogroup"] label[data-baseweb="radio"]:hover {
     background-color: #21262d !important;
 }
 
@@ -171,12 +168,21 @@ div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:ha
     box-shadow: 0 2px 10px rgba(31, 111, 235, 0.45) !important;
 }
 
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] > div:first-of-type {
+div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
+    background-color: #1f6feb !important;
+    border: 1px solid #388bfd !important;
+    box-shadow: 0 2px 10px rgba(31, 111, 235, 0.45) !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] > div:first-of-type,
+div[role="radiogroup"] label[data-baseweb="radio"] > div:first-of-type {
     display: none !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] div:last-child,
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] p {
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] p,
+div[role="radiogroup"] label[data-baseweb="radio"] div:last-child,
+div[role="radiogroup"] label[data-baseweb="radio"] p {
     font-size: 1rem !important;
     font-weight: 500 !important;
     color: #8b949e !important;
@@ -190,12 +196,16 @@ div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] p 
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover div:last-child,
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover p {
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover p,
+div[role="radiogroup"] label[data-baseweb="radio"]:hover div:last-child,
+div[role="radiogroup"] label[data-baseweb="radio"]:hover p {
     color: #e6edf3 !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) div:last-child,
-div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) p {
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) p,
+div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) div:last-child,
+div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) p {
     color: #ffffff !important;
     font-weight: 600 !important;
 }
