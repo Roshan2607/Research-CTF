@@ -9,10 +9,10 @@ Write-Host "Share that URL with all participants!`n" -ForegroundColor Green
 Write-Host "Keep this window OPEN during the entire event.`n" -ForegroundColor DarkGray
 
 if (Test-Path "cloudflared.exe") {
-    .\cloudflared.exe tunnel --protocol http2 --url http://localhost:8503
+    .\cloudflared.exe tunnel --url http://127.0.0.1:8503
 } else {
     Write-Host "[ERROR] cloudflared.exe not found in current directory." -ForegroundColor Red
     Write-Host "Downloading cloudflared.exe automatically..." -ForegroundColor Yellow
     Invoke-WebRequest -Uri "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe" -OutFile "cloudflared.exe"
-    .\cloudflared.exe tunnel --protocol http2 --url http://localhost:8503
+    .\cloudflared.exe tunnel --url http://127.0.0.1:8503
 }
