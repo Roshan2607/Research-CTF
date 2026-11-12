@@ -14,7 +14,7 @@ echo =========================================================
 echo.
 
 if exist "cloudflared.exe" (
-    .\cloudflared.exe tunnel --url http://localhost:8503
+    .\cloudflared.exe tunnel --protocol http2 --url http://localhost:8503
 ) else (
     echo [ERROR] cloudflared.exe not found in current directory.
     echo Please download it or run:
