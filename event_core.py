@@ -1259,31 +1259,48 @@ def _enforce_graph_gate(d: dict, tid: str, level: int, server_score: dict) -> No
 
 
 def get_live_judge():
-    """Returns the configured live AI judge (Groq Cloud, xAI Grok, or OpenAI)."""
-    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    """Returns the configured live AI judge with automatic multi-provider fallback.
+
+    Supports Groq Cloud, xAI Grok, Google Gemini, and OpenAI.
+    When multiple keys are provided, wraps them in a FallbackJudge so if one provider
+    hits rate limits (429), it automatically cascades to the next without failing.
+    """
     grok_key = (
         os.environ.get("GROK_API_KEY", "").strip()
         or os.environ.get("GROQ_API_KEY", "").strip()
         or os.environ.get("XAI_API_KEY", "").strip()
     )
+    gemini_key = (
+        os.environ.get("GEMINI_API_KEY", "").strip()
+        or os.environ.get("GOOGLE_API_KEY", "").strip()
+    )
+    openai_key = os.environ.get("OPENAI_API_KEY", "").strip()
     provider = os.environ.get("JUDGE_PROVIDER", "").strip().lower()
 
+    judges = []
     try:
-        # 1. If key is a Groq key (starts with 'gsk_') or provider is grok/groq/xai:
-        if grok_key and (grok_key.startswith("gsk_") or provider in ("grok", "groq", "xai") or not openai_key):
-            from judging.openai_judge import GrokJudge
-            return GrokJudge(api_key=grok_key)
-        # 2. If provider is OpenAI and key provided:
-        elif openai_key and (provider == "openai" or not provider):
-            from judging.openai_judge import OpenAIJudge
-            return OpenAIJudge(api_key=openai_key)
-        # 3. Fallback:
-        elif grok_key:
-            from judging.openai_judge import GrokJudge
-            return GrokJudge(api_key=grok_key)
-        elif openai_key:
-            from judging.openai_judge import OpenAIJudge
-            return OpenAIJudge(api_key=openai_key)
+        from judging.openai_judge import GrokJudge, GeminiJudge, OpenAIJudge, FallbackJudge
+
+        # 1. Primary based on JUDGE_PROVIDER setting
+        if provider in ("gemini", "google") and gemini_key:
+            judges.append(GeminiJudge(api_key=gemini_key))
+        elif provider in ("grok", "groq", "xai") and grok_key:
+            judges.append(GrokJudge(api_key=grok_key))
+        elif provider == "openai" and openai_key:
+            judges.append(OpenAIJudge(api_key=openai_key))
+
+        # 2. Add fallback providers to the pool
+        if grok_key and not any(isinstance(j, GrokJudge) for j in judges):
+            judges.append(GrokJudge(api_key=grok_key))
+        if gemini_key and not any(isinstance(j, GeminiJudge) for j in judges):
+            judges.append(GeminiJudge(api_key=gemini_key))
+        if openai_key and not any(isinstance(j, OpenAIJudge) for j in judges):
+            judges.append(OpenAIJudge(api_key=openai_key))
+
+        if len(judges) == 1:
+            return judges[0]
+        elif len(judges) > 1:
+            return FallbackJudge(judges)
     except Exception:
         pass
     return None

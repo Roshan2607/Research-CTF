@@ -111,3 +111,64 @@ class GrokJudge(OpenAIJudge):
 
 
 GroqJudge = GrokJudge
+DEFAULT_GEMINI_MODEL = "gemini-1.5-flash"
+
+
+class GeminiJudge(OpenAIJudge):
+    """Google Gemini AI judge via official OpenAI-compatible endpoint.
+
+    Uses https://generativelanguage.googleapis.com/v1beta/openai/ with model gemini-1.5-flash or gemini-2.0-flash.
+    """
+
+    def __init__(self, model: str | None = None, client: Any = None, samples: int = 1, timeout: float = 15.0,
+                 max_tokens: int = 1500, base_url: str | None = None, api_key: str | None = None):
+        target_key = (
+            api_key
+            or os.environ.get("GEMINI_API_KEY")
+            or os.environ.get("GOOGLE_API_KEY")
+        )
+        target_model = model or os.environ.get("GEMINI_MODEL") or DEFAULT_GEMINI_MODEL
+        default_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
+        target_url = base_url or os.environ.get("GEMINI_BASE_URL") or default_url
+        super().__init__(
+            model=target_model,
+            client=client,
+            samples=samples,
+            timeout=timeout,
+            max_tokens=max_tokens,
+            base_url=target_url,
+            api_key=target_key,
+        )
+
+
+class FallbackJudge:
+    """Wraps multiple judges and cascades on failure or 429 rate limits.
+
+    Tries primary judge first; if primary hits 429 (rate limit) or connection error,
+    automatically fails over to secondary judges seamlessly.
+    """
+
+    def __init__(self, judges: list[Any]):
+        self.judges = [j for j in judges if j is not None]
+
+    def judge_batch(self, rows: list[Any]) -> dict[str, Any]:
+        if not self.judges:
+            return {}
+        last_err: Exception | None = None
+        for idx, judge in enumerate(self.judges):
+            try:
+                return judge.judge_batch(rows)
+            except Exception as e:
+                err_str = str(e)
+                last_err = e
+                # Check if it's a rate limit (429), quota, timeout, or transient error
+                if ("429" in err_str or "rate_limit" in err_str.lower() or "quota" in err_str.lower()
+                        or "timeout" in err_str.lower() or "connection" in err_str.lower()):
+                    # Failover to next configured judge in pool
+                    continue
+                else:
+                    # Non-retryable error
+                    raise e
+        if last_err:
+            raise last_err
+        return {}
