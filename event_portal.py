@@ -97,30 +97,38 @@ header[data-testid="stHeader"] {
     z-index: 1;
 }
 
-/* Full-Width Modern Segmented Top Navbar */
-div[data-testid="stRadio"] {
+/* Full-Width Modern Top Navbar */
+div[data-testid="stElementContainer"]:has(div[data-testid="stRadio"]),
+div[data-testid="stRadio"],
+div[data-testid="stRadio"] > div,
+div[data-testid="stRadio"] div[data-testid="stRadioGroup"],
+div[data-testid="stRadio"] div[role="radiogroup"] {
     width: 100% !important;
-    margin-top: 0 !important;
-    margin-bottom: 1.5rem !important;
-    padding-bottom: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
-div[data-testid="stRadio"] > div[role="radiogroup"] {
+div[data-testid="stRadio"] {
+    margin-top: 0 !important;
+    margin-bottom: 1.5rem !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] {
     display: flex !important;
     flex-direction: row !important;
     align-items: stretch !important;
+    justify-content: space-between !important;
     gap: 8px !important;
     background: #0d1117 !important;
     padding: 6px 8px !important;
     border-radius: 12px !important;
     border: 1px solid #30363d !important;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] {
-    flex: 1 1 0px !important;
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -132,6 +140,7 @@ div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     border: 1px solid transparent !important;
     text-align: center !important;
+    white-space: nowrap !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover {
@@ -158,6 +167,8 @@ div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] p 
     transition: color 0.15s ease !important;
     text-align: center !important;
     width: 100% !important;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover div:last-child,
