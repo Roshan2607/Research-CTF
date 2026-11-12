@@ -81,6 +81,67 @@ st.markdown("""
     white-space: normal !important;
     word-break: break-word !important;
 }
+
+/* Modern Segmented Top Navbar for Participant Navigation */
+div[data-testid="stRadio"] > div[role="radiogroup"] {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    background: #0d1117;
+    padding: 6px 8px;
+    border-radius: 12px;
+    border: 1px solid #30363d;
+    margin-top: 0.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    width: fit-content;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] {
+    background-color: transparent !important;
+    padding: 8px 20px !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover {
+    background-color: #21262d !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
+    background-color: #1f6feb !important;
+    border: 1px solid #388bfd !important;
+    box-shadow: 0 2px 10px rgba(31, 111, 235, 0.4) !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] > div:first-of-type {
+    display: none !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] div:last-child,
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] p {
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    color: #8b949e !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+    transition: color 0.15s ease;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover div:last-child,
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover p {
+    color: #e6edf3 !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) div:last-child,
+div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) p {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -300,19 +361,17 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
     st.markdown(f"#### Live Graph Verification Result · Level {detail.level}")
 
     if getattr(detail, "judge_error", ""):
-        st.warning(f"• **AI Judge Notice**: {detail.judge_error}")
+        st.warning(f"• **Notice**: {detail.judge_error}")
 
     c1, c2, c3 = st.columns(3)
     c1.metric(
         "Graph Accuracy",
         f"{detail.accuracy_pct:.1f}%",
-        f"{len(detail.correct_edges)} of {detail.total_reference_count} edges",
     )
     floor_label = "PASSED (>= 50%)" if detail.meets_50pct_threshold else "BELOW FLOOR (< 50%)"
     c2.metric(
         "50% Accuracy Floor",
         floor_label,
-        "Points Eligible" if detail.meets_50pct_threshold else "Graph Pts Zeroed",
     )
     c3.metric(
         "Estimated Graph Points",
@@ -356,12 +415,11 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
                 st.write("• **Benchmark Literature Matches**: 0 reference relationships matched yet.")
 
         if getattr(detail, "nudges", None):
-            st.markdown("**Research Mentorship Nudges (Close Connections):**")
             for nudge in detail.nudges:
-                st.info(f"💡 {nudge}")
+                st.info(nudge)
 
         if detail.llm_verdicts:
-            st.markdown("**AI Judge Verdicts on Novel Relationships:**")
+            st.markdown("**Verdicts on Novel Relationships:**")
             for v in detail.llm_verdicts:
                 badge = "[SUPPORTED]" if v["verdict"] == "supported" else f"[{v['verdict'].upper()}]"
                 st.write(f"• `{v['edge'][0]}` → `{v['edge'][1]}` ({v['edge'][2]}): **{badge}** {v.get('reason', '')}")
@@ -523,13 +581,26 @@ if section == "Start":
 - **Dynamic Graph Discovery**: Novel verified connections outside the initial reference set are rewarded with discovery bounties.
         """)
 
-    with st.expander("Relationship Vocabulary Reference (6 types)", expanded=False):
-        vocab_df = pd.DataFrame(vocab["relationship_types"])
-        cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
-        clean_vocab_df = vocab_df[cols].rename(
-            columns={"relationship_type": "Relationship Type", "meaning": "Meaning", "example": "Example"}
+    with st.expander(":blue[Relationship Guide: How Papers Connect (Cheat Sheet)]", expanded=False):
+        st.markdown(
+            """
+* **`CITES` (Directional: Citing Paper → Cited Paper)**
+  * The arrow MUST go from the paper doing the citing to the paper being cited (`Later Paper → Earlier Paper`).
+  * *Example*: `P14 (2004)` surveys and cites `P13 (2004)`, so connect `P14 → P13`.
+
+* **`SHARES_PRINCIPLE` (Symmetric: Shared Core Concept / Math)**
+  * Both papers independently rely on the same fundamental mathematical theory or technique (e.g. additive metrics).
+
+* **`ANALOGOUS_PROBLEM` (Symmetric: Cross-Domain Equivalents)**
+  * Different scientific fields solving the exact same underlying structural problem (e.g. tree reconstruction in genetics ↔ routing trees on the Internet).
+
+* **`EXTENDS` (Directional: Generalization / Improvement)**
+  * Paper A directly builds upon, generalizes, or relaxes assumptions of Paper B (e.g. unicast probes extending multicast probes).
+
+* **`USES_METHOD` (Directional: Subroutine / Tool Application)**
+  * Paper A directly imports and applies a method or estimator from Paper B as part of its pipeline.
+            """
         )
-        st.dataframe(clean_vocab_df, hide_index=True, use_container_width=True)
 
 # ==============================================================================
 # TAB 2: PAPERS
@@ -549,7 +620,7 @@ elif section == "Papers":
     st.subheader(f"Papers Released for Level {current}")
     cur_papers = [p for p in papers if p["participant_id"] in spec["paper_ids"]]
     for p in cur_papers:
-        with st.expander(f"{p['participant_id']} — {p['title']}", expanded=False):
+        with st.expander(f":green[{p['participant_id']} — {p['title']}]", expanded=False):
             authors_str = ", ".join(p.get("authors", [])) if p.get("authors") else ""
             pub_info = f"{p.get('venue', '')} ({p.get('year', '')})".strip()
             meta_parts = []
@@ -596,15 +667,47 @@ elif section == "Papers":
                 past_levels_with_papers.append((plv, p_list))
 
     if past_levels_with_papers:
-        with st.expander("Previously Released Papers (Earlier Levels)", expanded=False):
+        with st.expander(":green[Previously Released Papers (Earlier Levels)]", expanded=False):
             for plv, p_list in past_levels_with_papers:
                 st.markdown(f"**Level {plv['id']}: {plv['title']}**")
                 for p in p_list:
                     st.caption(f"• **{p['participant_id']}** — {p['title']}")
 
-    # Hints Ladder (Placed last on the Papers tab, closed initially)
+    # Relationship Guide (Replaces old table, styled blue)
+    with st.expander(":blue[Relationship Guide: How Papers Connect (Cheat Sheet)]", expanded=False):
+        st.markdown(
+            """
+**How to choose the correct relationship:**
+
+* **`CITES` (Directional: Citing Paper → Cited Paper)**
+  * *Direction*: The arrow MUST go from the paper doing the citing to the paper being cited (`Later Paper → Earlier Paper`).
+  * *Example*: `P14 (2004)` surveys and cites `P13 (2004)`, so connect `P14 → P13`. Always check publication years!
+
+* **`SHARES_PRINCIPLE` (Symmetric: Shared Core Concept / Math)**
+  * *Definition*: Both papers independently rely on the same fundamental mathematical theory or technique (e.g., additive distance metrics, prefix tree / trie properties).
+
+* **`ANALOGOUS_PROBLEM` (Symmetric: Cross-Domain Equivalents)**
+  * *Definition*: Different scientific disciplines solving the exact same underlying structural problem (e.g., evolutionary biologists reconstructing tree lineages in genetics ↔ network engineers reconstructing routing trees on the Internet).
+
+* **`EXTENDS` (Directional: Generalization / Improvement)**
+  * *Definition*: Paper A directly builds upon, generalizes, or removes restrictive assumptions of Paper B (e.g. unicast probes extending multicast probes).
+
+* **`USES_METHOD` (Directional: Subroutine / Tool Application)**
+  * *Definition*: Paper A directly imports and executes a specific algorithm or estimator introduced by Paper B as part of its pipeline.
+            """
+        )
+        if current == 1:
+            st.info("**Level 1 Research Nudge**: Focus on internal network inference papers (`P02`, `P05`, `P13`, `P15`). Look for citations and shared measurement formulations between network tomography papers.")
+        elif current == 2:
+            st.info("**Level 2 Research Nudge**: Cross-Domain Connection! Look at how evolutionary biology connects with network tomography (`ANALOGOUS_PROBLEM` and `SHARES_PRINCIPLE`). Check which papers introduce phylogenetic ideas into networking!")
+        elif current == 3:
+            st.info("**Level 3 Research Nudge**: Focus on additive delay metrics, distance matrices, and signal recovery algorithms.")
+        elif current == 4:
+            st.info("**Level 4 Research Nudge**: Synthesis! Connect cross-domain tree reconstruction principles across biology, networks, and probability graphical models.")
+
+    # Hints Ladder (Placed at the very end of the Papers tab, styled yellow)
     ladder = hint_status(team["team_id"], current)
-    with st.expander(f"Hints for Level {current}", expanded=False):
+    with st.expander(f":orange[Hints for Level {current}]", expanded=False):
         if not ladder:
             st.caption("No hints configured for this level.")
         for h in ladder:
@@ -621,14 +724,6 @@ elif section == "Papers":
                     st.rerun()
             else:
                 st.caption(f"[Locked] {label} (released by organisers if required).")
-
-    with st.expander("Relationship Vocabulary Reference (6 types)", expanded=False):
-        vocab_df = pd.DataFrame(vocab["relationship_types"])
-        cols = [c for c in ["relationship_type", "meaning", "example"] if c in vocab_df.columns]
-        clean_vocab_df = vocab_df[cols].rename(
-            columns={"relationship_type": "Relationship Type", "meaning": "Meaning", "example": "Example"}
-        )
-        st.dataframe(clean_vocab_df, hide_index=True, use_container_width=True)
 
 # ==============================================================================
 # TAB 3: KNOWLEDGE GRAPH
@@ -670,36 +765,7 @@ elif section == "Knowledge Graph":
 
     # 1. Edge Editor (Dropdowns for source, target, and relationship)
     with st.expander("Add / Remove Graph Edges", expanded=bool(df.empty)):
-        with st.expander("Relationship Types Guide: How Papers Connect (Cheat Sheet)", expanded=False):
-            st.markdown(
-                """
-**How to choose the correct relationship:**
-
-* **`CITES` (Directional: Citing Paper → Cited Paper)**
-  * *Direction*: The arrow MUST go from the paper doing the citing to the paper being cited (`Later Paper → Earlier Paper`).
-  * *Example*: `P14 (2004)` surveys and cites `P13 (2004)`, so connect `P14 → P13`. Always check publication years!
-
-* **`SHARES_PRINCIPLE` (Symmetric: Shared Core Concept / Math)**
-  * *Definition*: Both papers independently rely on the same fundamental mathematical theory or technique (e.g., additive distance metrics, prefix tree / trie properties).
-
-* **`ANALOGOUS_PROBLEM` (Symmetric: Cross-Domain Equivalents)**
-  * *Definition*: Different scientific disciplines solving the exact same underlying structural problem (e.g., evolutionary biologists reconstructing tree lineages in genetics ↔ network engineers reconstructing routing trees on the Internet).
-
-* **`EXTENDS` (Directional: Generalization / Improvement)**
-  * *Definition*: Paper A directly builds upon, generalizes, or removes restrictive assumptions of Paper B (e.g. unicast probes extending multicast probes).
-
-* **`USES_METHOD` (Directional: Subroutine / Tool Application)**
-  * *Definition*: Paper A directly imports and executes a specific algorithm or estimator introduced by Paper B as part of its pipeline.
-                """
-            )
-            if current == 1:
-                st.info("**Level 1 Research Nudge**: Focus on internal network inference papers (`P02`, `P05`, `P13`, `P15`). Look for citations and shared measurement formulations between network tomography papers.")
-            elif current == 2:
-                st.info("**Level 2 Research Nudge**: Cross-Domain Connection! Look at how evolutionary biology connects with network tomography (`ANALOGOUS_PROBLEM` and `SHARES_PRINCIPLE`). Check which papers introduce phylogenetic ideas into networking!")
-            elif current == 3:
-                st.info("**Level 3 Research Nudge**: Focus on additive delay metrics, distance matrices, and signal recovery algorithms.")
-            elif current == 4:
-                st.info("**Level 4 Research Nudge**: Synthesis! Connect cross-domain tree reconstruction principles across biology, networks, and probability graphical models.")
+        st.caption("Tip: Consult the :blue[Relationship Guide] on the Papers tab for connection rules and research nudges.")
 
         with st.form(f"add_edge_{current}", clear_on_submit=True):
             c1, c2, c3 = st.columns([1.5, 1.5, 1.5])
@@ -756,20 +822,20 @@ elif section == "Knowledge Graph":
     st.markdown("#### Live Graph Visual")
     render_graph_diagram(df, available=available, byid=byid)
 
-    # 3. Live AI Graph Verification Section
+    # 3. Live Graph Verification Section
     st.markdown("---")
     v_stat = verification_status(team["team_id"], current)
     col_v_info, col_v_btn = st.columns([3, 1.4])
     with col_v_info:
-        st.markdown("#### Live AI Graph Verification")
+        st.markdown("#### Live Graph Verification")
         if current == 0:
             st.caption(
-                "Click below to test your graph against reference literature and novel connections with the AI Judge. "
+                "Click below to test your graph against reference literature and novel connections. "
                 "Practice Mode: Unlimited live verifications on Level 0."
             )
         else:
             st.caption(
-                f"Click below to test your graph against reference literature and novel connections with the AI Judge. "
+                f"Click below to test your graph against reference literature and novel connections. "
                 f"**Allowance: {v_stat['remaining']} of {v_stat['max']} verification checks remaining for Level {current}.**"
             )
     with col_v_btn:
@@ -792,7 +858,7 @@ elif section == "Knowledge Graph":
             st.warning("Your cumulative graph is currently empty. Add at least one edge in the section above before verifying.")
         else:
             record_verification(team["team_id"], current)
-            with st.spinner("Analyzing graph and evaluating connections with AI judge..."):
+            with st.spinner("Analyzing graph and evaluating connections..."):
                 judge = get_live_judge()
                 eval_detail = evaluate_submission(
                     team_id=team["team_id"],
