@@ -13,11 +13,15 @@ echo Keep this terminal window OPEN during the entire event.
 echo =========================================================
 echo.
 
-if exist "cloudflared.exe" (
-    .\cloudflared.exe tunnel --url http://127.0.0.1:8503
-) else (
+if not exist "cloudflared.exe" (
     echo [ERROR] cloudflared.exe not found in current directory.
-    echo Please download it or run:
-    echo powershell -Command "Invoke-WebRequest -Uri https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe -OutFile cloudflared.exe"
     pause
+    exit /b 1
 )
+
+:loop
+.\cloudflared.exe tunnel --url http://127.0.0.1:8503
+echo.
+echo [Notice] Tunnel disconnected or request timed out. Reconnecting in 3 seconds...
+timeout /t 3 /nobreak >nul
+goto loop
