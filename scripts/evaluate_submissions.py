@@ -77,7 +77,7 @@ class EvaluationDetail:
             "Flag Points": round(self.flag_points, 1),
             "Correct Edges": f"{len(self.correct_edges)}/{self.total_reference_count}",
             "Graph Accuracy": f"{self.accuracy_pct}%",
-            "50% Floor": "PASSED" if self.meets_50pct_threshold else "BELOW 50%",
+            "30% Floor": "PASSED" if self.meets_50pct_threshold else "BELOW 30%",
             "Base Graph Pts": round(self.base_graph_points, 1),
             "Injection Trap Hits": len(self.injection_hits),
             "Injection Penalty": round(self.injection_penalty, 1),
@@ -289,7 +289,8 @@ def evaluate_submission(
     total_ref_count = len(reference_edges)
     ratio = (len(correct_found) / total_ref_count) if total_ref_count > 0 else 0.0
     accuracy_pct = round(ratio * 100, 1)
-    meets_50pct = (accuracy_pct >= 50.0) if level > 0 else True
+    accuracy_floor_pct = 30.0
+    meets_floor = (accuracy_pct >= accuracy_floor_pct) if level > 0 else True
     base_gp = round(max_gp * ratio, 2)
 
     # Compute penalties
@@ -300,8 +301,8 @@ def evaluate_submission(
     final_gp = max(0.0, base_gp - inj_penalty - dec_penalty) + bounty_pts
     final_gp = round(final_gp, 2)
 
-    # Enforce 50% accuracy requirement: if below 50% floor, graph points are zeroed
-    if enforce_50pct_floor and not meets_50pct:
+    # Enforce 30% accuracy requirement: if below 30% floor, graph points are zeroed
+    if enforce_50pct_floor and not meets_floor:
         final_gp = 0.0
 
     total_score = round(flag_points + final_gp, 2)
@@ -316,7 +317,7 @@ def evaluate_submission(
         correct_edges=sorted(correct_found),
         total_reference_count=total_ref_count,
         accuracy_pct=accuracy_pct,
-        meets_50pct_threshold=meets_50pct,
+        meets_50pct_threshold=meets_floor,
         base_graph_points=base_gp,
         injection_hits=injection_hits,
         injection_penalty=inj_penalty,
@@ -417,7 +418,7 @@ def print_single_report(detail: EvaluationDetail):
     print(f"Flag Points:          {detail.flag_points:g} / {detail.max_flag_points:g} pts")
     print("-" * 65)
     floor_icon = "[OK]" if detail.meets_50pct_threshold else "[X]"
-    print(f"50% Accuracy Floor:   {floor_icon} {detail.accuracy_pct:.1f}% ({'PASSED' if detail.meets_50pct_threshold else 'BELOW 50% - Graph Points Zeroed'})")
+    print(f"30% Accuracy Floor:   {floor_icon} {detail.accuracy_pct:.1f}% ({'PASSED' if detail.meets_50pct_threshold else 'BELOW 30% - Graph Points Zeroed'})")
     print(f"Reference Edges Found: {len(detail.correct_edges)} of {detail.total_reference_count} ({detail.accuracy_pct:.1f}%)")
     print(f"Base Graph Points:    {detail.base_graph_points:g} pts")
     if detail.injection_hits:

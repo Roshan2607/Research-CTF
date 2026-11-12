@@ -97,38 +97,41 @@ header[data-testid="stHeader"] {
     z-index: 1;
 }
 
-/* Modern Segmented Top Navbar for Participant Navigation */
+/* Full-Width Modern Segmented Top Navbar */
 div[data-testid="stRadio"] {
+    width: 100% !important;
     margin-top: 0 !important;
-    margin-bottom: 1.25rem !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem !important;
+    padding-bottom: 0 !important;
 }
 
 div[data-testid="stRadio"] > div[role="radiogroup"] {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    background: #0d1117;
-    padding: 6px 8px;
-    border-radius: 12px;
-    border: 1px solid #30363d;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-    width: fit-content;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    background: #0d1117 !important;
+    padding: 6px 8px !important;
+    border-radius: 12px !important;
+    border: 1px solid #30363d !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    flex: 1 1 0px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     background-color: transparent !important;
-    padding: 9px 24px !important;
+    padding: 10px 16px !important;
     border-radius: 8px !important;
     margin: 0 !important;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid transparent;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 1px solid transparent !important;
+    text-align: center !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover {
@@ -138,7 +141,7 @@ div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:ho
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:has(input:checked) {
     background-color: #1f6feb !important;
     border: 1px solid #388bfd !important;
-    box-shadow: 0 2px 10px rgba(31, 111, 235, 0.4) !important;
+    box-shadow: 0 2px 10px rgba(31, 111, 235, 0.45) !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] > div:first-of-type {
@@ -147,12 +150,14 @@ div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] > 
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] div:last-child,
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"] p {
-    font-size: 0.95rem !important;
+    font-size: 1rem !important;
     font-weight: 500 !important;
     color: #8b949e !important;
     margin: 0 !important;
     line-height: 1.4 !important;
-    transition: color 0.15s ease;
+    transition: color 0.15s ease !important;
+    text-align: center !important;
+    width: 100% !important;
 }
 
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-baseweb="radio"]:hover div:last-child,
@@ -391,9 +396,9 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
         "Graph Accuracy",
         f"{detail.accuracy_pct:.1f}%",
     )
-    floor_label = "PASSED (>= 50%)" if detail.meets_50pct_threshold else "BELOW FLOOR (< 50%)"
+    floor_label = "PASSED (>= 30%)" if detail.meets_50pct_threshold else "BELOW FLOOR (< 30%)"
     c2.metric(
-        "50% Accuracy Floor",
+        "30% Accuracy Floor",
         floor_label,
     )
     c3.metric(
@@ -414,13 +419,13 @@ def render_live_verification_card(detail: EvaluationDetail) -> None:
             )
     elif detail.meets_50pct_threshold:
         st.success(
-            f"Accuracy is {detail.accuracy_pct:.1f}%. The 50% accuracy standard is satisfied! "
+            f"Accuracy is {detail.accuracy_pct:.1f}%. The 30% accuracy standard is satisfied! "
             f"You are on track to earn {detail.final_graph_points:g} graph points for this level."
         )
     else:
         st.warning(
-            f"Current accuracy is {detail.accuracy_pct:.1f}% (required: >= 50.0%). "
-            f"Graph points are currently zeroed. Connect more valid relationships between released papers to reach 50%."
+            f"Current accuracy is {detail.accuracy_pct:.1f}% (required: >= 30.0%). "
+            f"Graph points are currently zeroed. Connect more valid relationships between released papers to reach 30%."
         )
 
     with st.expander("Detailed Verification Breakdown", expanded=True):
@@ -1011,7 +1016,7 @@ if section == "Submit":
             check = col_btn.form_submit_button("Check flag", use_container_width=True, disabled=bool(fs["cooldown_remaining"] > 0))
         if check:
             if not answer.strip():
-                st.warning("Please fill the flag field to move on.")
+                st.warning("Please enter a flag answer before checking.")
             else:
                 result = attempt_flag(team["team_id"], current, answer.strip())
                 if result["correct"]:
@@ -1054,7 +1059,7 @@ if section == "Submit":
 
     if not can_submit:
         if fs["attempts"] == 0:
-            st.warning("Please fill the flag field and check your answer above to move on.")
+            st.caption("Submit at least one flag attempt above to enable level locking.")
         elif not draft.strip() or len(valid_rows) == 0:
             st.caption("Add at least one edge in Knowledge Graph to enable level locking.")
         elif errs:
