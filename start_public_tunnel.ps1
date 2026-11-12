@@ -14,7 +14,7 @@ if (-not (Test-Path "cloudflared.exe")) {
 }
 
 while ($true) {
-    .\cloudflared.exe tunnel --url http://127.0.0.1:8503
+    .\cloudflared.exe tunnel --protocol http2 --url http://127.0.0.1:8503
     Write-Host "`n[Notice] Tunnel disconnected or timed out. Reconnecting in 3 seconds..." -ForegroundColor Yellow
     Start-Sleep -Seconds 3
 }

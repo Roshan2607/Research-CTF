@@ -20,7 +20,7 @@ if not exist "cloudflared.exe" (
 )
 
 :loop
-.\cloudflared.exe tunnel --url http://127.0.0.1:8503
+.\cloudflared.exe tunnel --protocol http2 --url http://127.0.0.1:8503
 echo.
 echo [Notice] Tunnel disconnected or request timed out. Reconnecting in 3 seconds...
 timeout /t 3 /nobreak >nul
